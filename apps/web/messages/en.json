@@ -1,0 +1,77 @@
+{
+  "Landing": {
+    "Header": {
+      "nav": {
+        "mission": "Mission",
+        "howItWorks": "How it works",
+        "features": "Features",
+        "joinUs": "Join Us"
+      },
+      "button": {
+        "start": "Get Started"
+      }
+    },
+    "Hero": {
+      "title": "Restore Ukraine’s Beauty with EcoRally",
+      "subtitle": "EcoRally is a platform to unite communities in cleaning Ukraine’s lands from pollution. Organize or join events to make a lasting impact.",
+      "button": {
+        "start": "Start a Cleanup Now"
+      }
+    },
+    "Mission": {
+      "title": "Our Mission: A Cleaner Ukraine",
+      "paragraph": {
+        "first": "Ukraine’s forests, rivers, and fields face growing threats from pollution—plastic waste, industrial debris, and neglected landfills harm our environment and communities. EcoRally is here to change that. We’re building a platform where anyone, from city residents to rural volunteers, can take action to clean up their surroundings.",
+        "second": "Our vision is a Ukraine where every region thrives in its natural beauty. EcoRally connects people passionate about environmental change, enabling them to organize cleanup events, share resources, and inspire others. Whether it’s clearing a park in Dnipro, a beach in Odesa, or a village roadside in Ternopil, every step forward counts.",
+        "third": "We’re starting small but dreaming big. By empowering communities to act locally, we aim to create a nationwide movement for a cleaner, healthier Ukraine."
+      }
+    },
+    "HowItWorks": {
+      "title": "How it Works",
+      "stepTitle": {
+        "first": "1. Create an Event",
+        "second": "2. Rally Your Community",
+        "third": "3. Make an Impact"
+      },
+      "stepDescription": {
+        "first": "Sign up and plan a cleanup event in your area. Choose a location—like a park, riverbank, or street—set a date, and add details about what volunteers should bring, such as gloves or bags.",
+        "second": "Share your event through the app, social media, or local groups. Invite friends, neighbors, or organizations to join. EcoRally helps you coordinate participants and keep everyone updated.",
+        "third": "Lead or join the cleanup, collect waste, and document your efforts with photos. Log the results in the app to inspire others and track Ukraine’s progress toward a cleaner future."
+      }
+    },
+    "Features": {
+      "title": "What EcoRally Offers",
+      "featureTitle": {
+        "first": "Simple Event Planning",
+        "second": "Community Collaboration",
+        "third": "Progress Tracking",
+        "fourth": "Nationwide Reach"
+      },
+      "featureDescription": {
+        "first": "Create cleanup events with ease. Set locations using an interactive map, schedule dates, and specify needs like tools or safety gear. Perfect for first-time organizers or seasoned activists.",
+        "second": "Connect with volunteers and organizations in real-time. Share updates, assign tasks, and chat within the app to ensure everyone’s on the same page during cleanups.",
+        "third": "Record the waste collected, from plastic bottles to tires, and upload before-and-after photos. See your impact and motivate others to join the movement.",
+        "fourth": "Discover cleanups anywhere in Ukraine, from Lviv to Kharkiv. Filter events by region or type, so you can participate or support efforts in areas that matter to you."
+      }
+    },
+    "WhyItMatters": {
+      "title": "Why It Matters",
+      "paragraph": {
+        "first": "Pollution in Ukraine isn’t just an environmental issue—it affects our health, wildlife, and future generations. Illegal dumpsites, littered waterways, and urban waste piles degrade the land we cherish. EcoRally tackles this by giving every Ukrainian the tools to fight pollution directly.",
+        "second": "From small village cleanups to large-scale urban projects, every action adds up. We’re building a community-driven solution to address local challenges, whether it’s clearing plastic from the Dnister River or removing debris from war-affected areas. The app also encourages sustainable practices, like sorting recyclables during cleanups.",
+        "third": "Together, we can protect Ukraine’s landscapes, from the Carpathian Mountains to the Black Sea coast, and create a cleaner, prouder nation."
+      }
+    },
+    "CallToAction": {
+      "title": "Join the Fight for a Cleaner Ukraine",
+      "subtitle": "Join EcoRally to organize or join cleanup events in your community. Be the change Ukraine needs—one cleanup at a time.",
+      "button": {
+        "getApp": "Go to App"
+      }
+    },
+    "Footer": {
+      "title": "We’re launching a movement for Ukraine’s environment 🌍",
+      "contact": "Contact us at kirilglebov06@gmail.com for support, ideas, or partnerships."
+    }
+  }
+}

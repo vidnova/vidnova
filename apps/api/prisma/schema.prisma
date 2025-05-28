@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String              @id @default(uuid())
+  name              String
+  email             String              @unique
+  password          String
+  isVerified        Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  events            CleanupEvent[]
+  takePart          TakePart[]
+  cleanupResult     CleanupResult[]
+  notifications     Notification[]
+  comments          Comment[]
+  commentReplies    CommentReply[]
+  otp               Otp[]
+  blacklistTokens   BlacklistToken[]
+  ContaminatedPoint ContaminatedPoint[]
+}
+
+model CleanupEvent {
+  id            String                @id @default(uuid())
+  name          String
+  description   String
+  startDate     DateTime
+  endDate       DateTime
+  status        EventStatus
+  dates         CleanupEventDate[]
+  imageUrl      String
+  equipments    CleanupEquipment[]
+  location      CleanupEventLocation? @relation
+  organizerId   String
+  organizer     User                  @relation(fields: [organizerId], references: [id])
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  takePart      TakePart[]
+  result        CleanupResult?
+  comments      Comment[]
+  notifications Notification[]
+}
+
+model CleanupEventDate {
+  id      String       @id @default(uuid())
+  date    DateTime
+  eventId String
+  event   CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model CleanupEventLocation {
+  id           String       @id @default(uuid())
+  latitude     Float
+  longitude    Float
+  eventId      String       @unique
+  event        CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  settlementId String?
+  regionId     String
+  region       Region       @relation(fields: [regionId], references: [id])
+  settlement   Settlement?  @relation("SettlementToLocation", fields: [settlementId], references: [id])
+}
+
+model Region {
+  id                    String                 @id @default(uuid())
+  name                  String                 @unique
+  latitude              Float
+  longitude             Float
+  settlements           Settlement[]
+  contaminatedPoint     ContaminatedPoint[]
+  cleanupEventLocations CleanupEventLocation[]
+}
+
+model Settlement {
+  id                 String                 @id @default(uuid())
+  name               String
+  regionId           String
+  latitude           Float
+  longitude          Float
+  region             Region                 @relation(fields: [regionId], references: [id])
+  locations          CleanupEventLocation[] @relation("SettlementToLocation")
+  contaminatedPoints ContaminatedPoint[]    @relation("SettlementToContaminatedPoint")
+
+  @@unique([name, regionId])
+}
+
+model TakePart {
+  id        String       @id @default(uuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  eventId   String
+  event     CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model CleanupResult {
+  id          String       @id @default(uuid())
+  description String
+  eventId     String       @unique
+  event       CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  photos      String[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model CleanupEquipment {
+  id          String       @id @default(uuid())
+  eventId     String
+  event       CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  equipmentId String
+  equipment   Equipment    @relation(fields: [equipmentId], references: [id])
+  quantity    Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Equipment {
+  id                String             @id @default(uuid())
+  name              String             @unique
+  cleanupEquipments CleanupEquipment[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now())
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  message   String
+  eventId   String
+  type      NotificationType
+  event     CleanupEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @default(now())
+}
+
+model Comment {
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  eventId        String
+  event          CleanupEvent   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  content        String
+  commentReplies CommentReply[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model CommentReply {
+  id        String   @id @default(uuid())
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlacklistToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContaminatedPoint {
+  id           String                  @id @default(uuid())
+  imageUrl     String
+  name         String
+  description  String
+  status       ContaminatedPointStatus
+  latitude     Float
+  longitude    Float
+  settlementId String?
+  regionId     String
+  region       Region                  @relation(fields: [regionId], references: [id])
+  settlement   Settlement?             @relation("SettlementToContaminatedPoint", fields: [settlementId], references: [id])
+  creatorId    String
+  creator      User                    @relation(fields: [creatorId], references: [id])
+}
+
+enum ContaminatedPointStatus {
+  ACTIVE
+  CLEANED
+}
+
+enum NotificationType {
+  EVENT
+  COMMENT
+  REPLY
+}
+
+enum EventStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
