@@ -1,15 +1,11 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from '@ecorally/ui';
 import {
   EndEventDatePicker,
   RegionCombobox,
   SettlementCombobox,
   StartEventDatePicker,
-} from "./components";
-import { Filter } from "lucide-react";
+} from './components';
+import { Filter } from 'lucide-react';
 
 export const FilterPopover = () => {
   return (

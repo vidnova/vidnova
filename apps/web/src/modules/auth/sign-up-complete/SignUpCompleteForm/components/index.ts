@@ -1,2 +1,2 @@
-export * from "./SelectRegionCombobox";
-export * from "./SelectSettlementCombobox";
+export * from './SelectRegionCombobox';
+export * from './SelectSettlementCombobox';

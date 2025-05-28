@@ -1,4 +1,4 @@
-import { SignUpCompleteForm } from "@/modules/auth/sign-up-complete";
+import { SignUpCompleteForm } from '@/modules/auth/sign-up-complete';
 
 export default function SignUpComplete() {
   return (

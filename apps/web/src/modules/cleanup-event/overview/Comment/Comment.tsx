@@ -1,29 +1,20 @@
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Edit,
-  EllipsisVertical,
-  MessageSquareWarning,
-  Trash,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+} from '@ecorally/ui';
+import { Edit, EllipsisVertical, MessageSquareWarning, Trash } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-export const Comment = ({
-  onClickOpenReply,
-}: {
-  onClickOpenReply: () => void;
-}) => {
+export const Comment = ({ onClickOpenReply }: { onClickOpenReply: () => void }) => {
   return (
     <div className="flex text-accent gap-3">
-      <Link href={"/profile"}>
+      <Link href={'/profile'}>
         <Image
-          src={"/test_user.jpg"}
+          src={'/test_user.jpg'}
           alt="User image"
           className="w-11 h-11 object-cover rounded-full"
           width={44}
@@ -32,7 +23,7 @@ export const Comment = ({
       </Link>
       <div className="w-full">
         <div className="flex justify-between">
-          <Link href={"/profile"}>
+          <Link href={'/profile'}>
             <span className="font-bold">Олег</span>
           </Link>
           <DropdownMenu>
@@ -59,7 +50,7 @@ export const Comment = ({
         </div>
         <div>Візьму участь!</div>
         <div className="mt-2">
-          <Button size={"sm"} variant={"ghost"} onClick={onClickOpenReply}>
+          <Button size={'sm'} variant={'ghost'} onClick={onClickOpenReply}>
             Відповісти
           </Button>
         </div>

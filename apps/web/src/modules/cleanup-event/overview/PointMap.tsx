@@ -1,28 +1,23 @@
-import { MapPin } from "lucide-react";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import ReactDOMServer from "react-dom/server";
+import { MapPin } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
 
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
+const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
+  ssr: false,
+});
+const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
+  ssr: false,
+});
 
 export const PointMap = () => {
   const [icon, setIcon] = useState<L.DivIcon | null>(null);
 
   useEffect(() => {
-    import("leaflet").then((L) => {
+    import('leaflet').then((L) => {
       const divIcon = L.divIcon({
-        className: "custom-div-icon",
+        className: 'custom-div-icon',
         html: ReactDOMServer.renderToString(<MapPin size={24} color="red" />),
         iconAnchor: [12, 12],
       });
@@ -39,7 +34,7 @@ export const PointMap = () => {
         <MapContainer
           center={[50.4501, 30.5234]}
           zoom={20}
-          style={{ height: "400px", width: "400px" }}
+          style={{ height: '400px', width: '400px' }}
           maxBounds={[
             [44.0, 22.0],
             [52.5, 40.5],

@@ -1,1 +1,1 @@
-export * from "./CleanupEventsList";
+export * from './CleanupEventsList';

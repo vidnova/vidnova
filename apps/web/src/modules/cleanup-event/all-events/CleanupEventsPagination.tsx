@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@ecorally/ui';
 
 interface CleanupEventsPaginationProps {
   totalPages: number;
@@ -26,6 +26,7 @@ export const CleanupEventsPagination = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            size={'md'}
             href="#"
             onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
           />
@@ -33,6 +34,7 @@ export const CleanupEventsPagination = ({
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
+              size={'md'}
               href="#"
               isActive={page === currentPage}
               onClick={() => onPageChange(page)}
@@ -44,6 +46,7 @@ export const CleanupEventsPagination = ({
         {totalPages > 5 && <PaginationEllipsis />}
         <PaginationItem>
           <PaginationNext
+            size={'md'}
             href="#"
             onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
           />

@@ -1,1 +1,1 @@
-export * from "./EventDate";
+export * from './EventDate';

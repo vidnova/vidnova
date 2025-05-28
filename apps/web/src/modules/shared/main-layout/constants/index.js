@@ -1,34 +1,34 @@
-import { ChartBar, Earth, Map, Plus, Search, User } from "lucide-react";
+import { ChartBar, Earth, Map, Plus, Search, User } from 'lucide-react';
 
 export const sidebarLinks = [
   {
     icon: <Earth />,
-    name: "Події недалеко",
-    path: "/near-events",
+    name: 'Події недалеко',
+    path: '/near-events',
   },
   {
     icon: <Map />,
-    name: "Карта подій",
-    path: "/events-map",
+    name: 'Карта подій',
+    path: '/events-map',
   },
   {
     icon: <Search />,
-    name: "Всі події",
-    path: "/cleanup-events",
+    name: 'Всі події',
+    path: '/cleanup-events',
   },
   {
     icon: <Plus />,
-    name: "Створити подію",
-    path: "/event/create",
+    name: 'Створити подію',
+    path: '/event/create',
   },
   {
     icon: <User />,
-    name: "Мій профіль",
-    path: "/in-development",
+    name: 'Мій профіль',
+    path: '/in-development',
   },
   {
     icon: <ChartBar />,
-    name: "Статистика додатку",
-    path: "/in-development",
+    name: 'Статистика додатку',
+    path: '/in-development',
   },
 ];

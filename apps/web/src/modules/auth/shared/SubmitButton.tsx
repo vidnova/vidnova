@@ -1,5 +1,5 @@
-import* as React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@ecorally/ui';
+import * as React from 'react';
 
 interface SubmitButtonProps {
   text: string;

@@ -1,7 +1,7 @@
-import { Clock4, Circle, CircleX, CircleCheckBig } from "lucide-react";
-import { JSX } from "react";
+import { Clock4, Circle, CircleX, CircleCheckBig } from 'lucide-react';
+import { JSX } from 'react';
 
-export type EventStatusType = "Planned" | "InProgress" | "Canceled" | "Completed";
+export type EventStatusType = 'Planned' | 'InProgress' | 'Canceled' | 'Completed';
 
 export interface EventStatusConfig {
   status: EventStatusType;
@@ -12,28 +12,28 @@ export interface EventStatusConfig {
 
 export const eventStatuses: EventStatusConfig[] = [
   {
-    status: "Planned",
-    name: "Заплановано",
+    status: 'Planned',
+    name: 'Заплановано',
     icon: <Clock4 size={24} />,
-    color: "text-yellow-300",
+    color: 'text-yellow-300',
   },
   {
-    status: "InProgress",
-    name: "В процесі",
+    status: 'InProgress',
+    name: 'В процесі',
     icon: <Circle size={24} />,
-    color: "text-green-300",
+    color: 'text-green-300',
   },
   {
-    status: "Canceled",
-    name: "Скасовано",
+    status: 'Canceled',
+    name: 'Скасовано',
     icon: <CircleX size={24} />,
-    color: "text-red-400",
+    color: 'text-red-400',
   },
   {
-    status: "Completed",
-    name: "Завершено",
+    status: 'Completed',
+    name: 'Завершено',
     icon: <CircleCheckBig size={24} />,
-    color: "text-green-400",
+    color: 'text-green-400',
   },
 ];
 

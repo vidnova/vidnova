@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Header, Sidebar } from "./components";
+import { ReactNode } from 'react';
+import { Header, Sidebar } from './components';
 
 export const MainLayout = ({ children }: { children: ReactNode }) => {
   return (

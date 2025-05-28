@@ -3,8 +3,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Bell, LogOut, Plus, Settings, User } from "lucide-react";
+} from '@ecorally/ui';
+import { Bell, LogOut, Plus, Settings, User } from 'lucide-react';
 
 export const Header = () => {
   return (
@@ -15,9 +15,7 @@ export const Header = () => {
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="bg-blue-400 p-2 rounded-full cursor-pointer text-white">
-              KH
-            </div>
+            <div className="bg-blue-400 p-2 rounded-full cursor-pointer text-white">KH</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>

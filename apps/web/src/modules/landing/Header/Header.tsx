@@ -1,12 +1,12 @@
-import { useTranslations } from "next-intl";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { LanguageDropdown } from "./components";
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
+import { LanguageDropdown } from './components';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations("Landing.Header");
+  const t = useTranslations('Landing.Header');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -20,11 +20,11 @@ export const Header = () => {
     };
 
     if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMenuOpen]);
 
@@ -35,16 +35,16 @@ export const Header = () => {
         <nav className="hidden md:block">
           <ul className="flex gap-6">
             <li className="text-gray-400 hover:text-white transition-colors">
-              <a href="#mission">{t("nav.mission")}</a>
+              <a href="#mission">{t('nav.mission')}</a>
             </li>
             <li className="text-gray-400 hover:text-white transition-colors">
-              <a href="#how-it-works">{t("nav.howItWorks")}</a>
+              <a href="#how-it-works">{t('nav.howItWorks')}</a>
             </li>
             <li className="text-gray-400 hover:text-white transition-colors">
-              <a href="#features">{t("nav.features")}</a>
+              <a href="#features">{t('nav.features')}</a>
             </li>
             <li className="text-gray-400 hover:text-white transition-colors">
-              <a href="#call-to-action">{t("nav.joinUs")}</a>
+              <a href="#call-to-action">{t('nav.joinUs')}</a>
             </li>
           </ul>
         </nav>
@@ -54,44 +54,40 @@ export const Header = () => {
         <button onClick={toggleMenu} aria-label="Toggle menu">
           <div
             className={`w-6 h-0.5 bg-white mb-1.5 transition-transform ${
-              isMenuOpen && "invisible"
+              isMenuOpen && 'invisible'
             }`}
           ></div>
+          <div className={`w-6 h-0.5 bg-white mb-1.5 ${isMenuOpen && 'invisible'}`}></div>
           <div
-            className={`w-6 h-0.5 bg-white mb-1.5 ${isMenuOpen && "invisible"}`}
-          ></div>
-          <div
-            className={`w-6 h-0.5 bg-white transition-transform ${
-              isMenuOpen && "invisible"
-            }`}
+            className={`w-6 h-0.5 bg-white transition-transform ${isMenuOpen && 'invisible'}`}
           ></div>
         </button>
       </div>
       <nav
         ref={menuRef}
         className={`fixed top-0 right-0 h-full w-64 bg-[#131313b3] backdrop-blur-md transform transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         } md:hidden z-10 py-10 px-6 overflow-y-auto`}
       >
         <ul className="flex flex-col gap-6">
           <li className="text-gray-400 hover:text-white transition-colors">
             <a href="#mission" onClick={toggleMenu}>
-              {t("nav.mission")}
+              {t('nav.mission')}
             </a>
           </li>
           <li className="text-gray-400 hover:text-white transition-colors">
             <a href="#how-it-works" onClick={toggleMenu}>
-              {t("nav.howItWorks")}
+              {t('nav.howItWorks')}
             </a>
           </li>
           <li className="text-gray-400 hover:text-white transition-colors">
             <a href="#features" onClick={toggleMenu}>
-              {t("nav.features")}
+              {t('nav.features')}
             </a>
           </li>
           <li className="text-gray-400 hover:text-white transition-colors">
             <a href="#call-to-action" onClick={toggleMenu}>
-              {t("nav.joinUs")}
+              {t('nav.joinUs')}
             </a>
           </li>
         </ul>
@@ -99,10 +95,10 @@ export const Header = () => {
       <div className="hidden md:flex items-center gap-7">
         <LanguageDropdown />
         <Link
-          href={"/near-events"}
+          href={'/near-events'}
           className="px-4 py-2 bg-blue-400 hover:bg-blue-500 transition-colors text-white cursor-pointer rounded-lg"
         >
-          {t("button.start")}
+          {t('button.start')}
         </Link>
       </div>
     </header>

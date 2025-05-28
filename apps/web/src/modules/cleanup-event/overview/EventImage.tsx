@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Expand } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from 'react';
+import { Expand } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@ecorally/ui';
 
 export const EventImage = ({ imageUrl }: { imageUrl: string }) => {
   const [open, setOpen] = useState(false);
@@ -24,11 +24,7 @@ export const EventImage = ({ imageUrl }: { imageUrl: string }) => {
       </div>
 
       <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 overflow-hidden">
-        <img
-          src={imageUrl}
-          alt="Full size event image"
-          className="w-full h-full object-contain"
-        />
+        <img src={imageUrl} alt="Full size event image" className="w-full h-full object-contain" />
       </DialogContent>
     </Dialog>
   );

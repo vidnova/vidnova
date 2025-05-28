@@ -1,28 +1,23 @@
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { LatLngTuple } from "leaflet";
-import { MapPin } from "lucide-react";
-import ReactDOMServer from "react-dom/server";
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { LatLngTuple } from 'leaflet';
+import { MapPin } from 'lucide-react';
+import ReactDOMServer from 'react-dom/server';
 
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
-);
-const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
+  ssr: false,
+});
+const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
+  ssr: false,
+});
+const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), {
   ssr: false,
 });
 
 const MapEvents = dynamic(
   () =>
-    import("react-leaflet").then((mod) => {
+    import('react-leaflet').then((mod) => {
       const { useMapEvents } = mod;
       return function MapEventsComponent({
         onMapClick,
@@ -37,13 +32,11 @@ const MapEvents = dynamic(
         return null;
       };
     }),
-  { ssr: false }
+  { ssr: false },
 );
 
 export const CreatePointMap = () => {
-  const [markerPosition, setMarkerPosition] = useState<LatLngTuple | null>(
-    null
-  );
+  const [markerPosition, setMarkerPosition] = useState<LatLngTuple | null>(null);
 
   const handleMapClick = (lat: number, lng: number) => {
     setMarkerPosition([lat, lng]);
@@ -52,9 +45,9 @@ export const CreatePointMap = () => {
   const [icon, setIcon] = useState<L.DivIcon | null>(null);
 
   useEffect(() => {
-    import("leaflet").then((L) => {
+    import('leaflet').then((L) => {
       const divIcon = L.divIcon({
-        className: "custom-div-icon",
+        className: 'custom-div-icon',
         html: ReactDOMServer.renderToString(<MapPin size={24} color="red" />),
         iconAnchor: [12, 12],
       });
@@ -69,7 +62,7 @@ export const CreatePointMap = () => {
       <MapContainer
         center={[48.3794, 31.1656]}
         zoom={5}
-        style={{ height: "400px", width: "400px" }}
+        style={{ height: '400px', width: '400px' }}
         maxBounds={[
           [44.0, 22.0],
           [52.5, 40.5],
@@ -84,15 +77,14 @@ export const CreatePointMap = () => {
         {markerPosition && (
           <Marker position={markerPosition} icon={icon}>
             <Popup>
-              Lat: {markerPosition[0].toFixed(4)}, Lng:{" "}
-              {markerPosition[1].toFixed(4)}
+              Lat: {markerPosition[0].toFixed(4)}, Lng: {markerPosition[1].toFixed(4)}
             </Popup>
           </Marker>
         )}
       </MapContainer>
       {markerPosition && (
         <div className="mt-2 text-sm">
-          Selected Coordinates: Lat: {markerPosition[0].toFixed(4)}, Lng:{" "}
+          Selected Coordinates: Lat: {markerPosition[0].toFixed(4)}, Lng:{' '}
           {markerPosition[1].toFixed(4)}
         </div>
       )}

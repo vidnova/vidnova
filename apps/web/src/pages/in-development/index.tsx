@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Undo2 } from "lucide-react";
+import { Button } from '@ecorally/ui';
+import { Undo2 } from 'lucide-react';
 
 export default function InDevelopment() {
   return (

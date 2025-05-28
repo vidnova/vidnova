@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@ecorally/ui";
 import { SelectRegionCombobox, SelectSettlementCombobox } from "./components";
 import Link from "next/link";
 

@@ -1,4 +1,4 @@
-import { CleanupEventCard } from "../common";
+import { CleanupEventCard } from '../common';
 
 export const CleanupEventsList = () => {
   return (

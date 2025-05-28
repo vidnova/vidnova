@@ -3,9 +3,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Check, Earth } from "lucide-react";
-import { useRouter } from "next/router";
+} from '@ecorally/ui';
+import { Check, Earth } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 export const LanguageDropdown = () => {
   const router = useRouter();
@@ -24,16 +24,16 @@ export const LanguageDropdown = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => changeLanguage("uk")}>
+        <DropdownMenuItem onClick={() => changeLanguage('uk')}>
           <div className="flex w-full items-center justify-between gap-2">
             <span>Українська</span>
-            {locale === "uk-UK" ? <Check /> : null}
+            {locale === 'uk-UK' ? <Check /> : null}
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => changeLanguage("en")}>
+        <DropdownMenuItem onClick={() => changeLanguage('en')}>
           <div className="flex w-full items-center justify-between gap-2">
             <span>English</span>
-            {locale === "en-US" ? <Check /> : null}
+            {locale === 'en-US' ? <Check /> : null}
           </div>
         </DropdownMenuItem>
       </DropdownMenuContent>

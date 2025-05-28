@@ -1,1 +1,1 @@
-export * from "./VerifyAccountForm";
+export * from './VerifyAccountForm';

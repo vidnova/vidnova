@@ -12,10 +12,10 @@ import {
   CreateCommentForm,
   Comment,
   CreateCommentReplyForm,
-} from "@/modules/cleanup-event/overview";
-import { MainLayout } from "@/modules/shared";
-import "leaflet/dist/leaflet.css";
-import { useState } from "react";
+} from '@/modules/cleanup-event/overview';
+import { MainLayout } from '@/modules/shared';
+import 'leaflet/dist/leaflet.css';
+import { useState } from 'react';
 
 export default function EventPage() {
   const [openedReplyId, setOpenedReplyId] = useState<number | null>(null);
@@ -51,15 +51,10 @@ export default function EventPage() {
         <div className="mt-3 flex flex-col gap-3">
           {[...Array(2)].map((_, idx) => (
             <div key={idx}>
-              <Comment
-                onClickOpenReply={() => handleOpenCreateReply(idx)}
-                key={idx}
-              />
+              <Comment onClickOpenReply={() => handleOpenCreateReply(idx)} key={idx} />
               <div className="ml-14 mt-3">
                 {openedReplyId === idx && (
-                  <CreateCommentReplyForm
-                    onClickClose={() => setOpenedReplyId(null)}
-                  />
+                  <CreateCommentReplyForm onClickClose={() => setOpenedReplyId(null)} />
                 )}
               </div>
             </div>

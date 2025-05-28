@@ -1,4 +1,4 @@
-import { EventDate } from "./components";
+import { EventDate } from './components';
 
 export const EventDates = () => {
   return (

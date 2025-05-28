@@ -1,6 +1,6 @@
-import "leaflet/dist/leaflet.css";
-import { MainLayout } from "@/modules/shared";
-import { AllEventsMap } from "@/modules/cleanup-event/map";
+import 'leaflet/dist/leaflet.css';
+import { MainLayout } from '@/modules/shared';
+import { AllEventsMap } from '@/modules/cleanup-event/map';
 
 export default function EventsMap() {
   return (

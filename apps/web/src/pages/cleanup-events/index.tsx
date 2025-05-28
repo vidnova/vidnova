@@ -1,10 +1,10 @@
-import { Input } from "@/components/ui/input";
 import {
   CleanupEventsList,
   CleanupEventsPagination,
   FilterPopover,
-} from "@/modules/cleanup-event/all-events";
-import { MainLayout } from "@/modules/shared";
+} from '@/modules/cleanup-event/all-events';
+import { MainLayout } from '@/modules/shared';
+import { Input } from '@ecorally/ui';
 
 export default function CleanupEvents() {
   return (
@@ -16,11 +16,7 @@ export default function CleanupEvents() {
           <FilterPopover />
         </div>
         <CleanupEventsList />
-        <CleanupEventsPagination
-          totalPages={3}
-          currentPage={1}
-          onPageChange={() => {}}
-        />
+        <CleanupEventsPagination totalPages={3} currentPage={1} onPageChange={() => {}} />
       </div>
     </MainLayout>
   );

@@ -1,13 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export const EventOrganizerInfo = () => {
   return (
     <div className="flex items-center gap-3">
       <span className="text-muted-foreground">Організатор:</span>
-      <Link href={"/profile/1"} className="flex items-center gap-2">
+      <Link href={'/profile/1'} className="flex items-center gap-2">
         <Image
-          src={"/test_user.jpg"}
+          src={'/test_user.jpg'}
           className="w-8 h-8 object-cover rounded-full"
           alt="User photo"
           width={32}

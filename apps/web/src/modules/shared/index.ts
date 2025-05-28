@@ -1,2 +1,2 @@
-export * from "./main-layout";
-export * from "./SeoHead";
+export * from './main-layout';
+export * from './SeoHead';

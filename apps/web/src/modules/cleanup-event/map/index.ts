@@ -1,1 +1,1 @@
-export * from "./AllEventsMap";
+export * from './AllEventsMap';

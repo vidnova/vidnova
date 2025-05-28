@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { VerifyAccountInputOTP } from "./components";
+import { VerifyAccountInputOTP } from './components';
+import { Button } from '@ecorally/ui';
 
 export const VerifyAccountForm = () => {
   return (
@@ -11,21 +11,15 @@ export const VerifyAccountForm = () => {
         </p>
         <VerifyAccountInputOTP />
         <div className="flex items-center gap-1">
-          <span className="text-muted-foreground text-sm">
-            Не отримали код?
-          </span>
-          <Button variant={"ghost"} size={"sm"} className="text-blue-200">
+          <span className="text-muted-foreground text-sm">Не отримали код?</span>
+          <Button variant={'ghost'} size={'sm'} className="text-blue-200">
             Надіслати знову
           </Button>
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <Button>Перевірити</Button>
-        <Button
-          variant={"outline"}
-          onClick={() => history.back()}
-          type="button"
-        >
+        <Button variant={'outline'} onClick={() => history.back()} type="button">
           <span>Повернутись</span>
         </Button>
       </div>

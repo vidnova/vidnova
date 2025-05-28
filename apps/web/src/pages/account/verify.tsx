@@ -1,4 +1,4 @@
-import { VerifyAccountForm } from "@/modules/account/verify";
+import { VerifyAccountForm } from '@/modules/account/verify';
 
 export default function VerifyAccount() {
   return (

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@ecorally/ui';
 import {
   Command,
   CommandEmpty,
@@ -6,19 +6,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+} from '@ecorally/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@ecorally/ui';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { useState } from 'react';
 
 export const RegionCombobox = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   return (
     <Popover>
@@ -29,7 +24,7 @@ export const RegionCombobox = () => {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {"Виберіть область..."}
+          {'Виберіть область...'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -40,18 +35,17 @@ export const RegionCombobox = () => {
             <CommandEmpty>Область не знайдена.</CommandEmpty>
             <CommandGroup>
               <CommandItem
-                value={"Дніпропетровська"}
+                value={'Дніпропетровська'}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  setValue(currentValue === value ? '' : currentValue);
                   setOpen(false);
                 }}
               >
-                {"Дніпропетровська"}
+                {'Дніпропетровська'}
                 <Check
-                  className={cn(
-                    "ml-auto",
-                    value === "Дніпропетровська" ? "opacity-100" : "opacity-0"
-                  )}
+                  className={`ml-auto ${
+                    value === 'Дніпропетровська' ? 'opacity-100' : 'opacity-0'
+                  }`}
                 />
               </CommandItem>
             </CommandGroup>

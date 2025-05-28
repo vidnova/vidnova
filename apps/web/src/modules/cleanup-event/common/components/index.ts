@@ -1,1 +1,1 @@
-export * from "./CleanupEventCard";
+export * from './CleanupEventCard';

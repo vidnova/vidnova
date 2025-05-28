@@ -1,4 +1,4 @@
-import { getEventStatus, EventStatusType } from "./constants/eventStatuses";
+import { getEventStatus, EventStatusType } from './constants/eventStatuses';
 
 interface EventStatusProps {
   status: EventStatusType;

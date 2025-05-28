@@ -1,5 +1,4 @@
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Input, Textarea } from '@ecorally/ui';
 import {
   ChooseRegionCombobox,
   ChooseSettlementCombobox,
@@ -9,8 +8,8 @@ import {
   InstrumentDialog,
   SelectImageInput,
   StartEventDatePicker,
-} from "./components";
-import { ArrowRight } from "lucide-react";
+} from './components';
+import { ArrowRight } from 'lucide-react';
 
 export const CreateCleanupEventForm = () => {
   return (

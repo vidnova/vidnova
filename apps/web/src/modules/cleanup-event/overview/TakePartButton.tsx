@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { UserMinus, UserPlus } from "lucide-react";
+import { Button } from '@ecorally/ui';
+import { UserMinus, UserPlus } from 'lucide-react';
 
 export const TakePartButton = ({ isTaken }: { isTaken: boolean }) => {
   return (
-    <Button variant={isTaken ? "destructive" : "default"}>
+    <Button variant={isTaken ? 'destructive' : 'default'}>
       {!isTaken ? (
         <>
           <UserPlus />

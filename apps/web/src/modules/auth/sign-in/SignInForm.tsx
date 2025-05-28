@@ -1,8 +1,7 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SubmitButton } from "../shared/SubmitButton";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { SubmitButton } from '../shared/SubmitButton';
+import { Button, Input } from '@ecorally/ui';
 
 export default function SignInForm() {
   const router = useRouter();
@@ -47,7 +46,11 @@ export default function SignInForm() {
           <SubmitButton text="Продолжити" />
         </form>
 
-        <Button variant="outline" className="w-full mt-1" onClick={() => router.push("/auth/sign-up")}>
+        <Button
+          variant="outline"
+          className="w-full mt-1"
+          onClick={() => router.push('/auth/sign-up')}
+        >
           Створити акаунт
         </Button>
       </div>

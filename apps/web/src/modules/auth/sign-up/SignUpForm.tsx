@@ -1,8 +1,7 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SubmitButton } from "../shared/SubmitButton";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { SubmitButton } from '../shared/SubmitButton';
+import { Button, Input } from '@ecorally/ui';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -10,7 +9,9 @@ export default function SignUpForm() {
   return (
     <section className="relative flex items-center justify-center min-screen bg-background dark:bg-background">
       <div className="w-full max-w-sm p-8 space-y-2 rounded-2xl shadow-lg bg-secondary/50 dark:bg-input/50">
-        <h2 className="text-2xl font-bold text-left text-primary-foreground">Створити обліковий запис</h2>
+        <h2 className="text-2xl font-bold text-left text-primary-foreground">
+          Створити обліковий запис
+        </h2>
 
         <p className="text-sm text-muted-foreground text-left">
           Створіть обліковий запис, щоб користуватися всіми можливостями додатку
@@ -49,7 +50,11 @@ export default function SignUpForm() {
           <SubmitButton text="Зареєструватися" />
         </form>
 
-        <Button variant="outline" className="w-full mt-1" onClick={() => router.push("/auth/sign-in")}>
+        <Button
+          variant="outline"
+          className="w-full mt-1"
+          onClick={() => router.push('/auth/sign-in')}
+        >
           Назад
         </Button>
       </div>

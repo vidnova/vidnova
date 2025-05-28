@@ -1,6 +1,6 @@
-import { CameraIcon } from "lucide-react";
-import Image from "next/image";
-import { useRef, useState } from "react";
+import { CameraIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
 
 export const SelectImageInput = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -13,13 +13,7 @@ export const SelectImageInput = () => {
 
   return (
     <div className="w-full max-w-[400px] rounded-2xl h-[400px]">
-      <input
-        ref={inputFileRef}
-        onChange={handleImageChange}
-        type="file"
-        accept="image/*"
-        hidden
-      />
+      <input ref={inputFileRef} onChange={handleImageChange} type="file" accept="image/*" hidden />
       <button
         onClick={() => inputFileRef.current?.click()}
         type="button"
@@ -28,9 +22,7 @@ export const SelectImageInput = () => {
         {selectedImage ? (
           <Image
             src={URL.createObjectURL(selectedImage)}
-            className={
-              "object-cover max-w-xl w-full h-full hover:opacity-70 transition-opacity"
-            }
+            className={'object-cover max-w-xl w-full h-full hover:opacity-70 transition-opacity'}
             alt="Camera"
             width={576}
             height={320}

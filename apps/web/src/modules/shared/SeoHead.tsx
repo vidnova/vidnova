@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 type SeoHeadProps = {
   title: string;
@@ -12,10 +12,10 @@ export const SeoHead = ({
   title,
   locale,
   description,
-  image = locale === "uk"
-    ? "https://ecorally.vercel.app/og_uk.png"
-    : "https://ecorally.vercel.app/og_en.png",
-  url = "https://ecorally.vercel.app/",
+  image = locale === 'uk'
+    ? 'https://ecorally.vercel.app/og_uk.png'
+    : 'https://ecorally.vercel.app/og_en.png',
+  url = 'https://ecorally.vercel.app/',
 }: SeoHeadProps) => {
   return (
     <Head>

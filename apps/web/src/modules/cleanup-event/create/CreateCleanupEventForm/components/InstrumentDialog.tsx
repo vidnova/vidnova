@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Button,
+  Checkbox,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { Shovel } from "lucide-react";
-import { useState } from "react";
+  Input,
+  Label,
+} from '@ecorally/ui';
+import { Dialog, DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { Shovel } from 'lucide-react';
+import { useState } from 'react';
 
 type Instrument = {
   id: string;
@@ -17,9 +17,9 @@ type Instrument = {
 };
 
 const instruments: Instrument[] = [
-  { id: "1", name: "Інструмент 1" },
-  { id: "2", name: "Інструмент 2" },
-  { id: "3", name: "Інструмент 3" },
+  { id: '1', name: 'Інструмент 1' },
+  { id: '2', name: 'Інструмент 2' },
+  { id: '3', name: 'Інструмент 3' },
 ];
 
 export const InstrumentDialog = () => {
@@ -29,7 +29,7 @@ export const InstrumentDialog = () => {
     setSelected((prev) =>
       id in prev
         ? Object.fromEntries(Object.entries(prev).filter(([key]) => key !== id))
-        : { ...prev, [id]: 1 }
+        : { ...prev, [id]: 1 },
     );
   };
 
@@ -57,10 +57,7 @@ export const InstrumentDialog = () => {
         </DialogHeader>
         <div className="space-y-4 pt-2">
           {instruments.map((instrument) => (
-            <div
-              key={instrument.id}
-              className="flex items-center justify-between gap-4"
-            >
+            <div key={instrument.id} className="flex items-center justify-between gap-4">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id={instrument.id}
@@ -75,10 +72,8 @@ export const InstrumentDialog = () => {
                   type="number"
                   min={1}
                   disabled={!selected[instrument.id]}
-                  value={selected[instrument.id] ?? ""}
-                  onChange={(e) =>
-                    handleQuantityChange(instrument.id, e.target.value)
-                  }
+                  value={selected[instrument.id] ?? ''}
+                  onChange={(e) => handleQuantityChange(instrument.id, e.target.value)}
                   className="w-16"
                 />
               </div>

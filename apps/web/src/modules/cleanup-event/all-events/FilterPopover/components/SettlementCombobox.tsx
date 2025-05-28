@@ -1,24 +1,20 @@
-import { Button } from "@/components/ui/button";
 import {
-  Command,
+  Button,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+} from '@ecorally/ui';
+import { Check, ChevronsUpDown, Command } from 'lucide-react';
+import { useState } from 'react';
 
 export const SettlementCombobox = () => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   return (
     <Popover>
@@ -29,7 +25,7 @@ export const SettlementCombobox = () => {
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {"Виберіть місто..."}
+          {'Виберіть місто...'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -40,19 +36,14 @@ export const SettlementCombobox = () => {
             <CommandEmpty>Місто не знайдено.</CommandEmpty>
             <CommandGroup>
               <CommandItem
-                value={"Дніпро"}
+                value={'Дніпро'}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                  setValue(currentValue === value ? '' : currentValue);
                   setOpen(false);
                 }}
               >
-                {"Дніпро"}
-                <Check
-                  className={cn(
-                    "ml-auto",
-                    value === "Дніпро" ? "opacity-100" : "opacity-0"
-                  )}
-                />
+                {'Дніпро'}
+                <Check className={`ml-auto ${value === 'Дніпро' ? 'opacity-100' : 'opacity-0'}`} />
               </CommandItem>
             </CommandGroup>
           </CommandList>
