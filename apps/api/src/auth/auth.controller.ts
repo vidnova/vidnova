@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Req, Res} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -32,11 +32,11 @@ export class AuthController {
   async signUp(@Body() data: SignUpDto, @Res() res: FastifyReply) {
     const result = await this.authService.signUp(data);
 
-    // res.cookie('refreshToken', result.refreshToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'strict',
-    // });
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
     return res.send({ accessToken: result.accessToken });
   }
@@ -63,11 +63,11 @@ export class AuthController {
   async signIn(@Body() data: SignInDto, @Res() res: FastifyReply) {
     const result = await this.authService.signIn(data);
 
-    // res.cookie('refreshToken', result.refreshToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'strict',
-    // });
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
     return res.send({ accessToken: result.accessToken });
   }
@@ -78,11 +78,11 @@ export class AuthController {
     const refreshToken = req.cookies.refreshToken as string | undefined;
     const result = await this.authService.refreshToken(accessToken, refreshToken);
 
-    // res.cookie('refreshToken', result.refreshToken, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === 'production',
-    //   sameSite: 'strict',
-    // });
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
     return res.send({
       accessToken: result.accessToken,
