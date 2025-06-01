@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { RedisService } from '../redis/redis.service';
 import axios, { AxiosResponse } from 'axios';
-import * as osmtogeojson from 'osmtogeojson';
+import osmtogeojson from 'osmtogeojson';
 import type { GeoJSON } from 'geojson';
 import { OverpassResponse } from './interfaces/overpass-response';
 

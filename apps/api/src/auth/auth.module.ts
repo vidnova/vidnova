@@ -4,10 +4,28 @@ import { AuthController } from './auth.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { OtpService } from '../otp/otp.service';
 import { RedisModule } from '../redis/redis.module';
+import { SignUpUseCase } from './application/use-cases/sign-up.use-case';
+import { SignInUseCase } from './application/use-cases/sign-in.use-case';
+import { RefreshTokensUseCase } from './application/use-cases/refresh-tokens.use-case';
+import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
+import { UserModule } from '../user/user.module';
+import { BlacklistedTokenRepository } from './infrastructure/repositories/blacklisted-token.repository';
+import { OtpModule } from '../otp/otp.module';
+import { VerifyOtpUseCase } from '../otp/application/use-cases/verify-otp.use-case';
 
 @Module({
-  imports: [RedisModule],
+  imports: [RedisModule, UserModule, OtpModule],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, OtpService],
+  providers: [
+    AuthService,
+    PrismaService,
+    OtpService,
+    SignUpUseCase,
+    SignInUseCase,
+    BlacklistedTokenRepository,
+    RefreshTokensUseCase,
+    ResetPasswordUseCase,
+    VerifyOtpUseCase
+  ],
 })
 export class AuthModule {}

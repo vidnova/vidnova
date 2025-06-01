@@ -11,8 +11,8 @@ import {
 import { JsonWebTokenError } from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import * as tokenUtils from '../common/utils/tokens.util';
-import { Prisma } from '@prisma/client';
 import { OtpService } from '../otp/otp.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -77,15 +77,11 @@ describe('AuthService', () => {
     beforeEach(() => {
       jest.spyOn(bcrypt as any, 'hash').mockResolvedValue(hashedPassword);
       jest.spyOn(tokenUtils, 'createAccessToken').mockReturnValue(accessToken);
-      jest
-        .spyOn(tokenUtils, 'createRefreshToken')
-        .mockReturnValue(refreshToken);
+      jest.spyOn(tokenUtils, 'createRefreshToken').mockReturnValue(refreshToken);
     });
 
     it('should successfully sign up a user and return tokens', async () => {
-      const createUserSpy = jest
-        .spyOn(prismaService.user, 'create')
-        .mockResolvedValue(user);
+      const createUserSpy = jest.spyOn(prismaService.user, 'create').mockResolvedValue(user);
 
       const result = await authService.signUp(signUpDto);
 
@@ -104,18 +100,14 @@ describe('AuthService', () => {
 
     it('should throw ConflictException if email already exists', async () => {
       jest.spyOn(prismaService.user, 'create').mockRejectedValue(
-        new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        new PrismaClientKnownRequestError('Unique constraint failed', {
           code: 'P2002',
           clientVersion: '',
         }),
       );
 
-      await expect(authService.signUp(signUpDto)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(authService.signUp(signUpDto)).rejects.toThrow(
-        'Email already exists',
-      );
+      await expect(authService.signUp(signUpDto)).rejects.toThrow(ConflictException);
+      await expect(authService.signUp(signUpDto)).rejects.toThrow('Email already exists');
     });
 
     it('should throw original error for non-P2002 errors', async () => {
@@ -146,9 +138,7 @@ describe('AuthService', () => {
     beforeEach(() => {
       jest.spyOn(bcrypt as any, 'compare').mockResolvedValue(true);
       jest.spyOn(tokenUtils, 'createAccessToken').mockReturnValue(accessToken);
-      jest
-        .spyOn(tokenUtils, 'createRefreshToken')
-        .mockReturnValue(refreshToken);
+      jest.spyOn(tokenUtils, 'createRefreshToken').mockReturnValue(refreshToken);
     });
 
     it('should successfully sign in a user and return tokens', async () => {
@@ -159,10 +149,7 @@ describe('AuthService', () => {
       expect(prismaService.user.findUnique).toHaveBeenCalledWith({
         where: { email: signInDto.email },
       });
-      expect(bcrypt.compare).toHaveBeenCalledWith(
-        signInDto.password,
-        user.password,
-      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(signInDto.password, user.password);
       expect(tokenUtils.createAccessToken).toHaveBeenCalledWith(user.id);
       expect(tokenUtils.createRefreshToken).toHaveBeenCalledWith(user.id);
       expect(result).toEqual({ accessToken, refreshToken });
@@ -171,24 +158,16 @@ describe('AuthService', () => {
     it('should throw NotFoundException if user is not found', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
 
-      await expect(authService.signIn(signInDto)).rejects.toThrow(
-        NotFoundException,
-      );
-      await expect(authService.signIn(signInDto)).rejects.toThrow(
-        'User not found',
-      );
+      await expect(authService.signIn(signInDto)).rejects.toThrow(NotFoundException);
+      await expect(authService.signIn(signInDto)).rejects.toThrow('User not found');
     });
 
     it('should throw ConflictException if password is invalid', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(user);
       jest.spyOn(bcrypt as any, 'compare').mockResolvedValue(false);
 
-      await expect(authService.signIn(signInDto)).rejects.toThrow(
-        ConflictException,
-      );
-      await expect(authService.signIn(signInDto)).rejects.toThrow(
-        'Invalid data provided',
-      );
+      await expect(authService.signIn(signInDto)).rejects.toThrow(ConflictException);
+      await expect(authService.signIn(signInDto)).rejects.toThrow('Invalid data provided');
     });
   });
 
@@ -207,12 +186,8 @@ describe('AuthService', () => {
         throw new JsonWebTokenError('Invalid token');
       });
 
-      jest
-        .spyOn(tokenUtils, 'createAccessToken')
-        .mockResolvedValue(newAccessToken as never);
-      jest
-        .spyOn(tokenUtils, 'createRefreshToken')
-        .mockResolvedValue(newRefreshToken as never);
+      jest.spyOn(tokenUtils, 'createAccessToken').mockResolvedValue(newAccessToken as never);
+      jest.spyOn(tokenUtils, 'createRefreshToken').mockResolvedValue(newRefreshToken as never);
     });
 
     afterEach(() => {
@@ -250,26 +225,19 @@ describe('AuthService', () => {
         updatedAt: new Date(),
       });
 
-      await expect(
-        authService.refreshToken(validAccessToken, validRefreshToken),
-      ).rejects.toThrow(ForbiddenException);
-      await expect(
-        authService.refreshToken(validAccessToken, validRefreshToken),
-      ).rejects.toThrow('Refresh token is revoked');
+      await expect(authService.refreshToken(validAccessToken, validRefreshToken)).rejects.toThrow(
+        ForbiddenException,
+      );
+      await expect(authService.refreshToken(validAccessToken, validRefreshToken)).rejects.toThrow(
+        'Refresh token is revoked',
+      );
     });
 
     it('should blacklist both tokens and return new ones if both are valid and userId matches', async () => {
-      jest
-        .spyOn(prismaService.blacklistToken, 'findUnique')
-        .mockResolvedValue(null);
-      jest
-        .spyOn(prismaService.blacklistToken, 'createMany')
-        .mockResolvedValue({ count: 2 });
+      jest.spyOn(prismaService.blacklistToken, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prismaService.blacklistToken, 'createMany').mockResolvedValue({ count: 2 });
 
-      const result = await authService.refreshToken(
-        validAccessToken,
-        validRefreshToken,
-      );
+      const result = await authService.refreshToken(validAccessToken, validRefreshToken);
 
       expect(prismaService.blacklistToken.createMany).toHaveBeenCalledWith({
         data: [
@@ -285,17 +253,10 @@ describe('AuthService', () => {
     });
 
     it('should only blacklist refresh token if access token is not provided', async () => {
-      jest
-        .spyOn(prismaService.blacklistToken, 'findUnique')
-        .mockResolvedValue(null);
-      jest
-        .spyOn(prismaService.blacklistToken, 'createMany')
-        .mockResolvedValue({ count: 1 });
+      jest.spyOn(prismaService.blacklistToken, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prismaService.blacklistToken, 'createMany').mockResolvedValue({ count: 1 });
 
-      const result = await authService.refreshToken(
-        undefined,
-        validRefreshToken,
-      );
+      const result = await authService.refreshToken(undefined, validRefreshToken);
 
       expect(prismaService.blacklistToken.createMany).toHaveBeenCalledWith({
         data: [{ token: validRefreshToken, userId }],
@@ -312,12 +273,12 @@ describe('AuthService', () => {
         .spyOn(prismaService.blacklistToken, 'findUnique')
         .mockRejectedValue(new Error('Unexpected error'));
 
-      await expect(
-        authService.refreshToken(validAccessToken, validRefreshToken),
-      ).rejects.toThrow(InternalServerErrorException);
-      await expect(
-        authService.refreshToken(validAccessToken, validRefreshToken),
-      ).rejects.toThrow('Failed to refresh token');
+      await expect(authService.refreshToken(validAccessToken, validRefreshToken)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+      await expect(authService.refreshToken(validAccessToken, validRefreshToken)).rejects.toThrow(
+        'Failed to refresh token',
+      );
     });
   });
 
@@ -347,23 +308,15 @@ describe('AuthService', () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
       mockOtpService.checkOtp.mockResolvedValue(true);
       jest.spyOn(bcrypt as any, 'hash').mockResolvedValue('hashedPassword');
-      jest
-        .spyOn(prismaService.user, 'update')
-        .mockResolvedValue(mockUser as any);
+      jest.spyOn(prismaService.user, 'update').mockResolvedValue(mockUser as any);
 
       const result = await authService.resetPassword(resetPasswordMockData);
 
       expect(prismaService.user.findUnique).toHaveBeenCalledWith({
         where: { email: resetPasswordMockData.email },
       });
-      expect(mockOtpService.checkOtp).toHaveBeenCalledWith(
-        resetPasswordMockData.code,
-        userId,
-      );
-      expect(bcrypt.hash).toHaveBeenCalledWith(
-        resetPasswordMockData.password,
-        8,
-      );
+      expect(mockOtpService.checkOtp).toHaveBeenCalledWith(resetPasswordMockData.code, userId);
+      expect(bcrypt.hash).toHaveBeenCalledWith(resetPasswordMockData.password, 8);
       expect(prismaService.user.update).toHaveBeenCalledWith({
         where: { id: userId },
         data: { password: 'hashedPassword' },
@@ -374,30 +327,26 @@ describe('AuthService', () => {
     it('should throw ConflictException when user is not found', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
 
-      await expect(
-        authService.resetPassword(resetPasswordMockData),
-      ).rejects.toThrow(new ConflictException('Invalid data provided'));
+      await expect(authService.resetPassword(resetPasswordMockData)).rejects.toThrow(
+        new ConflictException('Invalid data provided'),
+      );
     });
 
     it('should throw ConflictException when provided code is invalid', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
       mockOtpService.checkOtp.mockResolvedValue(false);
 
-      await expect(
-        authService.resetPassword(resetPasswordMockData),
-      ).rejects.toThrow(new ConflictException('Invalid data provided'));
+      await expect(authService.resetPassword(resetPasswordMockData)).rejects.toThrow(
+        new ConflictException('Invalid data provided'),
+      );
     });
 
     it('should throw InternalServerErrorException for unexpected errors', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
       mockOtpService.checkOtp.mockResolvedValue(true);
-      jest
-        .spyOn(bcrypt as any, 'hash')
-        .mockRejectedValue(new Error('Unexpected error'));
+      jest.spyOn(bcrypt as any, 'hash').mockRejectedValue(new Error('Unexpected error'));
 
-      await expect(
-        authService.resetPassword(resetPasswordMockData),
-      ).rejects.toThrow(
+      await expect(authService.resetPassword(resetPasswordMockData)).rejects.toThrow(
         new InternalServerErrorException('Failed to reset password'),
       );
     });

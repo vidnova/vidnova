@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { OtpController } from './otp.controller';
 import { OtpService } from './otp.service';
 import { AuthGuard } from '../common/guards/auth.guard';
-import { CheckOtpDto } from './dto/check-otp.dto';
+import { CheckOtpDto } from './infrastructure/dto/check-otp.dto';
 import {
   ConflictException,
   InternalServerErrorException,

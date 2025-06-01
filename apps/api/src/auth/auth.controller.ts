@@ -1,10 +1,10 @@
 import { Body, Controller, Patch, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/sign-up.dto';
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { SignInDto } from './dto/sign-in.dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SignUpDto } from './infrastructure/dto/sign-up.dto';
+import { SignInDto } from './infrastructure/dto/sign-in.dto';
+import { ResetPasswordDto } from './infrastructure/dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -32,11 +32,11 @@ export class AuthController {
   async signUp(@Body() data: SignUpDto, @Res() res: FastifyReply) {
     const result = await this.authService.signUp(data);
 
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    // res.cookie('refreshToken', result.refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    // });
 
     return res.send({ accessToken: result.accessToken });
   }
@@ -63,11 +63,11 @@ export class AuthController {
   async signIn(@Body() data: SignInDto, @Res() res: FastifyReply) {
     const result = await this.authService.signIn(data);
 
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    // res.cookie('refreshToken', result.refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    // });
 
     return res.send({ accessToken: result.accessToken });
   }
@@ -76,16 +76,13 @@ export class AuthController {
   async refreshToken(@Res() res: FastifyReply, @Req() req: FastifyRequest) {
     const accessToken = req.headers['authorization'];
     const refreshToken = req.cookies.refreshToken as string | undefined;
-    const result = await this.authService.refreshToken(
-      accessToken,
-      refreshToken,
-    );
+    const result = await this.authService.refreshToken(accessToken, refreshToken);
 
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    // res.cookie('refreshToken', result.refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    // });
 
     return res.send({
       accessToken: result.accessToken,
@@ -113,10 +110,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'Provided code is invalid' })
-  async resetPassword(
-    @Res() res: FastifyReply,
-    @Body() data: ResetPasswordDto,
-  ) {
+  async resetPassword(@Res() res: FastifyReply, @Body() data: ResetPasswordDto) {
     const result = await this.authService.resetPassword(data);
 
     res.send({ message: result });

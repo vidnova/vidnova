@@ -9,10 +9,10 @@ import {
 import { OtpService } from './otp.service';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CheckOtpDto } from './dto/check-otp.dto';
+import { CheckOtpDto } from './infrastructure/dto/check-otp.dto';
 import { FastifyRequest } from 'fastify';
 import { User } from '@prisma/client';
-import { SendOtpDto } from './dto/send-otp.dto';
+import { SendOtpDto } from './infrastructure/dto/send-otp.dto';
 
 @Controller('otp')
 export class OtpController {

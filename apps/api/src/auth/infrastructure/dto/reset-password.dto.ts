@@ -6,7 +6,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { Match } from '../../common/decorators';
+import { Match } from '../../../common/decorators';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResetPasswordDto {
