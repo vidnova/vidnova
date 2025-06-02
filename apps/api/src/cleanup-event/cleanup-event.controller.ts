@@ -12,11 +12,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CleanupEventService } from './cleanup-event.service';
-import { UpsertCleanupEventDto } from './dto/upsert-cleanup-event.dto';
+import { UpsertCleanupEventDto } from './infrastructure/dto/upsert-cleanup-event.dto';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { User } from '@prisma/client';
 import { AuthGuard } from '../common/guards/auth.guard';
-import { GetCleanupEventsQueryDto } from './dto/get-cleanup-events-query';
+import { GetCleanupEventsQueryDto } from './infrastructure/dto/get-cleanup-events-query';
 
 @Controller('cleanup-events')
 export class CleanupEventController {

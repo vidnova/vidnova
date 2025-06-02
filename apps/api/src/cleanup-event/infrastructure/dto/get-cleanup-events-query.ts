@@ -9,11 +9,11 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
-import { IsDateAfter } from '../../common/decorators';
+import { IsDateAfter } from '../../../common/decorators';
 import {
   SortBy,
   SortOrder,
-} from '../enum/get-cleanup-events-sort-options.enum';
+} from '../../enum/get-cleanup-events-sort-options.enum';
 
 export class GetCleanupEventsQueryDto {
   @IsOptional()

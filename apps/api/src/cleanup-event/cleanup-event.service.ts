@@ -4,31 +4,28 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpsertCleanupEventDto } from './dto/upsert-cleanup-event.dto';
+import { UpsertCleanupEventDto } from './infrastructure/dto/upsert-cleanup-event.dto';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { RedisService } from '../redis/redis.service';
-import { CleanupEvent } from './types/cleanup-event';
 import { Prisma } from '@prisma/client';
-import { GetCleanupEventsQueryDto } from './dto/get-cleanup-events-query';
+import { GetCleanupEventsQueryDto } from './infrastructure/dto/get-cleanup-events-query';
 import { SortBy } from './enum/get-cleanup-events-sort-options.enum';
 import { SettlementService } from '../settlement/settlement.service';
 import { RegionService } from 'src/region/region.service';
+import { GetCleanupEventUseCase } from './application/use-cases/get-cleanup-event.use-case';
 
 @Injectable()
 export class CleanupEventService {
-  private readonly logger = new Logger(CleanupEventService.name);
-  private readonly CACHE_TTL = 300;
-
   constructor(
     private readonly prisma: PrismaService,
     private readonly redisService: RedisService,
     private readonly settlementService: SettlementService,
     private readonly regionService: RegionService,
+    private readonly getCleanupEventUseCase: GetCleanupEventUseCase,
   ) {
     axiosRetry(axios, {
       retries: 3,
@@ -36,72 +33,8 @@ export class CleanupEventService {
     });
   }
 
-  async getCleanupEventById(cleanupEventId: string) {
-    const cacheKey = `cleanup-event:${cleanupEventId}`;
-    const cachedEvent = await this.redisService.get(cacheKey);
-    if (cachedEvent) {
-      this.logger.debug(`Cache hit for cleanup event ${cleanupEventId}`);
-      return JSON.parse(cachedEvent) as CleanupEvent;
-    }
-
-    try {
-      const cleanupEvent = await this.prisma.cleanupEvent.findUnique({
-        where: { id: cleanupEventId },
-        include: {
-          location: {
-            select: {
-              latitude: true,
-              longitude: true,
-              region: {
-                select: {
-                  latitude: true,
-                  longitude: true,
-                  name: true,
-                },
-              },
-              settlement: {
-                select: {
-                  name: true,
-                  latitude: true,
-                  longitude: true,
-                },
-              },
-            },
-          },
-          takePart: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!cleanupEvent) {
-        throw new NotFoundException(
-          `Cleanup event with ID ${cleanupEventId} not found`,
-        );
-      }
-
-      await this.redisService.set(
-        cacheKey,
-        JSON.stringify(cleanupEvent),
-        this.CACHE_TTL,
-      );
-
-      return cleanupEvent;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
-      throw new InternalServerErrorException(
-        'Failed to retrieve cleanup event',
-      );
-    }
+  async getCleanupEvent(cleanupEventId: string) {
+    return this.getCleanupEventUseCase.execute(cleanupEventId);
   }
 
   async createCleanupEvent(data: UpsertCleanupEventDto, userId: string) {
@@ -115,23 +48,18 @@ export class CleanupEventService {
         data.regionId,
       );
       if (!isPointInsideInCorrectRegion)
-        throw new ConflictException(
-          'The selected point is outside the selected settlement',
-        );
+        throw new ConflictException('The selected point is outside the selected settlement');
 
       if (data.settlementId) {
-        isPointInsideInCorrectSettlement =
-          await this.settlementService.isPointInSettlement(
-            data.location.latitude,
-            data.location.longitude,
-            data.settlementId,
-          );
+        isPointInsideInCorrectSettlement = await this.settlementService.isPointInSettlement(
+          data.location.latitude,
+          data.location.longitude,
+          data.settlementId,
+        );
       }
 
       if (!isPointInsideInCorrectSettlement)
-        throw new ConflictException(
-          'The selected point is outside the selected region',
-        );
+        throw new ConflictException('The selected point is outside the selected region');
 
       return this.prisma.$transaction(async () => {
         const cleanupEvent = await this.prisma.cleanupEvent.create({
@@ -178,26 +106,18 @@ export class CleanupEventService {
     }
   }
 
-  async updateCleanupEvent(
-    data: UpsertCleanupEventDto,
-    cleanupEventId: string,
-    userId: string,
-  ) {
+  async updateCleanupEvent(data: UpsertCleanupEventDto, cleanupEventId: string, userId: string) {
     try {
       const cleanupEvent = await this.prisma.cleanupEvent.findUnique({
         where: { id: cleanupEventId },
       });
 
       if (!cleanupEvent) {
-        throw new NotFoundException(
-          `Event with ID ${cleanupEventId} not found.`,
-        );
+        throw new NotFoundException(`Event with ID ${cleanupEventId} not found.`);
       }
 
       if (cleanupEvent.organizerId !== userId) {
-        throw new ForbiddenException(
-          'You have no access to change this event.',
-        );
+        throw new ForbiddenException('You have no access to change this event.');
       }
 
       if (data.startDate && data.endDate && data.startDate > data.endDate) {
@@ -206,13 +126,10 @@ export class CleanupEventService {
 
       if (data.dates) {
         const invalidDates = data.dates.filter(
-          (dateDto) =>
-            dateDto.date < data.startDate || dateDto.date > data.endDate,
+          (dateDto) => dateDto.date < data.startDate || dateDto.date > data.endDate,
         );
         if (invalidDates.length > 0) {
-          throw new ConflictException(
-            'Dates must be in scope startDate and endDate.',
-          );
+          throw new ConflictException('Dates must be in scope startDate and endDate.');
         }
       }
 
@@ -226,24 +143,19 @@ export class CleanupEventService {
       );
 
       if (!isPointInsideCorrectRegion) {
-        throw new ConflictException(
-          'The selected point is outside the selected region.',
-        );
+        throw new ConflictException('The selected point is outside the selected region.');
       }
 
       if (data.settlementId) {
-        isPointInsideCorrectSettlement =
-          await this.settlementService.isPointInSettlement(
-            data.location.latitude,
-            data.location.longitude,
-            data.settlementId,
-          );
+        isPointInsideCorrectSettlement = await this.settlementService.isPointInSettlement(
+          data.location.latitude,
+          data.location.longitude,
+          data.settlementId,
+        );
       }
 
       if (!isPointInsideCorrectSettlement) {
-        throw new ConflictException(
-          'The selected point is outside the selected settlement.',
-        );
+        throw new ConflictException('The selected point is outside the selected settlement.');
       }
 
       const updatedEvent = await this.prisma.$transaction(async (tx) => {
@@ -361,15 +273,11 @@ export class CleanupEventService {
       });
 
       if (!cleanupEvent) {
-        throw new NotFoundException(
-          `Cleanup event with ID ${cleanupEventId} not found.`,
-        );
+        throw new NotFoundException(`Cleanup event with ID ${cleanupEventId} not found.`);
       }
 
       if (cleanupEvent.organizerId !== userId) {
-        throw new ForbiddenException(
-          'You have no access to change this content.',
-        );
+        throw new ForbiddenException('You have no access to change this content.');
       }
 
       await this.prisma.cleanupEvent.delete({
@@ -380,9 +288,7 @@ export class CleanupEventService {
     } catch (error) {
       if (error instanceof HttpException) throw error;
 
-      throw new InternalServerErrorException(
-        'Failed to delete a cleanup event.',
-      );
+      throw new InternalServerErrorException('Failed to delete a cleanup event.');
     }
   }
 
