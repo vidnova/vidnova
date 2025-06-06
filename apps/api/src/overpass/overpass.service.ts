@@ -7,14 +7,14 @@ import { RedisService } from '../redis/redis.service';
 import axios, { AxiosResponse } from 'axios';
 import osmtogeojson from 'osmtogeojson';
 import type { GeoJSON } from 'geojson';
-import { OverpassResponse } from './interfaces/overpass-response';
+import { OverpassResponse } from './domain/interfaces/overpass-response';
 
 @Injectable()
-export class OsmService {
+export class OverpassService {
   private readonly overpassUrl =
     process.env.OVERPASS_API_URL || 'https://overpass-api.de/api/interpreter';
   private readonly cacheTTL = 30 * 24 * 60 * 60;
-  private readonly logger = new Logger(OsmService.name);
+  private readonly logger = new Logger(OverpassService.name);
 
   constructor(private readonly redis: RedisService) {}
 

@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module';
 import { CleanupEventModule } from './cleanup-event/cleanup-event.module';
 import { ContaminatedPointModule } from './contaminated-point/contaminated-point.module';
 import { SettlementModule } from './settlement/settlement.module';
-import { OsmModule } from './osm/osm.module';
+import { OverpassModule } from './overpass/overpass.module';
 import { RegionModule } from './region/region.module';
 
 @Module({
@@ -24,7 +24,7 @@ import { RegionModule } from './region/region.module';
     CleanupEventModule,
     ContaminatedPointModule,
     SettlementModule,
-    OsmModule,
+    OverpassModule,
     RegionModule,
   ],
   controllers: [AppController],

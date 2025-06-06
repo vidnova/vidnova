@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { RegionService } from './region.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisModule } from '../redis/redis.module';
-import { OsmModule } from '../osm/osm.module';
+import { OsmModule } from '../overpass/overpass.module';
 
 @Module({
   imports: [RedisModule, OsmModule],

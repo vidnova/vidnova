@@ -85,8 +85,6 @@ model Settlement {
   region             Region                 @relation(fields: [regionId], references: [id])
   locations          CleanupEventLocation[] @relation("SettlementToLocation")
   contaminatedPoints ContaminatedPoint[]    @relation("SettlementToContaminatedPoint")
-
-  @@unique([name, regionId])
 }
 
 model TakePart {

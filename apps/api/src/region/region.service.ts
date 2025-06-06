@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { OsmService } from '../osm/osm.service';
+import { OsmService } from '../overpass/overpass.service';
 import { PrismaService } from '../prisma/prisma.service';
 import * as turf from '@turf/turf';
 import {

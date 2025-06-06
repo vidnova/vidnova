@@ -4,7 +4,7 @@ import { CleanupEventController } from './cleanup-event.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisModule } from '../redis/redis.module';
 import { SettlementService } from '../settlement/settlement.service';
-import { OsmModule } from '../osm/osm.module';
+import { OsmModule } from '../overpass/overpass.module';
 import { RegionService } from 'src/region/region.service';
 
 @Module({

@@ -1,4 +1,3 @@
-import { type EventStatus } from '@prisma/client';
 import {
   IsArray,
   IsDate,
@@ -14,6 +13,7 @@ import { UpsertCleanupEventDateDto } from './upsert-cleanup-event-dates.dto';
 import { Type } from 'class-transformer';
 import { UpsertCleanupEquipmentDto } from './upsert-cleanup-equipment.dto';
 import { UpsertCleanupEventLocationDto } from './upsert-cleanup-event-location.dto';
+import { CleanupEventStatus } from '../../domain/enum/cleanup-event-status.dto';
 
 export class UpsertCleanupEventDto {
   @IsString()
@@ -35,7 +35,7 @@ export class UpsertCleanupEventDto {
   endDate: Date;
 
   @IsString()
-  status: EventStatus;
+  status: CleanupEventStatus;
 
   @IsArray()
   @ValidateNested({ each: true })

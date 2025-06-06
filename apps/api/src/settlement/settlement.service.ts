@@ -12,7 +12,7 @@ import {
   MultiPolygon,
   Polygon,
 } from 'geojson';
-import { OsmService } from '../osm/osm.service';
+import { OsmService } from '../overpass/overpass.service';
 
 @Injectable()
 export class SettlementService {

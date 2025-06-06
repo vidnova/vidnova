@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegionService } from '../region/region.service';
 import { SettlementService } from '../settlement/settlement.service';
 import { RedisModule } from '../redis/redis.module';
-import { OsmModule } from '../osm/osm.module';
+import { OsmModule } from '../overpass/overpass.module';
 
 describe('ContaminatedPointController', () => {
   let controller: ContaminatedPointController;

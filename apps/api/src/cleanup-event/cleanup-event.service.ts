@@ -8,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpsertCleanupEventDto } from './infrastructure/dto/upsert-cleanup-event.dto';
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
 import { RedisService } from '../redis/redis.service';
 import { Prisma } from '@prisma/client';
 import { GetCleanupEventsQueryDto } from './infrastructure/dto/get-cleanup-events-query';
@@ -17,6 +15,7 @@ import { SortBy } from './enum/get-cleanup-events-sort-options.enum';
 import { SettlementService } from '../settlement/settlement.service';
 import { RegionService } from 'src/region/region.service';
 import { GetCleanupEventUseCase } from './application/use-cases/get-cleanup-event.use-case';
+import { CreateCleanupEventUseCase } from './application/use-cases/create-cleanup-event.use-case';
 
 @Injectable()
 export class CleanupEventService {
@@ -26,84 +25,15 @@ export class CleanupEventService {
     private readonly settlementService: SettlementService,
     private readonly regionService: RegionService,
     private readonly getCleanupEventUseCase: GetCleanupEventUseCase,
-  ) {
-    axiosRetry(axios, {
-      retries: 3,
-      retryDelay: (retryCount: number) => retryCount * 1000,
-    });
-  }
+    private readonly createCleanupEventUseCase: CreateCleanupEventUseCase,
+  ) {}
 
   async getCleanupEvent(cleanupEventId: string) {
     return this.getCleanupEventUseCase.execute(cleanupEventId);
   }
 
   async createCleanupEvent(data: UpsertCleanupEventDto, userId: string) {
-    try {
-      let isPointInsideInCorrectRegion: boolean = false;
-      let isPointInsideInCorrectSettlement: boolean = false;
-
-      isPointInsideInCorrectRegion = await this.regionService.isPointInRegion(
-        data.location.latitude,
-        data.location.longitude,
-        data.regionId,
-      );
-      if (!isPointInsideInCorrectRegion)
-        throw new ConflictException('The selected point is outside the selected settlement');
-
-      if (data.settlementId) {
-        isPointInsideInCorrectSettlement = await this.settlementService.isPointInSettlement(
-          data.location.latitude,
-          data.location.longitude,
-          data.settlementId,
-        );
-      }
-
-      if (!isPointInsideInCorrectSettlement)
-        throw new ConflictException('The selected point is outside the selected region');
-
-      return this.prisma.$transaction(async () => {
-        const cleanupEvent = await this.prisma.cleanupEvent.create({
-          data: {
-            name: data.name,
-            description: data.description,
-            startDate: data.startDate,
-            endDate: data.endDate,
-            status: data.status,
-            imageUrl: data.imageUrl,
-            organizerId: userId,
-          },
-        });
-
-        await Promise.all([
-          this.prisma.cleanupEventLocation.create({
-            data: {
-              eventId: cleanupEvent.id,
-              ...data.location,
-              settlementId: data.settlementId,
-              regionId: data.regionId,
-            },
-          }),
-          this.prisma.cleanupEventDate.createMany({
-            data: data.dates.map((dateDto) => ({
-              eventId: cleanupEvent.id,
-              date: dateDto.date,
-            })),
-          }),
-          this.prisma.cleanupEquipment.createMany({
-            data: data.equipments.map((equipmentDto) => ({
-              eventId: cleanupEvent.id,
-              ...equipmentDto,
-            })),
-          }),
-        ]);
-
-        return cleanupEvent;
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-
-      throw new InternalServerErrorException('Failed to create cleanup event');
-    }
+    return this.createCleanupEventUseCase.execute(data, userId);
   }
 
   async updateCleanupEvent(data: UpsertCleanupEventDto, cleanupEventId: string, userId: string) {
