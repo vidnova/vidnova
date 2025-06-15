@@ -9,28 +9,27 @@ import {
 import * as bcrypt from 'bcrypt';
 import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
 import { UserRepository } from '../../../user/domain/interfaces/user-repository.interface';
-import { SignInDto } from '../../infrastructure/dto/sign-in.dto';
-import { USER_REPOSITORY } from '../../../user/tokens/user-repository.token';
+import { SignInCommand } from '../commands/sign-in.command';
 
 @Injectable()
 export class SignInUseCase {
-  constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
+  constructor(@Inject('USER_REPOSITORY') private readonly userRepository: UserRepository) {}
 
-  async execute(data: SignInDto) {
+  async execute(command: SignInCommand) {
     try {
-      const user = await this.userRepository.getByEmail(data.email);
+      const user = await this.userRepository.getByEmail(command.email);
 
       if (!user) {
         throw new NotFoundException('Invalid data provided');
       }
 
-      const isPasswordValid = await bcrypt.compare(data.password, user.getSnapshot().password);
+      const isPasswordValid = await bcrypt.compare(command.password, user.password);
       if (!isPasswordValid) {
         throw new ConflictException('Invalid data provided');
       }
 
-      const accessToken = createAccessToken(user.getSnapshot().id);
-      const refreshToken = createRefreshToken(user.getSnapshot().id);
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
 
       return { accessToken, refreshToken };
     } catch (error: unknown) {
@@ -39,7 +38,7 @@ export class SignInUseCase {
       }
 
       throw new InternalServerErrorException(
-        `Failed to sign-in; ${error instanceof Error ? error.message : error}`,
+        `Failed to sign-in; ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       );
     }
   }

@@ -11,70 +11,74 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { CleanupEventService } from './cleanup-event.service';
-import { UpsertCleanupEventDto } from './infrastructure/dto/upsert-cleanup-event.dto';
+import { CreateCleanupEventDto } from './dtos/upsert-cleanup-event.dto';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { User } from '@prisma/client';
 import { AuthGuard } from '../common/guards/auth.guard';
-import { GetCleanupEventsQueryDto } from './infrastructure/dto/get-cleanup-events-query';
+import { GetCleanupEventsQueryDto } from './dtos/get-cleanup-events-query';
+import { CreateCleanupEventUseCase } from './application/use-cases/create-cleanup-event.use-case';
+import { GetCleanupEventUseCase } from './application/use-cases/get-cleanup-event.use-case';
+import { GetCleanupEventsUseCase } from './application/use-cases/get-cleanup-events.use-case';
+import { UpdateCleanupEventUseCase } from './application/use-cases/update-cleanup-event.use-case';
+import { DeleteCleanupEventUseCase } from './application/use-cases/delete-cleanup-event.use-case';
+import { CreateCleanupEventCommand } from './application/commands/create-cleanup-event.command';
+import { CleanupEvent } from './domain/entities/cleanup-event.entity';
+import { GetCleanupEventCommand } from './application/commands/get-cleanup-event.command';
+import { GetCleanupEventsCommand } from './application/commands/get-cleanup-events.command';
+import { UpdateCleanupEventCommand } from './application/commands/update-cleanup-event.command';
+import { DeleteCleanupEventCommand } from './application/commands/delete-cleanup-event.command';
+import { ICreateCleanupEventDto } from '@ecorally/shared';
 
 @Controller('cleanup-events')
 export class CleanupEventController {
-  constructor(private readonly cleanupEventService: CleanupEventService) {}
+  constructor(
+    private readonly createCleanupEventUseCase: CreateCleanupEventUseCase,
+    private readonly getCleanupEventUseCase: GetCleanupEventUseCase,
+    private readonly getCleanupEventsUseCase: GetCleanupEventsUseCase,
+    private readonly updateCleanupEventUseCase: UpdateCleanupEventUseCase,
+    private readonly deleteCleanupEventUseCase: DeleteCleanupEventUseCase,
+  ) {}
 
   @Post('create')
   @UseGuards(AuthGuard)
   async createCleanupEvent(
     @Req() req: FastifyRequest,
-    @Res() res: FastifyReply,
-    @Body() data: UpsertCleanupEventDto,
-  ) {
-    const user = req.user as User;
-    const cleanupEvent = await this.cleanupEventService.createCleanupEvent(
-      data,
-      user.id,
-    );
+    @Body() data: CreateCleanupEventDto,
+  ): Promise<CleanupEvent> {
+    const user = req.user;
 
-    return res.send(cleanupEvent);
+    return this.createCleanupEventUseCase.execute(
+      CreateCleanupEventCommand.create({
+        ...data,
+        userId: user.id,
+      }),
+    );
   }
 
   @Get(':cleanupEventId')
-  async getCleanupEventById(
-    @Param('cleanupEventId') cleanupEventId: string,
-    @Res() res: FastifyReply,
-  ) {
-    const cleanupEvent =
-      await this.cleanupEventService.getCleanupEventById(cleanupEventId);
-    return res.send(cleanupEvent);
+  async getCleanupEventById(@Param('cleanupEventId') cleanupEventId: string) {
+    return this.getCleanupEventUseCase.execute(GetCleanupEventCommand.create({ cleanupEventId }));
   }
 
   @Get()
-  async getCleanupEvents(
-    @Query() query: GetCleanupEventsQueryDto,
-    @Res() res: FastifyReply,
-  ) {
-    const cleanupEventsResult =
-      await this.cleanupEventService.getCleanupEvents(query);
-
-    return res.send(cleanupEventsResult);
+  async getCleanupEvents(@Query() query: GetCleanupEventsQueryDto) {
+    return this.getCleanupEventsUseCase.execute(GetCleanupEventsCommand.create({ ...query }));
   }
 
   @Put(':cleanupEventId/update')
   @UseGuards(AuthGuard)
   async updateCleanupEvent(
     @Param('cleanupEventId') cleanupEventId: string,
-    @Body() data: UpsertCleanupEventDto,
+    @Body() data: ICreateCleanupEventDto,
     @Req() req: FastifyRequest,
-    @Res() res: FastifyReply,
   ) {
-    const user = req.user as User;
-    const cleanupEvent = await this.cleanupEventService.updateCleanupEvent(
-      data,
-      cleanupEventId,
-      user.id,
+    const user = req.user;
+    return this.updateCleanupEventUseCase.execute(
+      UpdateCleanupEventCommand.create({
+        ...data,
+        userId: user.id,
+        cleanupEventId,
+      }),
     );
-
-    return res.send(cleanupEvent);
   }
 
   @Delete(':cleanupEventId/delete')
@@ -84,12 +88,13 @@ export class CleanupEventController {
     @Req() req: FastifyRequest,
     @Res() res: FastifyReply,
   ) {
-    const user = req.user as User;
-    const deleteCleanupEventResult =
-      await this.cleanupEventService.deleteCleanupEvent(
+    const user = req.user;
+    const deleteCleanupEventResult = await this.deleteCleanupEventUseCase.execute(
+      DeleteCleanupEventCommand.create({
         cleanupEventId,
-        user.id,
-      );
+        userId: user.id,
+      }),
+    );
 
     return res.send({ message: deleteCleanupEventResult });
   }

@@ -22,17 +22,17 @@ interface EquipmentJSON {
 
 const prisma = new PrismaClient();
 
-async function importData() {
+(async function importData() {
   try {
-    const regionsData: RegionJSON[] = JSON.parse(
+    const regionsData = JSON.parse(
       await fs.readFile(path.join(__dirname, 'data/regions.json'), 'utf-8'),
-    );
-    const settlementsData: SettlementJSON[] = JSON.parse(
+    ) as RegionJSON[];
+    const settlementsData = JSON.parse(
       await fs.readFile(path.join(__dirname, 'data/settlements.json'), 'utf-8'),
-    );
-    const equipmentData: EquipmentJSON[] = JSON.parse(
+    ) as SettlementJSON[];
+    const equipmentData = JSON.parse(
       await fs.readFile(path.join(__dirname, 'data/equipments.json'), 'utf-8'),
-    );
+    ) as EquipmentJSON[];
 
     console.log('Importing regions...');
     for (const region of regionsData) {
@@ -104,6 +104,4 @@ async function importData() {
   } finally {
     await prisma.$disconnect();
   }
-}
-
-importData();
+})();

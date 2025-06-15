@@ -1,9 +1,12 @@
 import * as jwt from 'jsonwebtoken';
-import { InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import * as dotenv from 'dotenv';
 
-const jwtSecret = process.env.JWT_SECRET as string;
-const jwtAccessExpiresIn = process.env.JWT_ACCESS_EXPIRES_IN as string;
-const jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN as string;
+dotenv.config();
+
+const jwtSecret = process.env.JWT_SECRET;
+const jwtAccessExpiresIn = process.env.JWT_ACCESS_EXPIRES_IN;
+const jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
 
 interface IPayload {
   id: string;
@@ -34,6 +37,6 @@ export const verifyToken = (token: string): string => {
     const payload = jwt.verify(token, jwtSecret) as IPayload;
     return payload.id;
   } catch {
-    throw new InternalServerErrorException('Invalid token');
+    throw new UnauthorizedException('Invalid token');
   }
 };

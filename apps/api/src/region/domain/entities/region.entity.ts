@@ -1,21 +1,31 @@
+import { v4 } from 'uuid';
+import { Location } from '../../../domain/value-objects/location.vo';
+
 export class Region {
-  constructor(
-    private readonly id: string,
-    private name: string,
-    private latitude: number,
-    private longitude: number,
+  private constructor(
+    private readonly _id: string,
+    private readonly _name: string,
+    private readonly _location: Location,
   ) {}
 
-  static create(params: { id: string; name: string; latitude: number; longitude: number }): Region {
-    return new Region(params.id, params.name, params.latitude, params.longitude);
+  static create(name: string, latitude: number, longitude: number): Region {
+    if (!name || name.trim().length === 0) {
+      throw new Error('Region name is required');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return new Region(v4(), name.trim(), new Location(latitude, longitude));
   }
 
-  getSnapshot() {
-    return {
-      id: this.id,
-      name: this.name,
-      latitude: this.latitude,
-      longitude: this.longitude,
-    };
+  get id(): string {
+    return this._id;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get location(): Location {
+    return this._location;
   }
 }

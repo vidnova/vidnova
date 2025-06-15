@@ -1,12 +1,12 @@
 import { GeoJSON } from 'geojson';
-import { Region } from 'src/region/domain/entities/region.entity';
-import { Settlement } from 'src/settlement/domain/entities/settlement.entity';
 import { OverpassRepository } from '../../domain/interfaces/overpass-repository.interface';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { OverpassResponse } from 'src/overpass/domain/interfaces/overpass-response';
 import axios from 'axios';
 import osmtogeojson from 'osmtogeojson';
+import { Settlement } from '../../../domain/value-objects/settlement.vo';
+import { Region } from '../../../domain/value-objects/region.vo';
 
 @Injectable()
 export class OverpassRepositoryImpl implements OverpassRepository {
@@ -18,8 +18,8 @@ export class OverpassRepositoryImpl implements OverpassRepository {
   }
 
   async fetchSettlementBoundaries(settlement: Settlement, region: Region): Promise<GeoJSON> {
-    const escapedSettlementName = settlement.getSnapshot.name.replace(/'/g, '?.');
-    const escapedRegionName = region.getSnapshot.name.replace(/'/g, '?.');
+    const escapedSettlementName = settlement.name.replace(/'/g, '?.');
+    const escapedRegionName = region.name.replace(/'/g, '?.');
 
     const query = `
       [out:json][timeout:60];
@@ -33,11 +33,11 @@ export class OverpassRepositoryImpl implements OverpassRepository {
       out geom;
     `;
 
-    return this.requestToOverpassApi(query, settlement.getSnapshot.name);
+    return this.requestToOverpassApi(query, settlement.name);
   }
 
   async fetchRegionBoundaries(region: Region): Promise<GeoJSON> {
-    const escapedRegionName = region.getSnapshot.name.replace(/'/g, '?.');
+    const escapedRegionName = region.name.replace(/'/g, '?.');
 
     const query = `
       [out:json][timeout:60];
@@ -45,7 +45,7 @@ export class OverpassRepositoryImpl implements OverpassRepository {
       out geom;
     `;
 
-    return this.requestToOverpassApi(query, region.getSnapshot.name);
+    return this.requestToOverpassApi(query, region.name);
   }
 
   private async requestToOverpassApi(query: string, locality: string) {
@@ -79,7 +79,7 @@ export class OverpassRepositoryImpl implements OverpassRepository {
 
       return geojson;
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       this.logger.error(`Overpass API error for ${locality}: ${errorMessage}`);
       throw new InternalServerErrorException(
         `Error while fetching boundaries from Overpass API: ${errorMessage}`,

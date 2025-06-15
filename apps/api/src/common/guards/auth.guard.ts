@@ -25,9 +25,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const token = accessToken.startsWith('Bearer ')
-        ? accessToken.slice(7)
-        : accessToken;
+      const token = accessToken.startsWith('Bearer ') ? accessToken.slice(7) : accessToken;
 
       const id = verifyToken(token);
       const user = await this.prisma.user.findUnique({ where: { id } });

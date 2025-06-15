@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { BlacklistedToken } from '../../domain/entities/BlacklistedToken.entity';
+import { BlacklistedToken } from '../../domain/entities/blacklisted-token.entity';
+import { BlacklistedTokenRepository } from '../../domain/interfaces/blacklisted-token-repository.interface';
 
 @Injectable()
-export class BlacklistedTokenRepository {
+export class BlacklistedTokenRepositoryImpl implements BlacklistedTokenRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getByToken(token: string): Promise<BlacklistedToken | null> {
@@ -11,10 +12,10 @@ export class BlacklistedTokenRepository {
 
     if (!blacklistedToken) return null;
 
-    return BlacklistedToken.create(blacklistedToken);
+    return BlacklistedToken.fromPersistence(blacklistedToken);
   }
 
-  async createMany(tokens: { token: string; userId: string }[]): Promise<void> {
-    await this.prisma.blacklistToken.createMany({ data: tokens });
+  async createMany(blacklistedTokens: BlacklistedToken[]): Promise<void> {
+    await this.prisma.blacklistToken.createMany({ data: blacklistedTokens });
   }
 }

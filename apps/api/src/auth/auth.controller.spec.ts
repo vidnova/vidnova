@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/sign-up.dto';
+import { SignUpDto } from './dtos/sign-up.dto';
 import { FastifyReply } from 'fastify';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInDto } from './dtos/sign-in.dto';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { PrismaService } from '../prisma/prisma.service';
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;

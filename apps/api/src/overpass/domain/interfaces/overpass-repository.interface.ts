@@ -1,8 +1,9 @@
 import type { GeoJSON } from 'geojson';
-import { Region } from '../../../region/domain/entities/region.entity';
-import { Settlement } from '../../../settlement/domain/entities/settlement.entity';
+import { Settlement } from '../../../domain/value-objects/settlement.vo';
+import { Region } from '../../../domain/value-objects/region.vo';
 
 export interface OverpassRepository {
   fetchSettlementBoundaries(settlement: Settlement, region: Region): Promise<GeoJSON>;
+
   fetchRegionBoundaries(region: Region): Promise<GeoJSON>;
 }

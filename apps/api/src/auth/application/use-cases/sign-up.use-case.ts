@@ -8,26 +8,26 @@ import * as bcrypt from 'bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
 import { UserRepository } from '../../../user/domain/interfaces/user-repository.interface';
-import { SignUpDto } from '../../infrastructure/dto/sign-up.dto';
-import { USER_REPOSITORY } from '../../../user/tokens/user-repository.token';
+import { SignUpCommand } from '../commands/sign-up.command';
+import { User } from '../../../user/domain/entities/user.entity';
 
 @Injectable()
 export class SignUpUseCase {
-  constructor(@Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
+  constructor(@Inject('USER_REPOSITORY') private readonly userRepository: UserRepository) {}
 
-  async execute(data: SignUpDto) {
+  async execute(command: SignUpCommand) {
     try {
-      const hashedPassword = await bcrypt.hash(data.password, 8);
-      const name = data.email.split('@')[0];
+      const hashedPassword = await bcrypt.hash(command.password, 8);
 
-      const user = await this.userRepository.create({
-        name,
-        email: data.email,
+      const user = User.create({
         password: hashedPassword,
+        email: command.email,
       });
 
-      const accessToken = createAccessToken(user.getSnapshot().id);
-      const refreshToken = createRefreshToken(user.getSnapshot().id);
+      const createdUser = await this.userRepository.create(user);
+
+      const accessToken = createAccessToken(createdUser.id);
+      const refreshToken = createRefreshToken(createdUser.id);
 
       return { accessToken, refreshToken };
     } catch (error: unknown) {
@@ -35,8 +35,10 @@ export class SignUpUseCase {
         throw new ConflictException('Email already exists');
       }
 
+      console.log(error);
+
       throw new InternalServerErrorException(
-        `Failed to create an account: ${error instanceof Error ? error.message : error}`,
+        `Failed to create an account: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       );
     }
   }

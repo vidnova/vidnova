@@ -6,6 +6,7 @@
   "files": [
     "base.json",
     "nextjs.json",
-    "ui-library.json"
+    "ui-library.json",
+    "nestjs.json"
   ]
 }

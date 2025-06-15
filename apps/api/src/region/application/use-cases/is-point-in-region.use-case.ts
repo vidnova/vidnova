@@ -8,6 +8,7 @@ import { Feature, FeatureCollection, GeoJsonProperties, MultiPolygon, Polygon } 
 @Injectable()
 export class IsPointInRegionUseCase implements IsPointInRegion {
   constructor(
+    @Inject('REGION_REPOSITORY')
     private readonly regionRepository: RegionRepository,
     @Inject('OVERPASS_REPOSITORY') private readonly overpassRepository: OverpassRepository,
   ) {}

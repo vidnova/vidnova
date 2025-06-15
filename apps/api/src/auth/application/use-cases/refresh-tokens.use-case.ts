@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -10,50 +11,31 @@ import {
   verifyToken,
 } from '../../../common/utils/tokens.util';
 import { JsonWebTokenError } from 'jsonwebtoken';
-import { BlacklistedTokenRepository } from '../../../auth/infrastructure/repositories/blacklisted-token.repository';
+import { BlacklistedTokenRepository } from '../../domain/interfaces/blacklisted-token-repository.interface';
+import { RefreshTokensCommand } from '../commands/refresh-token.command';
+import { BlacklistedToken } from '../../domain/entities/blacklisted-token.entity';
 
 @Injectable()
 export class RefreshTokensUseCase {
-  constructor(private readonly blacklistedTokenRepository: BlacklistedTokenRepository) {}
+  constructor(
+    @Inject('BLACKLISTED_TOKEN_REPOSITORY')
+    private readonly blacklistedTokenRepository: BlacklistedTokenRepository,
+  ) {}
 
-  async execute(accessToken?: string, refreshToken?: string) {
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token is required');
-    }
-
+  async execute(command: RefreshTokensCommand) {
     try {
-      const userId = verifyToken(refreshToken);
-      if (!userId) {
-        throw new ForbiddenException('Invalid refresh token');
+      if (!command.refreshToken) {
+        throw new UnauthorizedException('Refresh token is required');
       }
 
-      const isBlacklisted = await this.blacklistedTokenRepository.getByToken(refreshToken);
+      const userId = this.verifyRefreshToken(command.refreshToken);
+      await this.checkTokenBlacklist(command.refreshToken);
+      await this.blacklistTokens(command, userId);
 
-      if (isBlacklisted) {
-        throw new ForbiddenException('Refresh token is revoked');
-      }
-
-      const blacklistData: { token: string; userId: string }[] = [{ token: refreshToken, userId }];
-
-      if (accessToken) {
-        try {
-          const accessTokenUserId = verifyToken(accessToken);
-          if (accessTokenUserId && accessTokenUserId === userId) {
-            blacklistData.push({ token: accessToken, userId });
-          }
-        } catch (error) {
-          if (!(error instanceof JsonWebTokenError)) {
-            throw error;
-          }
-        }
-      }
-
-      await this.blacklistedTokenRepository.createMany(blacklistData);
-
-      const newAccessToken = createAccessToken(userId);
-      const newRefreshToken = createRefreshToken(userId);
-
-      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+      return {
+        accessToken: createAccessToken(userId),
+        refreshToken: createRefreshToken(userId),
+      };
     } catch (error: unknown) {
       if (error instanceof JsonWebTokenError) {
         throw new ForbiddenException('Invalid refresh token');
@@ -63,9 +45,49 @@ export class RefreshTokensUseCase {
         throw error;
       }
 
-      throw new InternalServerErrorException(
-        `Failed to refresh tokens: ${error instanceof Error ? error.message : error}`,
-      );
+      throw new InternalServerErrorException('Failed to refresh tokens');
+    }
+  }
+
+  private verifyRefreshToken(refreshToken: string): string {
+    try {
+      const payload = verifyToken(refreshToken);
+      if (!payload) {
+        throw new ForbiddenException('Invalid refresh token');
+      }
+      return payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
+      throw new ForbiddenException('Invalid refresh token');
+    }
+  }
+
+  private async checkTokenBlacklist(refreshToken: string): Promise<void> {
+    const isBlacklisted = await this.blacklistedTokenRepository.getByToken(refreshToken);
+    if (isBlacklisted) {
+      throw new ForbiddenException('Refresh token is revoked');
+    }
+  }
+
+  private async blacklistTokens(command: RefreshTokensCommand, userId: string): Promise<void> {
+    const tokensToBlacklist: BlacklistedToken[] = [
+      BlacklistedToken.create({ userId, token: command.refreshToken }),
+    ];
+
+    if (command.accessToken) {
+      try {
+        const payload = verifyToken(command.accessToken);
+        if (payload === userId) {
+          tokensToBlacklist.push(BlacklistedToken.create({ userId, token: command.accessToken }));
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error: unknown) {
+        new ForbiddenException('Invalid access token');
+      }
+    }
+
+    if (tokensToBlacklist.length > 0) {
+      await this.blacklistedTokenRepository.createMany(tokensToBlacklist);
     }
   }
 }

@@ -1,8 +1,17 @@
 {
   "name": "@ecorally/ui",
   "version": "1.0.0",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build"
+  },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -18,6 +27,7 @@
     "input-otp": "^1.4.2",
     "react-day-picker": "8.10.1",
     "tailwind-merge": "^3.3.0",
+    "tailwindcss": "^4.1.10",
     "tw-animate-css": "^1.3.0"
   },
   "devDependencies": {

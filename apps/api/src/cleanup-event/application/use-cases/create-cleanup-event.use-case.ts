@@ -5,55 +5,58 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { CleanupEventRepository } from '../../domain/interfaces/cleanup-event.repository.interface';
-import { UpsertCleanupEventDto } from '../../infrastructure/dto/upsert-cleanup-event.dto';
-import { IsPointInsideSettlement } from 'src/settlement/domain/interfaces/is-point-in-settlement-use-case.interface';
-import { IsPointInRegion } from 'src/region/domain/interfaces/is-point-in-region.use-case.interface';
+import { CleanupEventRepository } from '../../domain/interfaces/cleanup-event-repository.interface';
 import { CleanupEvent } from '../../domain/entities/cleanup-event.entity';
+import { CreateCleanupEventCommand } from '../commands/create-cleanup-event.command';
+import { EquipmentItem } from '../../domain/value-objects/equipment-item.vo';
+import { LocationValidationService } from '../../../domain/services/location-validation.service';
 
 @Injectable()
 export class CreateCleanupEventUseCase {
   constructor(
     @Inject('CLEANUP_EVENT_REPOSITORY')
     private readonly cleanupEventRepository: CleanupEventRepository,
-    @Inject('IS_POINT_INSIDE_SETTLEMENT')
-    private readonly isPointInsideSettlement: IsPointInsideSettlement,
-    @Inject('IS_POINT_INSIDE_REGION')
-    private readonly isPointInsideRegion: IsPointInRegion,
+    private readonly locationValidationService: LocationValidationService,
   ) {}
 
-  async execute(data: UpsertCleanupEventDto, organizerId: string): Promise<CleanupEvent> {
+  async execute(command: CreateCleanupEventCommand): Promise<CleanupEvent> {
     try {
-      let isPointInsideInCorrectRegion: boolean = false;
-      let isPointInsideInCorrectSettlement: boolean = false;
-
-      isPointInsideInCorrectRegion = await this.isPointInsideRegion.execute(
-        data.regionId,
-        data.location.longitude,
-        data.location.latitude,
+      const validationResult = await this.locationValidationService.validateLocation(
+        command.regionId,
+        command.settlementId,
+        command.longitude,
+        command.latitude,
       );
-      if (!isPointInsideInCorrectRegion)
-        throw new ConflictException('The selected point is outside the selected settlement');
 
-      if (data.settlementId) {
-        isPointInsideInCorrectSettlement = await this.isPointInsideSettlement.execute(
-          data.settlementId,
-          data.location.longitude,
-          data.location.latitude,
-        );
+      if (!validationResult.isValidLocation()) {
+        throw new ConflictException(validationResult.getErrorMessage());
       }
 
-      if (!isPointInsideInCorrectSettlement)
-        throw new ConflictException('The selected point is outside the selected region');
+      const equipmentItems = command.equipments.map(
+        (eq) => new EquipmentItem(eq.equipmentId, eq.quantity),
+      );
 
-      const cleanupEvent = await this.cleanupEventRepository.create(data, organizerId);
+      const cleanupEvent = CleanupEvent.create(
+        command.name,
+        command.description,
+        command.startDate,
+        command.endDate,
+        command.imageUrl,
+        command.userId,
+        equipmentItems,
+        command.longitude,
+        command.latitude,
+        command.regionId,
+        command.settlementId,
+        command.dates,
+      );
 
-      return CleanupEvent.create(cleanupEvent);
+      return this.cleanupEventRepository.create(cleanupEvent);
     } catch (error: unknown) {
       if (error instanceof HttpException) throw error;
 
       throw new InternalServerErrorException(
-        `Failed to create a cleanup event: ${error instanceof Error ? error.message : error}`,
+        `Failed to create a cleanup event: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       );
     }
   }

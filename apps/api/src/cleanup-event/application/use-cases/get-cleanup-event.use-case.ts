@@ -6,9 +6,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CleanupEvent } from '../../domain/entities/cleanup-event.entity';
-import { CleanupEventRepository } from '../../domain/interfaces/cleanup-event.repository.interface';
+import { CleanupEventRepository } from '../../domain/interfaces/cleanup-event-repository.interface';
 import { RedisService } from '../../../redis/redis.service';
-import { CLEANUP_EVENT_REPOSITORY } from '../../tokens/cleanup-event.repository.token';
+import { GetCleanupEventCommand } from '../commands/get-cleanup-event.command';
 
 @Injectable()
 export class GetCleanupEventUseCase {
@@ -16,23 +16,24 @@ export class GetCleanupEventUseCase {
   private readonly CACHE_TTL = 300;
 
   constructor(
-    @Inject(CLEANUP_EVENT_REPOSITORY)
+    @Inject('CLEANUP_EVENT_REPOSITORY')
     private readonly cleanupEventRepository: CleanupEventRepository,
     private readonly redis: RedisService,
   ) {}
 
-  async execute(id: string): Promise<CleanupEvent | null> {
+  async execute(command: GetCleanupEventCommand): Promise<CleanupEvent | null> {
     try {
-      const cacheKey = `cleanup-event:${id}`;
+      const cacheKey = `cleanup-event:${command.cleanupEventId}`;
       const cachedEvent = await this.redis.get(cacheKey);
       if (cachedEvent) {
-        this.logger.debug(`Cache hit for cleanup event ${id}`);
+        this.logger.debug(`Cache hit for cleanup event ${command.cleanupEventId}`);
         return JSON.parse(cachedEvent) as CleanupEvent;
       }
 
-      const cleanupEvent = await this.cleanupEventRepository.getById(id);
+      const cleanupEvent = await this.cleanupEventRepository.getById(command.cleanupEventId);
 
-      if (!cleanupEvent) throw new NotFoundException(`Cleanup event with id ${id} not found`);
+      if (!cleanupEvent)
+        throw new NotFoundException(`Cleanup event with id ${command.cleanupEventId} not found`);
 
       await this.redis.set(cacheKey, JSON.stringify(cleanupEvent), this.CACHE_TTL);
 
@@ -43,7 +44,7 @@ export class GetCleanupEventUseCase {
       }
 
       throw new InternalServerErrorException(
-        `Failed to get a cleanup event with id ${id}`,
+        `Failed to get a cleanup event with id ${command.cleanupEventId}`,
         error instanceof Error ? error.message : error,
       );
     }

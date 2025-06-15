@@ -1,14 +1,26 @@
-import { Body, Controller, Patch, Post, Req, Res} from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Body, Controller, Patch, Post, Req, Res } from '@nestjs/common';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SignUpDto } from './infrastructure/dto/sign-up.dto';
-import { SignInDto } from './infrastructure/dto/sign-in.dto';
-import { ResetPasswordDto } from './infrastructure/dto/reset-password.dto';
+import { SignUpDto } from './dtos/sign-up.dto';
+import { SignInDto } from './dtos/sign-in.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { SignUpUseCase } from './application/use-cases/sign-up.use-case';
+import { SignUpCommand } from './application/commands/sign-up.command';
+import { SignInCommand } from './application/commands/sign-in.command';
+import { SignInUseCase } from './application/use-cases/sign-in.use-case';
+import { RefreshTokensUseCase } from './application/use-cases/refresh-tokens.use-case';
+import { RefreshTokensCommand } from './application/commands/refresh-token.command';
+import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
+import { ResetPasswordCommand } from './application/commands/reset-password.command';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly signUpUseCase: SignUpUseCase,
+    private readonly signInUseCase: SignInUseCase,
+    private readonly refreshTokensUseCase: RefreshTokensUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase,
+  ) {}
 
   @Post('sign-up')
   @ApiOperation({
@@ -30,7 +42,7 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'User already exists' })
   async signUp(@Body() data: SignUpDto, @Res() res: FastifyReply) {
-    const result = await this.authService.signUp(data);
+    const result = await this.signUpUseCase.execute(SignUpCommand.create(data));
 
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
@@ -61,7 +73,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   async signIn(@Body() data: SignInDto, @Res() res: FastifyReply) {
-    const result = await this.authService.signIn(data);
+    const result = await this.signInUseCase.execute(SignInCommand.create(data));
 
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
@@ -75,8 +87,10 @@ export class AuthController {
   @Post('refresh-token')
   async refreshToken(@Res() res: FastifyReply, @Req() req: FastifyRequest) {
     const accessToken = req.headers['authorization'];
-    const refreshToken = req.cookies.refreshToken as string | undefined;
-    const result = await this.authService.refreshToken(accessToken, refreshToken);
+    const refreshToken = req.cookies.refreshToken;
+    const result = await this.refreshTokensUseCase.execute(
+      RefreshTokensCommand.create({ accessToken, refreshToken }),
+    );
 
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
@@ -111,7 +125,7 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'Provided code is invalid' })
   async resetPassword(@Res() res: FastifyReply, @Body() data: ResetPasswordDto) {
-    const result = await this.authService.resetPassword(data);
+    const result = await this.resetPasswordUseCase.execute(ResetPasswordCommand.create(data));
 
     res.send({ message: result });
   }

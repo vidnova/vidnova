@@ -1,7 +1,10 @@
-import { Region } from 'src/region/domain/entities/region.entity';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { RegionRepository } from '../../domain/interfaces/region.repository.interface';
+import { Region } from '../../../domain/value-objects/region.vo';
+import { Location } from '../../../domain/value-objects/location.vo';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class RegionRepositoryImpl implements RegionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -10,6 +13,10 @@ export class RegionRepositoryImpl implements RegionRepository {
 
     if (!region) return null;
 
-    return Region.create(region);
+    return Region.fromPersistence(
+      region.id,
+      region.name,
+      Location.create(region.latitude, region.longitude),
+    );
   }
 }

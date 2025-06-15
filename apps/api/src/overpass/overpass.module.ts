@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
-import { OverpassService } from './overpass.service';
 import { RedisModule } from '../redis/redis.module';
+import { OverpassRepositoryImpl } from './infrastructure/repositories/overpass.repository';
+import { CachingOverpassRepository } from './infrastructure/cache/caching-overpass-repository';
 
 @Module({
   imports: [RedisModule],
-  providers: [OverpassService],
-  exports: [OverpassService],
+  providers: [
+    {
+      provide: 'BASE_OVERPASS_REPOSITORY',
+      useClass: OverpassRepositoryImpl,
+    },
+    {
+      provide: 'OVERPASS_REPOSITORY',
+      useClass: CachingOverpassRepository,
+    },
+  ],
+  exports: ['OVERPASS_REPOSITORY'],
 })
 export class OverpassModule {}

@@ -2,8 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OverpassRepository } from '../../domain/interfaces/overpass-repository.interface';
 import { RedisService } from '../../../redis/redis.service';
 import { GeoJSON } from 'geojson';
-import { Region } from 'src/region/domain/entities/region.entity';
-import { Settlement } from 'src/settlement/domain/entities/settlement.entity';
+import { Settlement } from '../../../domain/value-objects/settlement.vo';
+import { Region } from '../../../domain/value-objects/region.vo';
 
 @Injectable()
 export class CachingOverpassRepository implements OverpassRepository {
@@ -12,25 +12,21 @@ export class CachingOverpassRepository implements OverpassRepository {
   private readonly CACHE_PREFIX = 'boundaries';
 
   constructor(
-    @Inject('OVERPASS_REPOSITORY')
+    @Inject('BASE_OVERPASS_REPOSITORY')
     private readonly overpassRepository: OverpassRepository,
     private readonly redisService: RedisService,
   ) {}
 
   async fetchSettlementBoundaries(settlement: Settlement, region: Region): Promise<GeoJSON> {
-    const cacheKey = this.generateCacheKey(
-      'settlement',
-      settlement.getSnapshot.name,
-      region.getSnapshot.name,
-    );
-    return this.fetchAndCacheGeoJSON(cacheKey, region.getSnapshot.name, () =>
+    const cacheKey = this.generateCacheKey('settlement', settlement.name, region.name);
+    return this.fetchAndCacheGeoJSON(cacheKey, region.name, () =>
       this.overpassRepository.fetchSettlementBoundaries(settlement, region),
     );
   }
 
   async fetchRegionBoundaries(region: Region): Promise<GeoJSON> {
-    const cacheKey = this.generateCacheKey('region', region.getSnapshot.name);
-    return this.fetchAndCacheGeoJSON(cacheKey, region.getSnapshot.name, () =>
+    const cacheKey = this.generateCacheKey('region', region.name);
+    return this.fetchAndCacheGeoJSON(cacheKey, region.name, () =>
       this.overpassRepository.fetchRegionBoundaries(region),
     );
   }
@@ -53,9 +49,9 @@ export class CachingOverpassRepository implements OverpassRepository {
           return geojson;
         }
         this.logger.warn(`Invalid cached GeoJSON for ${logContext}, fetching new data`);
-      } catch (error) {
+      } catch (error: unknown) {
         this.logger.error(
-          `Failed to parse cached GeoJSON for ${logContext}: ${error instanceof Error ? error.message : String(error)}`,
+          `Failed to parse cached GeoJSON for ${logContext}: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
         );
       }
     }
@@ -68,8 +64,10 @@ export class CachingOverpassRepository implements OverpassRepository {
   private parseGeoJSON(data: string, logContext: string): GeoJSON {
     try {
       return JSON.parse(data) as GeoJSON;
-    } catch (error) {
-      throw new Error(`Invalid GeoJSON format for ${logContext}`);
+    } catch (error: unknown) {
+      throw new Error(
+        `Invalid GeoJSON format for ${logContext}: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      );
     }
   }
 
@@ -90,9 +88,9 @@ export class CachingOverpassRepository implements OverpassRepository {
     try {
       await this.redisService.set(cacheKey, JSON.stringify(geojson), this.CACHE_TTL_SECONDS);
       this.logger.log(`Cached GeoJSON for ${logContext}`);
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(
-        `Failed to cache GeoJSON for ${logContext}: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to cache GeoJSON for ${logContext}: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
       );
     }
   }
