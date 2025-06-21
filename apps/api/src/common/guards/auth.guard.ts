@@ -7,10 +7,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
 import { verifyToken } from '../utils/tokens.util';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { FastifyRequest } from 'fastify';
+import { PrismaService } from '@ecorally/dal';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

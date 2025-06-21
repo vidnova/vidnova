@@ -15,18 +15,18 @@ import { CreateCleanupEventDto } from './dtos/upsert-cleanup-event.dto';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { GetCleanupEventsQueryDto } from './dtos/get-cleanup-events-query';
-import { CreateCleanupEventUseCase } from './application/use-cases/create-cleanup-event.use-case';
-import { GetCleanupEventUseCase } from './application/use-cases/get-cleanup-event.use-case';
-import { GetCleanupEventsUseCase } from './application/use-cases/get-cleanup-events.use-case';
-import { UpdateCleanupEventUseCase } from './application/use-cases/update-cleanup-event.use-case';
-import { DeleteCleanupEventUseCase } from './application/use-cases/delete-cleanup-event.use-case';
-import { CreateCleanupEventCommand } from './application/commands/create-cleanup-event.command';
-import { CleanupEvent } from './domain/entities/cleanup-event.entity';
-import { GetCleanupEventCommand } from './application/commands/get-cleanup-event.command';
-import { GetCleanupEventsCommand } from './application/commands/get-cleanup-events.command';
-import { UpdateCleanupEventCommand } from './application/commands/update-cleanup-event.command';
-import { DeleteCleanupEventCommand } from './application/commands/delete-cleanup-event.command';
+import { CreateCleanupEventUseCase } from './use-cases/create-cleanup-event/create-cleanup-event.use-case';
+import { GetCleanupEventUseCase } from './use-cases/get-cleanup-event/get-cleanup-event.use-case';
+import { GetCleanupEventsUseCase } from './use-cases/get-cleanup-events/get-cleanup-events.use-case';
+import { UpdateCleanupEventUseCase } from './use-cases/update-cleanup-event/update-cleanup-event.use-case';
+import { DeleteCleanupEventUseCase } from './use-cases/delete-cleanup-event/delete-cleanup-event.use-case';
+import { CreateCleanupEventCommand } from './use-cases/create-cleanup-event/create-cleanup-event.command';
+import { GetCleanupEventCommand } from './use-cases/get-cleanup-event/get-cleanup-event.command';
+import { GetCleanupEventsCommand } from './use-cases/get-cleanup-events/get-cleanup-events.command';
+import { UpdateCleanupEventCommand } from './use-cases/update-cleanup-event/update-cleanup-event.command';
+import { DeleteCleanupEventCommand } from './use-cases/delete-cleanup-event/delete-cleanup-event.command';
 import { ICreateCleanupEventDto } from '@ecorally/shared';
+import { CleanupEvent } from '@ecorally/dal';
 
 @Controller('cleanup-events')
 export class CleanupEventController {

@@ -1,28 +1,25 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  UseGuards,
-  ValidationPipe,
-} from '@nestjs/common';
-import { OtpService } from './otp.service';
+import { Body, Controller, Inject, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CheckOtpDto } from './infrastructure/dto/check-otp.dto';
 import { FastifyRequest } from 'fastify';
-import { User } from '@prisma/client';
-import { SendOtpDto } from './infrastructure/dto/send-otp.dto';
+import { GenerateAndSendOtpUseCase } from './use-cases/generate-and-send-otp/generate-and-send-otp.use-case';
+import { SendOtpDto } from './dtos/send-otp.dto';
+import { GenerateAndSendOtpCommand } from './use-cases/generate-and-send-otp/generate-and-send-otp.command';
+import { CheckOtpDto } from './dtos/check-otp.dto';
+import { VerifyOtpCommand } from './use-cases/verify-otp/verify-otp-command';
+import { IVerifyOtp } from './use-cases/verify-otp/verify-otp.interface';
 
 @Controller('otp')
 export class OtpController {
-  constructor(private readonly otpService: OtpService) {}
+  constructor(
+    private readonly generateAndSendOtpUseCase: GenerateAndSendOtpUseCase,
+    @Inject('VERIFY_OTP') private readonly verifyOtpUseCase: IVerifyOtp,
+  ) {}
 
   @Post('send')
   @ApiOperation({
     summary: 'Create OTP',
-    description:
-      'Creates a one time password (OTP) for the user and sends it via email.',
+    description: 'Creates a one time password (OTP) for the user and sends it via email.',
   })
   @ApiResponse({
     status: 200,
@@ -43,7 +40,11 @@ export class OtpController {
     description: 'Access token is not valid',
   })
   async sendOtp(@Body() data: SendOtpDto) {
-    return this.otpService.generateAndSendOtp(data.email);
+    const result = await this.generateAndSendOtpUseCase.execute(
+      GenerateAndSendOtpCommand.create(data),
+    );
+
+    return { message: result };
   }
 
   @Post('check')
@@ -78,11 +79,12 @@ export class OtpController {
     status: 409,
     description: 'Provided code is not valid',
   })
-  async checkOtp(
-    @Body(ValidationPipe) data: CheckOtpDto,
-    @Req() req: FastifyRequest,
-  ) {
-    const user = req.user as User;
-    return this.otpService.checkOtp(data.code, user.id);
+  async checkOtp(@Body(ValidationPipe) data: CheckOtpDto, @Req() req: FastifyRequest) {
+    const user = req.user;
+    const isValid = await this.verifyOtpUseCase.execute(
+      VerifyOtpCommand.create({ userId: user.id, code: data.code }),
+    );
+
+    return { isValid };
   }
 }

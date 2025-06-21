@@ -1,33 +1,36 @@
 import { Module } from '@nestjs/common';
 import { CleanupEventController } from './cleanup-event.controller';
-import { PrismaService } from '../prisma/prisma.service';
-import { RedisModule } from '../redis/redis.module';
-import { CreateCleanupEventUseCase } from './application/use-cases/create-cleanup-event.use-case';
-import { DeleteCleanupEventUseCase } from './application/use-cases/delete-cleanup-event.use-case';
-import { GetCleanupEventUseCase } from './application/use-cases/get-cleanup-event.use-case';
-import { GetCleanupEventsUseCase } from './application/use-cases/get-cleanup-events.use-case';
-import { UpdateCleanupEventUseCase } from './application/use-cases/update-cleanup-event.use-case';
-import { CleanupEventRepositoryImpl } from './infrastructure/repositories/cleanup-event.repository';
-import { LocationValidationService } from '../domain/services/location-validation.service';
-import { IsPointInRegionUseCase } from '../region/application/use-cases/is-point-in-region.use-case';
-import { IsPointInsideSettlementUseCase } from '../settlement/application/use-cases/is-point-in-settlement.use-case';
+import { CreateCleanupEventUseCase } from './use-cases/create-cleanup-event/create-cleanup-event.use-case';
+import { DeleteCleanupEventUseCase } from './use-cases/delete-cleanup-event/delete-cleanup-event.use-case';
+import { GetCleanupEventUseCase } from './use-cases/get-cleanup-event/get-cleanup-event.use-case';
+import { GetCleanupEventsUseCase } from './use-cases/get-cleanup-events/get-cleanup-events.use-case';
+import { UpdateCleanupEventUseCase } from './use-cases/update-cleanup-event/update-cleanup-event.use-case';
 import { RegionModule } from '../region/region.module';
 import { SettlementModule } from '../settlement/settlement.module';
-import { OverpassModule } from '../overpass/overpass.module';
+import { CleanupEventRepository, PrismaService, RedisService } from '@ecorally/dal';
+import { LocationValidationService } from '@ecorally/shared';
+import { DatabaseModule } from '../database/database.module';
+import { IsPointInRegionUseCase } from '../region/use-cases/is-point-in-region/is-point-in-region.use-case';
+import { IsPointInsideSettlementUseCase } from '../settlement/use-cases/is-point-inside-settlement/is-point-in-settlement.use-case';
 
 @Module({
-  imports: [RedisModule, RegionModule, SettlementModule, OverpassModule],
+  imports: [DatabaseModule, SettlementModule, RegionModule],
   controllers: [CleanupEventController],
   providers: [
     PrismaService,
+    RedisService,
     CreateCleanupEventUseCase,
     DeleteCleanupEventUseCase,
     GetCleanupEventUseCase,
     GetCleanupEventsUseCase,
     UpdateCleanupEventUseCase,
     {
-      provide: 'CLEANUP_EVENT_REPOSITORY',
-      useClass: CleanupEventRepositoryImpl,
+      provide: 'IS_POINT_INSIDE_REGION',
+      useClass: IsPointInRegionUseCase,
+    },
+    {
+      provide: 'IS_POINT_INSIDE_SETTLEMENT',
+      useClass: IsPointInsideSettlementUseCase,
     },
     LocationValidationService,
   ],

@@ -1,5 +1,5 @@
-import { SortBy, SortOrder } from '../../enums';
 import { CleanupEventStatus } from '../../types';
+import { CleanupSortBy, CleanupSortOrder } from '../../enums';
 
 export interface IGetCleanupEventQueryDto {
   regionId?: string;
@@ -10,6 +10,6 @@ export interface IGetCleanupEventQueryDto {
   name?: string;
   pageSize: number;
   page: number;
-  sortBy?: SortBy;
-  sortOrder?: SortOrder;
+  sortBy?: CleanupSortBy;
+  sortOrder?: CleanupSortOrder;
 }

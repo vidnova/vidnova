@@ -4,14 +4,14 @@ import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/sign-up.dto';
 import { SignInDto } from './dtos/sign-in.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
-import { SignUpUseCase } from './application/use-cases/sign-up.use-case';
-import { SignUpCommand } from './application/commands/sign-up.command';
-import { SignInCommand } from './application/commands/sign-in.command';
-import { SignInUseCase } from './application/use-cases/sign-in.use-case';
-import { RefreshTokensUseCase } from './application/use-cases/refresh-tokens.use-case';
-import { RefreshTokensCommand } from './application/commands/refresh-token.command';
-import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
-import { ResetPasswordCommand } from './application/commands/reset-password.command';
+import { SignUpUseCase } from './use-cases/sign-up/sign-up.use-case';
+import { SignUpCommand } from './use-cases/sign-up/sign-up.command';
+import { SignInCommand } from './use-cases/sign-in/sign-in.command';
+import { SignInUseCase } from './use-cases/sign-in/sign-in.use-case';
+import { RefreshTokensUseCase } from './use-cases/refresh-tokens/refresh-tokens.use-case';
+import { RefreshTokensCommand } from './use-cases/refresh-tokens/refresh-token.command';
+import { ResetPasswordUseCase } from './use-cases/reset-password/reset-password.use-case';
+import { ResetPasswordCommand } from './use-cases/reset-password/reset-password.command';
 
 @Controller('auth')
 export class AuthController {

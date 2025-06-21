@@ -1,4 +1,4 @@
-export enum SortOrder {
+export enum CleanupSortOrder {
   ASC = 'asc',
   DESC = 'desc',
 }

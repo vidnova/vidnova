@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { ForbiddenException, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
