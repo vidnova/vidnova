@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "dev": "tsc --watch",
     "build": "tsc --build"
   },
   "dependencies": {
