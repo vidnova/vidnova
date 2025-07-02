@@ -4,44 +4,48 @@ export class User {
   constructor(
     private readonly _id: string,
     private readonly _name: string,
-    private readonly _password: string,
     private readonly _email: string,
     private readonly _isVerified: boolean,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
+    private readonly _password?: string,
+    private readonly _googleId?: string,
   ) {}
 
-  static create(params: { password: string; email: string }): User {
+  static create(params: { email: string; password?: string; googleId?: string }): User {
     const name = params.email.split('@')[0];
     return new User(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       v4(),
       name,
-      params.password,
       params.email,
       false,
       new Date(),
       new Date(),
+      params.password,
+      params.googleId,
     );
   }
 
   static fromPersistence(params: {
     id: string;
     name: string;
-    password: string;
     email: string;
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    password?: string;
+    googleId?: string;
   }): User {
     return new User(
       params.id,
       params.name,
-      params.password,
       params.email,
       params.isVerified,
       params.createdAt,
       params.updatedAt,
+      params.password,
+      params.googleId,
     );
   }
 
@@ -49,11 +53,11 @@ export class User {
     return new User(
       this._id,
       this._name,
-      newPassword,
       this._email,
       this._isVerified,
       this._createdAt,
-      new Date(), // обновляем updatedAt
+      new Date(),
+      newPassword,
     );
   }
 
@@ -81,7 +85,11 @@ export class User {
     return this._updatedAt;
   }
 
-  get password(): string {
+  get password(): string | null | undefined {
     return this._password;
+  }
+
+  get googleId(): string | null | undefined {
+    return this._googleId;
   }
 }
