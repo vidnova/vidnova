@@ -12,6 +12,8 @@
   },
   "license": "MIT",
   "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
     "dev": "tsc --watch",
     "build": "prisma generate && tsc --build"
   },
