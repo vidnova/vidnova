@@ -10,7 +10,7 @@ import {
 import { verifyToken } from '../utils/tokens.util';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { FastifyRequest } from 'fastify';
-import { PrismaService } from '@ecorally/dal';
+import { PrismaService, User } from '@ecorally/dal';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
         throw new NotFoundException('User not found');
       }
 
-      request.user = user;
+      request.user = User.fromPersistence(user);
       return true;
     } catch (error) {
       if (error instanceof TokenExpiredError) {
