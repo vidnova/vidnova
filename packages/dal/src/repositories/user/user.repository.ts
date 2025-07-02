@@ -1,7 +1,7 @@
 import { IUserRepository } from './user-repository.interface';
 import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../shared/services';
+import { PrismaService } from '../shared';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -31,5 +31,11 @@ export class UserRepository implements IUserRepository {
       where: { id: user.id },
       data: { password: user.password },
     });
+  }
+
+  async getByGoogleId(googleId: string): Promise<User | null> {
+    const user = await this.prismaService.user.findUnique({ where: { googleId } });
+
+    return user ? User.fromPersistence(user) : null;
   }
 }

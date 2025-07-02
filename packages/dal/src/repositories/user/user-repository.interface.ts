@@ -6,4 +6,6 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<User | null>;
 
   updatePassword(user: User): Promise<void>;
+
+  getByGoogleId(googleID: string): Promise<User | null>;
 }

@@ -8,8 +8,8 @@ export class User {
     private readonly _isVerified: boolean,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
-    private readonly _password?: string,
-    private readonly _googleId?: string,
+    private readonly _password: string | null,
+    private readonly _googleId: string | null,
   ) {}
 
   static create(params: { email: string; password?: string; googleId?: string }): User {
@@ -22,8 +22,8 @@ export class User {
       false,
       new Date(),
       new Date(),
-      params.password,
-      params.googleId,
+      params.password ?? null,
+      params.googleId ?? null,
     );
   }
 
@@ -34,8 +34,8 @@ export class User {
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
-    password?: string;
-    googleId?: string;
+    password: string | null;
+    googleId: string | null;
   }): User {
     return new User(
       params.id,
@@ -58,6 +58,7 @@ export class User {
       this._createdAt,
       new Date(),
       newPassword,
+      this._googleId
     );
   }
 
