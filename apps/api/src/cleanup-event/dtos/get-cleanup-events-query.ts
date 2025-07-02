@@ -1,8 +1,7 @@
-import { EventStatus } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min, ValidateIf } from 'class-validator';
 import { IsDateAfter } from '../../common/decorators';
-import { IGetCleanupEventQueryDto, CleanupSortBy, CleanupSortOrder } from '@ecorally/shared';
+import { IGetCleanupEventQueryDto, CleanupSortBy, CleanupSortOrder, CleanupEventStatus } from '@ecorally/shared';
 
 export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
   @IsOptional()
@@ -26,7 +25,7 @@ export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
 
   @IsOptional()
   @IsString()
-  status?: EventStatus;
+  status?: CleanupEventStatus;
 
   @IsOptional()
   @IsString()

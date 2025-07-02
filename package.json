@@ -8,8 +8,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "docker": "docker-compose up",
-    "db": "docker-compose up -d ecorally-db && docker-compose up -d ecorally-redis",
+    "docker": "docker compose up",
+    "db": "docker compose up -d ecorally-db && docker compose up -d ecorally-redis",
     "prepare": "husky"
   },
   "devDependencies": {
