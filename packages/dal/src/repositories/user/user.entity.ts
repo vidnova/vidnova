@@ -9,10 +9,9 @@ export class User {
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
     private readonly _password: string | null,
-    private readonly _googleId: string | null,
   ) {}
 
-  static create(params: { email: string; password?: string; googleId?: string }): User {
+  static create(params: { email: string; password?: string; }): User {
     const name = params.email.split('@')[0];
     return new User(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -23,7 +22,6 @@ export class User {
       new Date(),
       new Date(),
       params.password ?? null,
-      params.googleId ?? null,
     );
   }
 
@@ -35,7 +33,6 @@ export class User {
     createdAt: Date;
     updatedAt: Date;
     password: string | null;
-    googleId: string | null;
   }): User {
     return new User(
       params.id,
@@ -45,7 +42,6 @@ export class User {
       params.createdAt,
       params.updatedAt,
       params.password,
-      params.googleId,
     );
   }
 
@@ -58,7 +54,6 @@ export class User {
       this._createdAt,
       new Date(),
       newPassword,
-      this._googleId
     );
   }
 
@@ -88,9 +83,5 @@ export class User {
 
   get password(): string | null | undefined {
     return this._password;
-  }
-
-  get googleId(): string | null | undefined {
-    return this._googleId;
   }
 }

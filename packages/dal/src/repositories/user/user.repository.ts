@@ -32,10 +32,4 @@ export class UserRepository implements IUserRepository {
       data: { password: user.password },
     });
   }
-
-  async getByGoogleId(googleId: string): Promise<User | null> {
-    const user = await this.prismaService.user.findUnique({ where: { googleId } });
-
-    return user ? User.fromPersistence(user) : null;
-  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Redirect, Req, Res } from '@nestjs/common';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/sign-up.dto';
@@ -12,6 +12,9 @@ import { RefreshTokensUseCase } from './use-cases/refresh-tokens/refresh-tokens.
 import { RefreshTokensCommand } from './use-cases/refresh-tokens/refresh-token.command';
 import { ResetPasswordUseCase } from './use-cases/reset-password/reset-password.use-case';
 import { ResetPasswordCommand } from './use-cases/reset-password/reset-password.command';
+import { GoogleLoginUseCase } from './use-cases/google-login/google-login.use-case';
+import { GoogleLoginCommand } from './use-cases/google-login/google-login.command';
+import { GoogleService } from './services/google.service';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +23,8 @@ export class AuthController {
     private readonly signInUseCase: SignInUseCase,
     private readonly refreshTokensUseCase: RefreshTokensUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly googleLoginUseCase: GoogleLoginUseCase,
+    private readonly googleService: GoogleService,
   ) {}
 
   @Post('sign-up')
@@ -128,5 +133,40 @@ export class AuthController {
     const result = await this.resetPasswordUseCase.execute(ResetPasswordCommand.create(data));
 
     res.send({ message: result });
+  }
+
+  @Get('google')
+  @Redirect()
+  googleLogin() {
+    const url = this.googleService.getAuthUrl();
+    return { url };
+  }
+
+  @Get('google/callback')
+  @Redirect()
+  async googleCallback(@Res() res: FastifyReply, @Query('code') code: string) {
+    const user = await this.googleService.getUserData(code);
+
+    const { accessToken, refreshToken } = await this.googleLoginUseCase.execute(
+      GoogleLoginCommand.create({
+        email: user.email,
+      }),
+    );
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    const frontUrl = process.env.FRONT_URL || 'http://localhost:3000';
+    return { url: frontUrl };
   }
 }
