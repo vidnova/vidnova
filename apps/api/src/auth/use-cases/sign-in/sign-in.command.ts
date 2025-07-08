@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { BaseCommand } from '@ecorally/shared';
 
 export class SignInCommand extends BaseCommand {
@@ -6,5 +6,6 @@ export class SignInCommand extends BaseCommand {
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   password: string;
 }

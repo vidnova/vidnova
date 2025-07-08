@@ -1,10 +1,10 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   Inject,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
@@ -19,8 +19,8 @@ export class SignInUseCase {
     try {
       const user = await this.userRepository.getByEmail(command.email);
 
-      if (!user) {
-        throw new NotFoundException('Invalid data provided');
+      if (!user || !user.password) {
+        throw new BadRequestException('Invalid data provided');
       }
 
       const isPasswordValid = await bcrypt.compare(command.password, user.password);

@@ -15,6 +15,7 @@ import { ResetPasswordCommand } from './use-cases/reset-password/reset-password.
 import { GoogleLoginUseCase } from './use-cases/google-login/google-login.use-case';
 import { GoogleLoginCommand } from './use-cases/google-login/google-login.command';
 import { GoogleService } from './services/google.service';
+import { IApiResponse } from '../common/interceptors/response.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -46,16 +47,23 @@ export class AuthController {
   })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 409, description: 'User already exists' })
-  async signUp(@Body() data: SignUpDto, @Res() res: FastifyReply) {
+  async signUp(@Body() data: SignUpDto, @Res() res: FastifyReply): Promise<IApiResponse<void>> {
     const result = await this.signUpUseCase.execute(SignUpCommand.create(data));
 
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      path: '/',
     });
 
-    return res.send({ accessToken: result.accessToken });
+    return res.send({ isSuccess: true });
   }
 
   @Post('sign-in')
@@ -77,16 +85,23 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  async signIn(@Body() data: SignInDto, @Res() res: FastifyReply) {
+  async signIn(@Body() data: SignInDto, @Res() res: FastifyReply): Promise<IApiResponse<void>> {
     const result = await this.signInUseCase.execute(SignInCommand.create(data));
 
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      path: '/',
     });
 
-    return res.send({ accessToken: result.accessToken });
+    return res.send({ isSuccess: true });
   }
 
   @Post('refresh-token')
@@ -97,15 +112,20 @@ export class AuthController {
       RefreshTokensCommand.create({ accessToken, refreshToken }),
     );
 
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
+      path: '/',
     });
 
-    return res.send({
-      accessToken: result.accessToken,
-    });
+    return res.send({ isSuccess: true });
   }
 
   @Patch('reset-password')
