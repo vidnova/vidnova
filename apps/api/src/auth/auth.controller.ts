@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Patch, Post, Query, Redirect, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Query,
+  Redirect,
+  Req,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/sign-up.dto';
@@ -15,7 +26,7 @@ import { ResetPasswordCommand } from './use-cases/reset-password/reset-password.
 import { GoogleLoginUseCase } from './use-cases/google-login/google-login.use-case';
 import { GoogleLoginCommand } from './use-cases/google-login/google-login.command';
 import { GoogleService } from './services/google.service';
-import { IApiResponse } from '../common/interceptors/response.interceptor';
+import { IApiResponse, SkipResponseInterceptor } from '../common/interceptors/response.interceptor';
 
 @Controller('auth')
 export class AuthController {
@@ -156,6 +167,7 @@ export class AuthController {
   }
 
   @Get('google')
+  @SkipResponseInterceptor()
   @Redirect()
   googleLogin() {
     const url = this.googleService.getAuthUrl();
@@ -163,6 +175,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
+  @SkipResponseInterceptor()
   @Redirect()
   async googleCallback(@Res() res: FastifyReply, @Query('code') code: string) {
     const user = await this.googleService.getUserData(code);

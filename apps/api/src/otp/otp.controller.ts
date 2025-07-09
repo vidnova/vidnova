@@ -8,7 +8,6 @@ import { GenerateAndSendOtpCommand } from './use-cases/generate-and-send-otp/gen
 import { CheckOtpDto } from './dtos/check-otp.dto';
 import { VerifyOtpCommand } from './use-cases/verify-otp/verify-otp-command';
 import { IVerifyOtp } from './use-cases/verify-otp/verify-otp.interface';
-import { User } from '@ecorally/dal';
 
 @Controller('otp')
 export class OtpController {
@@ -81,7 +80,7 @@ export class OtpController {
     description: 'Provided code is not valid',
   })
   async checkOtp(@Body(ValidationPipe) data: CheckOtpDto, @Req() req: FastifyRequest) {
-    const user = req.user as User;
+    const user = req.user;
     const isValid = await this.verifyOtpUseCase.execute(
       VerifyOtpCommand.create({ userId: user.id, code: data.code }),
     );

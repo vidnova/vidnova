@@ -10,7 +10,7 @@ export class GoogleLoginUseCase {
     let user = await this.userRepository.getByEmail(command.email);
 
     if (!user) {
-      const createUser = User.create({ email: command.email });
+      const createUser = User.create({ email: command.email, isVerified: true });
       user = await this.userRepository.create(createUser);
     }
 

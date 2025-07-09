@@ -11,14 +11,14 @@ export class User {
     private readonly _password: string | null,
   ) {}
 
-  static create(params: { email: string; password?: string; }): User {
+  static create(params: { email: string; password?: string; isVerified?: boolean }): User {
     const name = params.email.split('@')[0];
     return new User(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       v4(),
       name,
       params.email,
-      false,
+      params.isVerified ?? false,
       new Date(),
       new Date(),
       params.password ?? null,

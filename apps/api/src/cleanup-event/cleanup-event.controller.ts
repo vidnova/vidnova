@@ -26,7 +26,7 @@ import { GetCleanupEventsCommand } from './use-cases/get-cleanup-events/get-clea
 import { UpdateCleanupEventCommand } from './use-cases/update-cleanup-event/update-cleanup-event.command';
 import { DeleteCleanupEventCommand } from './use-cases/delete-cleanup-event/delete-cleanup-event.command';
 import { ICreateCleanupEventDto } from '@ecorally/shared';
-import { CleanupEvent, User } from '@ecorally/dal';
+import { CleanupEvent } from '@ecorally/dal';
 
 @Controller('cleanup-events')
 export class CleanupEventController {
@@ -44,7 +44,7 @@ export class CleanupEventController {
     @Req() req: FastifyRequest,
     @Body() data: CreateCleanupEventDto,
   ): Promise<CleanupEvent> {
-    const user = req.user as User;
+    const user = req.user;
 
     return this.createCleanupEventUseCase.execute(
       CreateCleanupEventCommand.create({
@@ -71,7 +71,7 @@ export class CleanupEventController {
     @Body() data: ICreateCleanupEventDto,
     @Req() req: FastifyRequest,
   ) {
-    const user = req.user as User;
+    const user = req.user;
     return this.updateCleanupEventUseCase.execute(
       UpdateCleanupEventCommand.create({
         ...data,
@@ -88,7 +88,7 @@ export class CleanupEventController {
     @Req() req: FastifyRequest,
     @Res() res: FastifyReply,
   ) {
-    const user = req.user as User;
+    const user = req.user;
     const deleteCleanupEventResult = await this.deleteCleanupEventUseCase.execute(
       DeleteCleanupEventCommand.create({
         cleanupEventId,

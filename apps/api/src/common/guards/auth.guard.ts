@@ -18,16 +18,14 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request: FastifyRequest = ctx.switchToHttp().getRequest();
-    const accessToken: string | undefined = request.headers.authorization;
+    const accessToken: string | undefined = request.cookies.accessToken;
 
     if (!accessToken) {
       throw new UnauthorizedException('Access token not provided');
     }
 
     try {
-      const token = accessToken.startsWith('Bearer ') ? accessToken.slice(7) : accessToken;
-
-      const id = verifyToken(token);
+      const id = verifyToken(accessToken);
       const user = await this.prisma.user.findUnique({ where: { id } });
 
       if (!user) {
