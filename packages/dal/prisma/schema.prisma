@@ -67,24 +67,24 @@ model CleanupEventLocation {
 }
 
 model Region {
-  id                    String                 @id @default(uuid())
-  name                  String                 @unique
-  latitude              Float
-  longitude             Float
-  settlements           Settlement[]
-  contaminatedPoint     ContaminatedPoint[]
-  cleanupEventLocations CleanupEventLocation[]
+  id                        String                      @id @default(uuid())
+  name                      String                      @unique
+  latitude                  Float
+  longitude                 Float
+  settlements               Settlement[]
+  cleanupEventLocations     CleanupEventLocation[]
+  contaminatedPointLocation ContaminatedPointLocation[]
 }
 
 model Settlement {
-  id                 String                 @id @default(uuid())
-  name               String
-  regionId           String
-  latitude           Float
-  longitude          Float
-  region             Region                 @relation(fields: [regionId], references: [id])
-  locations          CleanupEventLocation[] @relation("SettlementToLocation")
-  contaminatedPoints ContaminatedPoint[]    @relation("SettlementToContaminatedPoint")
+  id                        String                      @id @default(uuid())
+  name                      String
+  regionId                  String
+  latitude                  Float
+  longitude                 Float
+  region                    Region                      @relation(fields: [regionId], references: [id])
+  locations                 CleanupEventLocation[]      @relation("SettlementToLocation")
+  contaminatedPointLocation ContaminatedPointLocation[]
 
   @@unique([name, regionId])
 }
@@ -185,19 +185,26 @@ model BlacklistToken {
 }
 
 model ContaminatedPoint {
-  id           String                  @id @default(uuid())
-  imageUrl     String
-  name         String
-  description  String
-  status       ContaminatedPointStatus
-  latitude     Float
-  longitude    Float
-  settlementId String?
-  regionId     String
-  region       Region                  @relation(fields: [regionId], references: [id])
-  settlement   Settlement?             @relation("SettlementToContaminatedPoint", fields: [settlementId], references: [id])
-  creatorId    String
-  creator      User                    @relation(fields: [creatorId], references: [id])
+  id          String                     @id @default(uuid())
+  imageUrl    String
+  name        String
+  description String
+  status      ContaminatedPointStatus
+  creatorId   String
+  creator     User                       @relation(fields: [creatorId], references: [id])
+  location    ContaminatedPointLocation? @relation
+}
+
+model ContaminatedPointLocation {
+  id                  String            @id @default(uuid())
+  contaminatedPointId String            @unique
+  latitude            Float
+  longitude           Float
+  settlementId        String?
+  regionId            String
+  region              Region            @relation(fields: [regionId], references: [id])
+  settlement          Settlement?       @relation(fields: [settlementId], references: [id])
+  contaminatedPoint   ContaminatedPoint @relation(fields: [contaminatedPointId], references: [id], onDelete: Cascade)
 }
 
 enum ContaminatedPointStatus {
