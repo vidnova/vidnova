@@ -12,7 +12,7 @@ export class ContaminatedPoint {
     private readonly _creatorId: string,
     private readonly _location: Location,
   ) {}
-  
+
   static create(
     name: string,
     imageUrl: string,
@@ -41,6 +41,18 @@ export class ContaminatedPoint {
     location: Location,
   ): ContaminatedPoint {
     return new ContaminatedPoint(id, imageUrl, name, description, status, creatorId, location);
+  }
+
+  toPrimitives() {
+    return {
+      id: this._id,
+      imageUrl: this._imageUrl,
+      name: this._name,
+      description: this._description,
+      status: this._status,
+      creatorId: this._creatorId,
+      location: this._location.toPrimitives(),
+    };
   }
 
   get id(): string {

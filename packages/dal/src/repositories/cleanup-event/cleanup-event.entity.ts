@@ -15,7 +15,7 @@ export class CleanupEvent {
     private readonly _equipment: EquipmentItem[],
     private readonly _location: Location,
     private readonly _regionId: string,
-    private readonly _settlementId: string | null,
+    private readonly _settlementId: string | undefined,
     private readonly _dates: Date[],
     private readonly _createdAt: Date,
   ) {}
@@ -31,7 +31,7 @@ export class CleanupEvent {
     latitude: number,
     longitude: number,
     regionId: string,
-    settlementId: string | null,
+    settlementId: string | undefined,
     dates: Date[],
   ): CleanupEvent {
     if (!name || name.trim().length === 0) {
@@ -59,7 +59,7 @@ export class CleanupEvent {
       throw new Error('All event dates must be within start and end date range');
     }
 
-    const location = new Location(latitude, longitude);
+    const location = new Location(latitude, longitude, regionId, settlementId);
 
     return new CleanupEvent(
       v4(),
@@ -91,7 +91,7 @@ export class CleanupEvent {
     latitude: number,
     longitude: number,
     regionId: string,
-    settlementId: string | null,
+    settlementId: string | undefined,
     dates: Date[],
     createdAt: Date,
   ): CleanupEvent {
@@ -120,7 +120,7 @@ export class CleanupEvent {
       throw new Error('All event dates must be within start and end date range');
     }
 
-    const location = new Location(latitude, longitude);
+    const location = new Location(latitude, longitude, regionId, settlementId);
 
     return new CleanupEvent(
       id,
@@ -153,7 +153,7 @@ export class CleanupEvent {
     latitude: number,
     longitude: number,
     regionId: string,
-    settlementId: string | null,
+    settlementId: string | undefined,
     eventDates: Date[],
     createdAt: Date,
   ): CleanupEvent {
@@ -167,7 +167,7 @@ export class CleanupEvent {
       organizerId,
       status,
       equipment,
-      new Location(latitude, longitude),
+      new Location(latitude, longitude, regionId, settlementId),
       regionId,
       settlementId,
       eventDates,
@@ -219,7 +219,7 @@ export class CleanupEvent {
     return this._regionId;
   }
 
-  get settlementId(): string | null {
+  get settlementId(): string | undefined {
     return this._settlementId;
   }
 
@@ -249,8 +249,8 @@ export class CleanupEvent {
       status: this.status,
       imageUrl: this.imageUrl,
       location: this.location,
-      organizer: this.organizerId
-    }
+      organizer: this.organizerId,
+    };
   }
 
   toJSON() {

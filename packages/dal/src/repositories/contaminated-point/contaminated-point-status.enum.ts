@@ -1,4 +1,4 @@
 export enum ContaminatedPointStatusEnum {
-  ACTIVE,
-  CLEANED,
+  ACTIVE = 'ACTIVE',
+  CLEANED = 'CLEANED',
 }

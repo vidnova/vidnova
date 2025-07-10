@@ -72,7 +72,7 @@ export class CleanupEventMapper {
       data.location.latitude,
       data.location.longitude,
       data.location.region.id,
-      data.location.settlement ? data.location.settlement.id : null,
+      data.location.settlement ? data.location.settlement.id : undefined,
       eventDates,
       data.createdAt,
     );

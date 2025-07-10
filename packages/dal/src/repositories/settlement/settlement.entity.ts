@@ -1,23 +1,24 @@
 import { Region } from '../region';
-import { Location } from '@ecorally/shared';
 
 export class Settlement {
   private constructor(
     private readonly _id: string,
     private readonly _name: string,
     private readonly _regionId: string,
-    private readonly _location: Location,
+    private readonly _longitude: number,
+    private readonly _latitude: number,
     private readonly _region?: Region,
   ) {}
 
-  static create(
+  static fromPersistence(
     id: string,
     name: string,
     regionId: string,
-    location: Location,
+    latitude: number,
+    longitude: number,
     region?: Region,
   ): Settlement {
-    return new Settlement(id, name, regionId, location, region);
+    return new Settlement(id, name, regionId, longitude, latitude, region);
   }
 
   get id(): string {
@@ -36,7 +37,11 @@ export class Settlement {
     return this._region;
   }
 
-  get location(): Location {
-    return this._location;
+  get latitude(): number {
+    return this._latitude;
+  }
+
+  get longitude(): number {
+    return this._longitude;
   }
 }

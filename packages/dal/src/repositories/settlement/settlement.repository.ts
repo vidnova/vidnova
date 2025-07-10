@@ -17,22 +17,22 @@ export class SettlementRepository implements ISettlementRepository {
 
     if (!settlement) return null;
 
-    const settlementLocation = Location.create(settlement.latitude, settlement.longitude);
-
     let region: Region | undefined;
     if (options?.includeRegion && settlement.region) {
-      const regionLocation = Location.create(
-        settlement.region.latitude,
+      region = Region.fromPersistence(
+        settlement.region.id,
+        settlement.region.name,
         settlement.region.longitude,
+        settlement.region.latitude,
       );
-      region = Region.fromPersistence(settlement.region.id, settlement.region.name, regionLocation);
     }
 
-    return Settlement.create(
+    return Settlement.fromPersistence(
       settlement.id,
       settlement.name,
       settlement.regionId,
-      settlementLocation,
+      settlement.latitude,
+      settlement.longitude,
       region,
     );
   }
