@@ -1,11 +1,12 @@
 import { IContaminatedPointRepository } from './contaminated-point-repository.interface';
 import { PrismaService } from '../shared';
 import { ContaminatedPoint } from './contaminated-point.entity';
-import { ContaminatedPointDto } from './contaminated-point.dto';
+import { ContaminatedPointDto, ContaminatedPointSummaryDto } from './contaminated-point.dto';
 import { ContaminatedPointQueries } from './contaminated-point.query';
 import { ContaminatedPointMapper } from './contaminated-point.mapper';
 import { Injectable } from '@nestjs/common';
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {
@@ -56,5 +57,15 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
           status: contaminatedPoint.status as ContaminatedPointStatusEnum,
         })
       : null;
+  }
+
+  async getMany(): Promise<ContaminatedPointSummaryDto[]> {
+    const contaminatedPoints = await this.prismaService.contaminatedPoint.findMany({
+      select: ContaminatedPointQueries.SELECT_FIELDS_PREVIEW,
+    });
+
+    return contaminatedPoints.map((contaminatedPoint) =>
+      ContaminatedPointMapper.toPreview(contaminatedPoint),
+    );
   }
 }

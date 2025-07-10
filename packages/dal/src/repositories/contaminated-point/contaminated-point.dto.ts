@@ -23,3 +23,24 @@ export interface ContaminatedPointDto {
     name: string;
   };
 }
+
+export interface ContaminatedPointSummaryDto {
+  id: string;
+  name: string;
+  imageUrl: string;
+  status: ContaminatedPointStatusEnum;
+  location: {
+    settlement: {
+      id?: string | undefined;
+      name?: string | undefined;
+    };
+    region: {
+      id?: string | undefined;
+      name?: string | undefined;
+    };
+  };
+  creator: {
+    id: string;
+    name: string;
+  };
+}
