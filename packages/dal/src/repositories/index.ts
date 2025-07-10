@@ -6,3 +6,4 @@ export * from './cleanup-event';
 export * from './overpass';
 export * from './otp';
 export * from './blacklisted-token';
+export * from './contaminated-point';
