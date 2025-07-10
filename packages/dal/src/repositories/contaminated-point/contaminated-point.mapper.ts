@@ -22,10 +22,14 @@ export class ContaminatedPointMapper {
       location: {
         latitude: data.location?.latitude,
         longitude: data.location?.longitude,
-        regionId: data.location?.region.id,
-        regionName: data.location?.region.name,
-        settlementId: data.location?.settlement?.id,
-        settlementName: data.location?.settlement?.name,
+        region: {
+          id: data.location?.region.id,
+          name: data.location?.region.name,
+        },
+        settlement: {
+          id: data.location?.settlement?.id,
+          name: data.location?.settlement?.name,
+        },
       },
     };
   }

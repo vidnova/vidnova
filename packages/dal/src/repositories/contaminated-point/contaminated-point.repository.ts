@@ -4,7 +4,9 @@ import { ContaminatedPoint } from './contaminated-point.entity';
 import { ContaminatedPointDto } from './contaminated-point.dto';
 import { ContaminatedPointQueries } from './contaminated-point.query';
 import { ContaminatedPointMapper } from './contaminated-point.mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {
   constructor(private readonly prismaService: PrismaService) {}
 

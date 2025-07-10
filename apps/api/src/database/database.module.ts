@@ -3,6 +3,7 @@ import {
   BlacklistedTokenRepository,
   CachingOverpassRepository,
   CleanupEventRepository,
+  ContaminatedPointRepository,
   OtpRepository,
   OverpassRepository,
   PrismaService,
@@ -48,6 +49,10 @@ import {
       provide: 'BLACKLISTED_TOKEN_REPOSITORY',
       useClass: BlacklistedTokenRepository,
     },
+    {
+      provide: 'CONTAMINATED_POINT_REPOSITORY',
+      useClass: ContaminatedPointRepository,
+    },
   ],
   exports: [
     'CLEANUP_EVENT_REPOSITORY',
@@ -58,6 +63,7 @@ import {
     'SETTLEMENT_REPOSITORY',
     'USER_REPOSITORY',
     'BLACKLISTED_TOKEN_REPOSITORY',
+    'CONTAMINATED_POINT_REPOSITORY',
     RedisService,
     PrismaService,
   ],

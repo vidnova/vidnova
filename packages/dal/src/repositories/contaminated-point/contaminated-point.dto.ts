@@ -9,10 +9,14 @@ export interface ContaminatedPointDto {
   location: {
     latitude: number | undefined;
     longitude: number | undefined;
-    settlementId?: string | undefined;
-    settlementName?: string | undefined;
-    regionId: string | undefined;
-    regionName: string | undefined;
+    settlement: {
+      id?: string | undefined;
+      name?: string | undefined;
+    };
+    region: {
+      id?: string | undefined;
+      name?: string | undefined;
+    };
   };
   creator: {
     id: string;

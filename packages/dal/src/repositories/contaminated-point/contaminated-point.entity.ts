@@ -14,20 +14,22 @@ export class ContaminatedPoint {
   ) {}
 
   static create(
-    name: string,
-    imageUrl: string,
-    description: string,
-    creatorId: string,
-    location: Location,
+    params: {
+      name: string,
+      imageUrl: string,
+      description: string,
+      creatorId: string,
+      location: Location,
+    }
   ): ContaminatedPoint {
     return new ContaminatedPoint(
       v4(),
-      imageUrl,
-      name,
-      description,
+      params.imageUrl,
+      params.name,
+      params.description,
       ContaminatedPointStatusEnum.ACTIVE,
-      creatorId,
-      location,
+      params.creatorId,
+      params.location,
     );
   }
 

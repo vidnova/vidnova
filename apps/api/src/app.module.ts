@@ -8,6 +8,7 @@ import { CleanupEventModule } from './cleanup-event/cleanup-event.module';
 import { SettlementModule } from './settlement/settlement.module';
 import { RegionModule } from './region/region.module';
 import { DatabaseModule } from './database/database.module';
+import { ContaminatedPointModule } from './contaminated-point/contaminated-point.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DatabaseModule } from './database/database.module';
     SettlementModule,
     RegionModule,
     DatabaseModule,
+    ContaminatedPointModule,
   ],
   controllers: [AppController],
   providers: [AppService],
