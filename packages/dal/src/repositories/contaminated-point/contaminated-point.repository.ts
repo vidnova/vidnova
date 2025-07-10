@@ -7,6 +7,7 @@ import { ContaminatedPointMapper } from './contaminated-point.mapper';
 import { Injectable } from '@nestjs/common';
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 import { Prisma } from '@prisma/client';
+import { GetContaminatedPointsFilters } from '@ecorally/shared';
 
 @Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {
@@ -59,13 +60,34 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
       : null;
   }
 
-  async getMany(): Promise<ContaminatedPointSummaryDto[]> {
+  async getAll(filters: GetContaminatedPointsFilters): Promise<ContaminatedPointSummaryDto[]> {
+    const whereClause = this.buildGetContaminatedPointsWhereClause(filters);
+
     const contaminatedPoints = await this.prismaService.contaminatedPoint.findMany({
+      where: whereClause,
       select: ContaminatedPointQueries.SELECT_FIELDS_PREVIEW,
     });
 
     return contaminatedPoints.map((contaminatedPoint) =>
       ContaminatedPointMapper.toPreview(contaminatedPoint),
     );
+  }
+
+  private buildGetContaminatedPointsWhereClause(
+    filters: GetContaminatedPointsFilters,
+  ): Prisma.ContaminatedPointWhereInput {
+    const where: Prisma.ContaminatedPointWhereInput = {};
+
+    if (filters.name) {
+      where.name = { contains: filters.name, mode: 'insensitive' };
+    }
+
+    if (filters.status) where.status = filters.status;
+
+    if (filters.regionId && where.location) where.location.regionId = filters.regionId;
+
+    if (filters.settlementId && where.location) where.location.settlementId = filters.settlementId;
+
+    return where;
   }
 }
