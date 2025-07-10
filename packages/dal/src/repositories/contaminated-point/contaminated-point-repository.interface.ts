@@ -5,4 +5,6 @@ export interface IContaminatedPointRepository {
   create(contaminatedPoint: ContaminatedPoint): Promise<ContaminatedPointDto>;
 
   getById(contaminatedPointId: string): Promise<ContaminatedPointDto | null>;
+
+  update(contaminatedPoint: ContaminatedPoint): Promise<ContaminatedPointDto>;
 }

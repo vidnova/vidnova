@@ -30,4 +30,17 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
 
     return contaminatedPoint ? ContaminatedPointMapper.toFullContent(contaminatedPoint) : null;
   }
+
+  async update(contaminatedPoint: ContaminatedPoint): Promise<ContaminatedPointDto> {
+    const updatedContaminatedPoint = await this.prismaService.contaminatedPoint.update({
+      where: { id: contaminatedPoint.id },
+      data: {
+        ...contaminatedPoint.toPrimitives(),
+        location: { update: contaminatedPoint.location.toPrimitives() },
+      },
+      select: ContaminatedPointQueries.SELECT_FIELDS,
+    });
+
+    return ContaminatedPointMapper.toFullContent(updatedContaminatedPoint);
+  }
 }
