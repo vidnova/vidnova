@@ -21,4 +21,13 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
 
     return ContaminatedPointMapper.toFullContent(createdContaminatedPoint);
   }
+
+  async getById(id: string): Promise<ContaminatedPointDto | null> {
+    const contaminatedPoint = await this.prismaService.contaminatedPoint.findUnique({
+      where: { id },
+      select: ContaminatedPointQueries.SELECT_FIELDS,
+    });
+
+    return contaminatedPoint ? ContaminatedPointMapper.toFullContent(contaminatedPoint) : null;
+  }
 }
