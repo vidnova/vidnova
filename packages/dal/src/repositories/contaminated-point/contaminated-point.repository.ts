@@ -5,6 +5,7 @@ import { ContaminatedPointDto } from './contaminated-point.dto';
 import { ContaminatedPointQueries } from './contaminated-point.query';
 import { ContaminatedPointMapper } from './contaminated-point.mapper';
 import { Injectable } from '@nestjs/common';
+import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 
 @Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {
@@ -14,7 +15,7 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
     const createdContaminatedPoint = await this.prismaService.contaminatedPoint.create({
       data: {
         ...contaminatedPoint.toPrimitives(),
-        location: { create: contaminatedPoint.location.toPrimitives() },
+        location: { create: contaminatedPoint.location?.toPrimitives() },
       },
       select: ContaminatedPointQueries.SELECT_FIELDS,
     });
@@ -22,7 +23,7 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
     return ContaminatedPointMapper.toFullContent(createdContaminatedPoint);
   }
 
-  async getById(id: string): Promise<ContaminatedPointDto | null> {
+  async getFullContentById(id: string): Promise<ContaminatedPointDto | null> {
     const contaminatedPoint = await this.prismaService.contaminatedPoint.findUnique({
       where: { id },
       select: ContaminatedPointQueries.SELECT_FIELDS,
@@ -36,11 +37,24 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
       where: { id: contaminatedPoint.id },
       data: {
         ...contaminatedPoint.toPrimitives(),
-        location: { update: contaminatedPoint.location.toPrimitives() },
+        location: { update: contaminatedPoint.location?.toPrimitives() },
       },
       select: ContaminatedPointQueries.SELECT_FIELDS,
     });
 
     return ContaminatedPointMapper.toFullContent(updatedContaminatedPoint);
+  }
+
+  async findById(id: string): Promise<ContaminatedPoint | null> {
+    const contaminatedPoint = await this.prismaService.contaminatedPoint.findUnique({
+      where: { id },
+    });
+
+    return contaminatedPoint
+      ? ContaminatedPoint.fromPersistence({
+          ...contaminatedPoint,
+          status: contaminatedPoint.status as ContaminatedPointStatusEnum,
+        })
+      : null;
   }
 }

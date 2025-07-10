@@ -27,7 +27,7 @@ export class GetContaminatedPointUseCase {
         return JSON.parse(cachedPoint) as ContaminatedPoint;
       }
 
-      const contaminatedPoint = await this.contaminatedPointRepository.getById(
+      const contaminatedPoint = await this.contaminatedPointRepository.getFullContentById(
         command.contaminatedPointId,
       );
 

@@ -10,18 +10,16 @@ export class ContaminatedPoint {
     private readonly _description: string,
     private readonly _status: ContaminatedPointStatusEnum,
     private readonly _creatorId: string,
-    private readonly _location: Location,
+    private readonly _location?: Location,
   ) {}
 
-  static create(
-    params: {
-      name: string,
-      imageUrl: string,
-      description: string,
-      creatorId: string,
-      location: Location,
-    }
-  ): ContaminatedPoint {
+  static create(params: {
+    name: string;
+    imageUrl: string;
+    description: string;
+    creatorId: string;
+    location: Location;
+  }): ContaminatedPoint {
     return new ContaminatedPoint(
       v4(),
       params.imageUrl,
@@ -33,16 +31,44 @@ export class ContaminatedPoint {
     );
   }
 
-  static fromPersistence(
-    id: string,
-    imageUrl: string,
-    name: string,
-    description: string,
-    status: ContaminatedPointStatusEnum,
-    creatorId: string,
-    location: Location,
-  ): ContaminatedPoint {
-    return new ContaminatedPoint(id, imageUrl, name, description, status, creatorId, location);
+  static update(params: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    description: string;
+    status: ContaminatedPointStatusEnum;
+    creatorId: string;
+    location: Location;
+  }): ContaminatedPoint {
+    return new ContaminatedPoint(
+      params.id,
+      params.imageUrl,
+      params.name,
+      params.description,
+      params.status,
+      params.creatorId,
+      params.location,
+    );
+  }
+
+  static fromPersistence(params: {
+    id: string;
+    imageUrl: string;
+    name: string;
+    description: string;
+    status: ContaminatedPointStatusEnum;
+    creatorId: string;
+    location?: Location;
+  }): ContaminatedPoint {
+    return new ContaminatedPoint(
+      params.id,
+      params.imageUrl,
+      params.name,
+      params.description,
+      params.status,
+      params.creatorId,
+      params.location,
+    );
   }
 
   toPrimitives() {
@@ -53,7 +79,7 @@ export class ContaminatedPoint {
       description: this._description,
       status: this._status,
       creatorId: this._creatorId,
-      location: this._location.toPrimitives(),
+      location: this._location?.toPrimitives(),
     };
   }
 
@@ -81,7 +107,7 @@ export class ContaminatedPoint {
     return this._creatorId;
   }
 
-  get location(): Location {
+  get location(): Location | null | undefined {
     return this._location;
   }
 }
