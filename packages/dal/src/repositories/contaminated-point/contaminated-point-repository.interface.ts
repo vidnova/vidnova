@@ -1,6 +1,6 @@
 import { ContaminatedPoint } from './contaminated-point.entity';
 import { ContaminatedPointDto, ContaminatedPointSummaryDto } from './contaminated-point.dto';
-import { GetContaminatedPointsFilters } from '@ecorally/shared';
+import { GetContaminatedPointsFilters, Pagination } from '@ecorally/shared';
 
 export interface IContaminatedPointRepository {
   create(contaminatedPoint: ContaminatedPoint): Promise<ContaminatedPointDto>;
@@ -11,5 +11,8 @@ export interface IContaminatedPointRepository {
 
   findById(id: string): Promise<ContaminatedPoint | null>;
 
-  getAll(filters?: GetContaminatedPointsFilters): Promise<ContaminatedPointSummaryDto[]>;
+  getAll(
+    filters?: GetContaminatedPointsFilters,
+    pagination?: Pagination,
+  ): Promise<{ contaminatedPoints: ContaminatedPointSummaryDto[]; total: number }>;
 }

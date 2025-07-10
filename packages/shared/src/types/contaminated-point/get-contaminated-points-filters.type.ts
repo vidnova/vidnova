@@ -1,8 +1,6 @@
-import { ContaminatedPointStatusEnum } from '@ecorally/dal';
-
 export type GetContaminatedPointsFilters = {
   name?: string;
-  status?: ContaminatedPointStatusEnum;
+  status?: 'ACTIVE' | 'CLEANED';
   settlementId?: string;
   regionId?: string;
 };

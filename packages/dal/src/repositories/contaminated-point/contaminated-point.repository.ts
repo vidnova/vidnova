@@ -7,7 +7,7 @@ import { ContaminatedPointMapper } from './contaminated-point.mapper';
 import { Injectable } from '@nestjs/common';
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 import { Prisma } from '@prisma/client';
-import { GetContaminatedPointsFilters } from '@ecorally/shared';
+import { GetContaminatedPointsFilters, Pagination } from '@ecorally/shared';
 
 @Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {
@@ -60,17 +60,29 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
       : null;
   }
 
-  async getAll(filters: GetContaminatedPointsFilters): Promise<ContaminatedPointSummaryDto[]> {
+  async getAll(
+    filters: GetContaminatedPointsFilters,
+    pagination: Pagination,
+  ): Promise<{ contaminatedPoints: ContaminatedPointSummaryDto[]; total: number }> {
     const whereClause = this.buildGetContaminatedPointsWhereClause(filters);
+    const skip = (pagination.page - 1) * pagination.pageSize;
 
-    const contaminatedPoints = await this.prismaService.contaminatedPoint.findMany({
-      where: whereClause,
-      select: ContaminatedPointQueries.SELECT_FIELDS_PREVIEW,
-    });
+    const [contaminatedPoints, total] = await Promise.all([
+      this.prismaService.contaminatedPoint.findMany({
+        where: whereClause,
+        skip,
+        take: pagination.pageSize,
+        select: ContaminatedPointQueries.SELECT_FIELDS_PREVIEW,
+      }),
+      this.prismaService.contaminatedPoint.count({ where: whereClause }),
+    ]);
 
-    return contaminatedPoints.map((contaminatedPoint) =>
-      ContaminatedPointMapper.toPreview(contaminatedPoint),
-    );
+    return {
+      contaminatedPoints: contaminatedPoints.map((contaminatedPoint) =>
+        ContaminatedPointMapper.toPreview(contaminatedPoint),
+      ),
+      total,
+    };
   }
 
   private buildGetContaminatedPointsWhereClause(

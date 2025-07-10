@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { CreateContaminatedPointUseCase } from './use-cases/create-contaminated-point/create-contaminated-point.use-case';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
@@ -9,6 +9,9 @@ import { GetContaminatedPointCommand } from './use-cases/get-contaminated-point/
 import { UpdateContaminatedPointDto } from './dtos/update-contaminated-point.dto';
 import { UpdateContaminatedPointUseCase } from './use-cases/update-contaminated-point/update-contaminated-point.use-case';
 import { UpdateContaminatedPointCommand } from './use-cases/update-contaminated-point/update-contaminated-point.command';
+import { GetContaminatedPointsQueryDto } from './dtos/get-contaminated-points-query.dto';
+import { GetContaminatedPointsUseCase } from './use-cases/get-contaminated-points/get-contaminated-points.use-case';
+import { GetContaminatedPointsCommand } from './use-cases/get-contaminated-points/get-contaminated-points.command';
 
 @Controller('contaminated-points')
 export class ContaminatedPointController {
@@ -16,6 +19,7 @@ export class ContaminatedPointController {
     private readonly createContaminatedPointUseCase: CreateContaminatedPointUseCase,
     private readonly getContaminatedPointUseCase: GetContaminatedPointUseCase,
     private readonly updateContaminatedPointUseCase: UpdateContaminatedPointUseCase,
+    private readonly getContaminatedPointsUseCase: GetContaminatedPointsUseCase,
   ) {}
 
   @Post('/create')
@@ -53,6 +57,13 @@ export class ContaminatedPointController {
         userId: user.id,
         id: contaminatedPointId,
       }),
+    );
+  }
+
+  @Get()
+  async getAll(@Query() query: GetContaminatedPointsQueryDto) {
+    return this.getContaminatedPointsUseCase.execute(
+      GetContaminatedPointsCommand.create({ ...query }),
     );
   }
 }

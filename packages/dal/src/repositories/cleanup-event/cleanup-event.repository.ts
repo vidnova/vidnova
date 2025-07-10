@@ -6,7 +6,7 @@ import { CleanupEventMapper } from './cleanup-event.mapper';
 import { CleanupEventListDto, CleanupSortBy } from '@ecorally/shared';
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { ICleanupEventsFilters } from '@ecorally/shared/dist/interfaces';
+import { ICleanupEventsFilters } from '@ecorally/shared';
 
 @Injectable()
 export class CleanupEventRepository implements ICleanupEventRepository {
