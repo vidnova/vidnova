@@ -15,4 +15,6 @@ export interface IContaminatedPointRepository {
     filters?: GetContaminatedPointsFilters,
     pagination?: Pagination,
   ): Promise<{ contaminatedPoints: ContaminatedPointSummaryDto[]; total: number }>;
+
+  delete(id: string): Promise<void>;
 }

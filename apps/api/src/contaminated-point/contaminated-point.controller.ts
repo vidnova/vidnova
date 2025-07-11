@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateContaminatedPointUseCase } from './use-cases/create-contaminated-point/create-contaminated-point.use-case';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
@@ -12,6 +23,8 @@ import { UpdateContaminatedPointCommand } from './use-cases/update-contaminated-
 import { GetContaminatedPointsQueryDto } from './dtos/get-contaminated-points-query.dto';
 import { GetContaminatedPointsUseCase } from './use-cases/get-contaminated-points/get-contaminated-points.use-case';
 import { GetContaminatedPointsCommand } from './use-cases/get-contaminated-points/get-contaminated-points.command';
+import { DeleteContaminatedPointUseCase } from './use-cases/delete-contaminated-point/delete-contaminated-point.use-case';
+import { DeleteContaminatedPointCommand } from './use-cases/delete-contaminated-point/delete-contaminated-point.command';
 
 @Controller('contaminated-points')
 export class ContaminatedPointController {
@@ -20,6 +33,7 @@ export class ContaminatedPointController {
     private readonly getContaminatedPointUseCase: GetContaminatedPointUseCase,
     private readonly updateContaminatedPointUseCase: UpdateContaminatedPointUseCase,
     private readonly getContaminatedPointsUseCase: GetContaminatedPointsUseCase,
+    private readonly deleteContaminatedPointUseCase: DeleteContaminatedPointUseCase,
   ) {}
 
   @Post('/create')
@@ -65,5 +79,23 @@ export class ContaminatedPointController {
     return this.getContaminatedPointsUseCase.execute(
       GetContaminatedPointsCommand.create({ ...query }),
     );
+  }
+
+  @Delete(':contaminatedPointId/delete')
+  @UseGuards(AuthGuard)
+  async delete(
+    @Param('contaminatedPointId') contaminatedPointId: string,
+    @Req() req: FastifyRequest,
+  ) {
+    const user = req.user;
+
+    const result = await this.deleteContaminatedPointUseCase.execute(
+      DeleteContaminatedPointCommand.create({
+        userId: user.id,
+        contaminatedPointId,
+      }),
+    );
+
+    return { message: result };
   }
 }

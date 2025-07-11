@@ -85,6 +85,10 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
     };
   }
 
+  async delete(id: string): Promise<void> {
+    await this.prismaService.contaminatedPoint.delete({ where: { id } });
+  }
+
   private buildGetContaminatedPointsWhereClause(
     filters: GetContaminatedPointsFilters,
   ): Prisma.ContaminatedPointWhereInput {
