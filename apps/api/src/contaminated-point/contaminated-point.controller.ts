@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -25,6 +26,9 @@ import { GetContaminatedPointsUseCase } from './use-cases/get-contaminated-point
 import { GetContaminatedPointsCommand } from './use-cases/get-contaminated-points/get-contaminated-points.command';
 import { DeleteContaminatedPointUseCase } from './use-cases/delete-contaminated-point/delete-contaminated-point.use-case';
 import { DeleteContaminatedPointCommand } from './use-cases/delete-contaminated-point/delete-contaminated-point.command';
+import { UpdateContaminatedPointStatusCommand } from './use-cases/update-contaminated-point-status/update-contaminated-point-status.command';
+import { UpdateContaminatedPointStatusDto } from './dtos/update-contaminated-point-status.dto';
+import { UpdateContaminatedPointStatusUseCase } from './use-cases/update-contaminated-point-status/update-contaminated-point-status.use-case';
 
 @Controller('contaminated-points')
 export class ContaminatedPointController {
@@ -34,6 +38,7 @@ export class ContaminatedPointController {
     private readonly updateContaminatedPointUseCase: UpdateContaminatedPointUseCase,
     private readonly getContaminatedPointsUseCase: GetContaminatedPointsUseCase,
     private readonly deleteContaminatedPointUseCase: DeleteContaminatedPointUseCase,
+    private readonly updateContaminatedPointStatusUseCase: UpdateContaminatedPointStatusUseCase,
   ) {}
 
   @Post('/create')
@@ -93,6 +98,26 @@ export class ContaminatedPointController {
       DeleteContaminatedPointCommand.create({
         userId: user.id,
         contaminatedPointId,
+      }),
+    );
+
+    return { message: result };
+  }
+
+  @Patch(':contaminatedPointId/update-status')
+  @UseGuards(AuthGuard)
+  async updateStatus(
+    @Req() req: FastifyRequest,
+    @Param('contaminatedPointId') contaminatedPointId: string,
+    @Body() data: UpdateContaminatedPointStatusDto,
+  ) {
+    const user = req.user;
+
+    const result = await this.updateContaminatedPointStatusUseCase.execute(
+      UpdateContaminatedPointStatusCommand.create({
+        userId: user.id,
+        contaminatedPointId,
+        status: data.status,
       }),
     );
 

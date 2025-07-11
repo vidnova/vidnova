@@ -3,6 +3,7 @@ import { GetContaminatedPointUseCase } from './get-contaminated-point/get-contam
 import { UpdateContaminatedPointUseCase } from './update-contaminated-point/update-contaminated-point.use-case';
 import { GetContaminatedPointsUseCase } from './get-contaminated-points/get-contaminated-points.use-case';
 import { DeleteContaminatedPointUseCase } from './delete-contaminated-point/delete-contaminated-point.use-case';
+import { UpdateContaminatedPointStatusUseCase } from './update-contaminated-point-status/update-contaminated-point-status.use-case';
 
 export const USE_CASES = [
   CreateContaminatedPointUseCase,
@@ -10,4 +11,5 @@ export const USE_CASES = [
   UpdateContaminatedPointUseCase,
   GetContaminatedPointsUseCase,
   DeleteContaminatedPointUseCase,
+  UpdateContaminatedPointStatusUseCase,
 ];

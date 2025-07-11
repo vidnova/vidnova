@@ -85,6 +85,13 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
     };
   }
 
+  async updateStatus(id: string, status: ContaminatedPointStatusEnum): Promise<void> {
+    await this.prismaService.contaminatedPoint.update({
+      where: { id },
+      data: { status },
+    });
+  }
+
   async delete(id: string): Promise<void> {
     await this.prismaService.contaminatedPoint.delete({ where: { id } });
   }

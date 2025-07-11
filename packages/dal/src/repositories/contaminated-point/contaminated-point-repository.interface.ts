@@ -1,6 +1,7 @@
 import { ContaminatedPoint } from './contaminated-point.entity';
 import { ContaminatedPointDto, ContaminatedPointSummaryDto } from './contaminated-point.dto';
 import { GetContaminatedPointsFilters, Pagination } from '@ecorally/shared';
+import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 
 export interface IContaminatedPointRepository {
   create(contaminatedPoint: ContaminatedPoint): Promise<ContaminatedPointDto>;
@@ -17,4 +18,6 @@ export interface IContaminatedPointRepository {
   ): Promise<{ contaminatedPoints: ContaminatedPointSummaryDto[]; total: number }>;
 
   delete(id: string): Promise<void>;
+
+  updateStatus(id: string, status: ContaminatedPointStatusEnum): Promise<void>;
 }
