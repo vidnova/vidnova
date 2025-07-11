@@ -6,8 +6,22 @@ export class Region {
     private readonly _latitude: number,
   ) {}
 
-  static fromPersistence(id: string, name: string, longitude: number, latitude: number): Region {
-    return new Region(id, name, longitude, latitude);
+  static fromPersistence(params: {
+    id: string;
+    name: string;
+    longitude: number;
+    latitude: number;
+  }): Region {
+    return new Region(params.id, params.name, params.longitude, params.latitude);
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+      latitude: this._latitude,
+      longitude: this._longitude,
+    };
   }
 
   get id(): string {

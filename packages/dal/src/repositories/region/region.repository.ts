@@ -12,6 +12,11 @@ export class RegionRepository implements IRegionRepository {
 
     if (!region) return null;
 
-    return Region.fromPersistence(region.id, region.name, region.longitude, region.latitude);
+    return Region.fromPersistence(region);
+  }
+
+  async getAll(): Promise<Region[]> {
+    const regions = await this.prismaService.region.findMany();
+    return regions.map((region) => Region.fromPersistence(region));
   }
 }

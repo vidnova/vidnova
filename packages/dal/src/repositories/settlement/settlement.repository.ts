@@ -19,12 +19,7 @@ export class SettlementRepository implements ISettlementRepository {
 
     let region: Region | undefined;
     if (options?.includeRegion && settlement.region) {
-      region = Region.fromPersistence(
-        settlement.region.id,
-        settlement.region.name,
-        settlement.region.longitude,
-        settlement.region.latitude,
-      );
+      region = Region.fromPersistence(settlement.region);
     }
 
     return Settlement.fromPersistence(
