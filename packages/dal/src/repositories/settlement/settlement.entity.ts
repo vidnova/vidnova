@@ -10,15 +10,22 @@ export class Settlement {
     private readonly _region?: Region,
   ) {}
 
-  static fromPersistence(
-    id: string,
-    name: string,
-    regionId: string,
-    latitude: number,
-    longitude: number,
-    region?: Region,
-  ): Settlement {
-    return new Settlement(id, name, regionId, longitude, latitude, region);
+  static fromPersistence(params: {
+    id: string;
+    name: string;
+    regionId: string;
+    latitude: number;
+    longitude: number;
+    region?: Region;
+  }): Settlement {
+    return new Settlement(
+      params.id,
+      params.name,
+      params.regionId,
+      params.longitude,
+      params.latitude,
+      params.region,
+    );
   }
 
   get id(): string {
@@ -43,5 +50,16 @@ export class Settlement {
 
   get longitude(): number {
     return this._longitude;
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+      regionId: this._regionId,
+      latitude: this._latitude,
+      longitude: this._longitude,
+      region: this._region,
+    };
   }
 }
