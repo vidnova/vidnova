@@ -30,7 +30,7 @@ export class CommentRepository implements ICommentRepository {
 
     const user = CommentUser.fromPersistence(createdComment.user);
 
-    return Comment.fromPersistence({ ...createdComment, replies: [], user });
+    return Comment.fromPersistence({ ...createdComment, user });
   }
 
   async findById(commentId: string) {
@@ -69,5 +69,26 @@ export class CommentRepository implements ICommentRepository {
       },
     });
     return { comments };
+  }
+
+  async update(comment: Comment): Promise<Comment> {
+    const updatedComment = await this.prismaService.comment.update({
+      where: { id: comment.id },
+      data: {
+        content: comment.content,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    const user = CommentUser.fromPersistence(updatedComment.user);
+
+    return Comment.fromPersistence({ ...updatedComment, user });
   }
 }

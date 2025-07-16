@@ -24,6 +24,22 @@ export class Comment {
     return new Comment(v4(), params.userId, params.eventId, params.content, params.parentId, []);
   }
 
+  updateContent(newContent: string): Comment {
+    if (newContent.trim().length === 0) {
+      throw new Error('Content length must be at least 1 character');
+    }
+
+    return new Comment(
+      this._id,
+      this._userId,
+      this._eventId,
+      newContent,
+      this._parentId,
+      this._replies,
+      this._user,
+    );
+  }
+
   static fromPersistence(params: {
     id: string;
     userId: string;
