@@ -3,6 +3,7 @@ import { PrismaService } from '../shared';
 import { Comment } from './comment.entity';
 import { Injectable } from '@nestjs/common';
 import { CommentUser } from './comment-user.vo';
+import { CommentDto } from './comment.dto';
 
 @Injectable()
 export class CommentRepository implements ICommentRepository {
@@ -38,5 +39,20 @@ export class CommentRepository implements ICommentRepository {
     if (!comment) return null;
 
     return Comment.fromPersistence(comment);
+  }
+
+  async findByEventId(eventId: string): Promise<{ comments: CommentDto[] }> {
+    // TODO: implement filters and pagination
+
+    const comments = await this.prismaService.comment.findMany({
+      where: { eventId, parentId: null },
+      select: {
+        id: true,
+        eventId: true,
+        content: true,
+        user: { select: { id: true, name: true } },
+      },
+    });
+    return { comments };
   }
 }

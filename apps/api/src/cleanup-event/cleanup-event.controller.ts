@@ -27,6 +27,8 @@ import { UpdateCleanupEventCommand } from './use-cases/update-cleanup-event/upda
 import { DeleteCleanupEventCommand } from './use-cases/delete-cleanup-event/delete-cleanup-event.command';
 import { ICreateCleanupEventDto } from '@ecorally/shared';
 import { CleanupEvent } from '@ecorally/dal';
+import { GetCommentsByEventIdUseCase } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.use-case';
+import { GetCommentsByEventIdCommand } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.command';
 
 @Controller('cleanup-events')
 export class CleanupEventController {
@@ -36,6 +38,7 @@ export class CleanupEventController {
     private readonly getCleanupEventsUseCase: GetCleanupEventsUseCase,
     private readonly updateCleanupEventUseCase: UpdateCleanupEventUseCase,
     private readonly deleteCleanupEventUseCase: DeleteCleanupEventUseCase,
+    private readonly getCommentsByEventIdUseCase: GetCommentsByEventIdUseCase,
   ) {}
 
   @Post('create')
@@ -97,5 +100,14 @@ export class CleanupEventController {
     );
 
     return res.send({ message: deleteCleanupEventResult });
+  }
+
+  @Get(':cleanupEventId/comments')
+  async getCleanupEventComments(@Param('cleanupEventId') cleanupEventId: string) {
+    return this.getCommentsByEventIdUseCase.execute(
+      GetCommentsByEventIdCommand.create({
+        eventId: cleanupEventId,
+      }),
+    );
   }
 }
