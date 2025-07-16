@@ -91,4 +91,8 @@ export class CommentRepository implements ICommentRepository {
 
     return Comment.fromPersistence({ ...updatedComment, user });
   }
+
+  async delete(commentId: string) {
+    await this.prismaService.comment.delete({ where: { id: commentId } });
+  }
 }

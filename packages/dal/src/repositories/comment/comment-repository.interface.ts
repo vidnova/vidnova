@@ -11,4 +11,6 @@ export interface ICommentRepository {
   findAllByParentId(parentId: string): Promise<{ comments: CommentDto[] }>;
 
   update(comment: Comment): Promise<Comment>;
+
+  delete(commentId: string): Promise<void>;
 }
