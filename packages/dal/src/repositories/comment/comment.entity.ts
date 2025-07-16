@@ -1,4 +1,5 @@
 import { CommentUser } from './comment-user.vo';
+import { v4 } from 'uuid';
 
 export class Comment {
   private constructor(
@@ -10,6 +11,38 @@ export class Comment {
     private readonly _replies: Comment[],
     private readonly _user?: CommentUser,
   ) {}
+
+  static create(params: {
+    userId: string;
+    eventId: string;
+    content: string;
+    parentId: string;
+  }): Comment {
+    if (params.content.trim().length === 0) {
+      throw new Error('Content length must be at least 1 character');
+    }
+    return new Comment(v4(), params.userId, params.eventId, params.content, params.parentId, []);
+  }
+
+  static fromPersistence(params: {
+    id: string;
+    userId: string;
+    eventId: string;
+    content: string;
+    parentId: string | null;
+    replies: Comment[];
+    user?: CommentUser;
+  }): Comment {
+    return new Comment(
+      params.id,
+      params.userId,
+      params.eventId,
+      params.content,
+      params.parentId,
+      params.replies,
+      params.user,
+    );
+  }
 
   get id(): string {
     return this._id;
