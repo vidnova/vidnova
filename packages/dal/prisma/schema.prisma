@@ -20,7 +20,6 @@ model User {
   cleanupResult     CleanupResult[]
   notifications     Notification[]
   comments          Comment[]
-  commentReplies    CommentReply[]
   otp               Otp[]
   blacklistTokens   BlacklistToken[]
   ContaminatedPoint ContaminatedPoint[]
@@ -144,26 +143,17 @@ model Notification {
 }
 
 model Comment {
-  id             String         @id @default(uuid())
-  userId         String
-  user           User           @relation(fields: [userId], references: [id])
-  eventId        String
-  event          CleanupEvent   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  content        String
-  commentReplies CommentReply[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-}
-
-model CommentReply {
-  id        String   @id @default(uuid())
-  commentId String
-  comment   Comment  @relation(fields: [commentId], references: [id])
+  id        String       @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User         @relation(fields: [userId], references: [id])
+  eventId   String
+  event     CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  parentId  String?      @map("parent_id")
+  parent    Comment?     @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[]    @relation("CommentReplies")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model Otp {
