@@ -8,7 +8,7 @@ export class Comment {
     private readonly _eventId: string,
     private readonly _content: string,
     private readonly _parentId: string | null,
-    private readonly _replies: Comment[],
+    private readonly _replies?: Comment[],
     private readonly _user?: CommentUser,
   ) {}
 
@@ -16,7 +16,7 @@ export class Comment {
     userId: string;
     eventId: string;
     content: string;
-    parentId: string;
+    parentId: string | null;
   }): Comment {
     if (params.content.trim().length === 0) {
       throw new Error('Content length must be at least 1 character');
@@ -30,7 +30,7 @@ export class Comment {
     eventId: string;
     content: string;
     parentId: string | null;
-    replies: Comment[];
+    replies?: Comment[];
     user?: CommentUser;
   }): Comment {
     return new Comment(
@@ -68,7 +68,19 @@ export class Comment {
     return this._user;
   }
 
-  get replies(): Comment[] {
+  get replies(): Comment[] | undefined {
     return this._replies;
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      userId: this._userId,
+      eventId: this._eventId,
+      content: this._content,
+      parentId: this._parentId,
+      replies: this._replies,
+      user: this._user,
+    };
   }
 }

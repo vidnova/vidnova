@@ -9,6 +9,7 @@ import { SettlementModule } from './settlement/settlement.module';
 import { RegionModule } from './region/region.module';
 import { DatabaseModule } from './database/database.module';
 import { ContaminatedPointModule } from './contaminated-point/contaminated-point.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ContaminatedPointModule } from './contaminated-point/contaminated-point
     RegionModule,
     DatabaseModule,
     ContaminatedPointModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

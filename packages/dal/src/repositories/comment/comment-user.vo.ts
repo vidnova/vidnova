@@ -5,6 +5,10 @@ export class CommentUser {
     private readonly _name: string,
   ) {}
 
+  static fromPersistence(params: { id: string; name: string; imageUrl?: string }): CommentUser {
+    return new CommentUser(params.id, params.name, params.imageUrl ?? '');
+  }
+
   get id(): string {
     return this._id;
   }

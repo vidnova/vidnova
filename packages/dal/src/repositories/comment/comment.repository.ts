@@ -1,7 +1,10 @@
 import { ICommentRepository } from './comment-repository.interface';
 import { PrismaService } from '../shared';
 import { Comment } from './comment.entity';
+import { Injectable } from '@nestjs/common';
+import { CommentUser } from './comment-user.vo';
 
+@Injectable()
 export class CommentRepository implements ICommentRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -14,8 +17,26 @@ export class CommentRepository implements ICommentRepository {
         content: comment.content,
         parentId: comment.parentId,
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
-    return Comment.fromPersistence({ ...createdComment, replies: [] });
+    const user = CommentUser.fromPersistence(createdComment.user);
+
+    return Comment.fromPersistence({ ...createdComment, replies: [], user });
+  }
+
+  async findById(commentId: string) {
+    const comment = await this.prismaService.comment.findUnique({ where: { id: commentId } });
+
+    if (!comment) return null;
+
+    return Comment.fromPersistence(comment);
   }
 }
