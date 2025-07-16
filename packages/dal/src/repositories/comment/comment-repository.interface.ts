@@ -7,4 +7,6 @@ export interface ICommentRepository {
   findById(commentId: string): Promise<Comment | null>;
 
   findByEventId(eventId: string): Promise<{ comments: CommentDto[] }>;
+
+  findAllByParentId(parentId: string): Promise<{ comments: CommentDto[] }>;
 }

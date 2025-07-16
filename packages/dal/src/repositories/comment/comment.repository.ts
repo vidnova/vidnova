@@ -55,4 +55,19 @@ export class CommentRepository implements ICommentRepository {
     });
     return { comments };
   }
+
+  async findAllByParentId(parentId: string): Promise<{ comments: CommentDto[] }> {
+    // TODO: implement pagination
+
+    const comments = await this.prismaService.comment.findMany({
+      where: { parentId },
+      select: {
+        id: true,
+        eventId: true,
+        content: true,
+        user: { select: { id: true, name: true } },
+      },
+    });
+    return { comments };
+  }
 }
