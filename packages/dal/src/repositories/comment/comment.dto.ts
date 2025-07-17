@@ -4,6 +4,8 @@ export interface CommentDto {
   content: string;
   user: {
     id: string;
-    name: string;
+    imageUrl: string;
+    firstName: string;
+    lastName: string | null;
   };
 }

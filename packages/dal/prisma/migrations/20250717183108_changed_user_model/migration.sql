@@ -7,13 +7,20 @@ CREATE TYPE "NotificationType" AS ENUM ('EVENT', 'COMMENT', 'REPLY');
 -- CreateEnum
 CREATE TYPE "EventStatus" AS ENUM ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED');
 
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN', 'SUPERADMIN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT,
     "email" TEXT NOT NULL,
     "password" TEXT,
     "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "imageUrl" TEXT NOT NULL DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -144,22 +151,11 @@ CREATE TABLE "Comment" (
     "userId" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "parent_id" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "CommentReply" (
-    "id" TEXT NOT NULL,
-    "commentId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "CommentReply_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -191,17 +187,31 @@ CREATE TABLE "ContaminatedPoint" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "status" "ContaminatedPointStatus" NOT NULL,
-    "latitude" DOUBLE PRECISION NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
-    "settlementId" TEXT,
-    "regionId" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
 
     CONSTRAINT "ContaminatedPoint_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "ContaminatedPointLocation" (
+    "id" TEXT NOT NULL,
+    "contaminatedPointId" TEXT NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "settlementId" TEXT,
+    "regionId" TEXT NOT NULL,
+
+    CONSTRAINT "ContaminatedPointLocation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "User_role_idx" ON "User"("role");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CleanupEventLocation_eventId_key" ON "CleanupEventLocation"("eventId");
@@ -211,6 +221,9 @@ CREATE UNIQUE INDEX "Region_name_key" ON "Region"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Settlement_name_regionId_key" ON "Settlement"("name", "regionId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TakePart_userId_eventId_key" ON "TakePart"("userId", "eventId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "CleanupResult_eventId_key" ON "CleanupResult"("eventId");
@@ -223,6 +236,9 @@ CREATE UNIQUE INDEX "Otp_userId_key" ON "Otp"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "BlacklistToken_token_key" ON "BlacklistToken"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ContaminatedPointLocation_contaminatedPointId_key" ON "ContaminatedPointLocation"("contaminatedPointId");
 
 -- AddForeignKey
 ALTER TABLE "CleanupEvent" ADD CONSTRAINT "CleanupEvent_organizerId_fkey" FOREIGN KEY ("organizerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -273,10 +289,7 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "CleanupEvent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CommentReply" ADD CONSTRAINT "CommentReply_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "Comment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "CommentReply" ADD CONSTRAINT "CommentReply_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "Comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Otp" ADD CONSTRAINT "Otp_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -285,10 +298,13 @@ ALTER TABLE "Otp" ADD CONSTRAINT "Otp_userId_fkey" FOREIGN KEY ("userId") REFERE
 ALTER TABLE "BlacklistToken" ADD CONSTRAINT "BlacklistToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ContaminatedPoint" ADD CONSTRAINT "ContaminatedPoint_regionId_fkey" FOREIGN KEY ("regionId") REFERENCES "Region"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ContaminatedPoint" ADD CONSTRAINT "ContaminatedPoint_settlementId_fkey" FOREIGN KEY ("settlementId") REFERENCES "Settlement"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "ContaminatedPoint" ADD CONSTRAINT "ContaminatedPoint_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ContaminatedPointLocation" ADD CONSTRAINT "ContaminatedPointLocation_regionId_fkey" FOREIGN KEY ("regionId") REFERENCES "Region"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ContaminatedPointLocation" ADD CONSTRAINT "ContaminatedPointLocation_settlementId_fkey" FOREIGN KEY ("settlementId") REFERENCES "Settlement"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ContaminatedPointLocation" ADD CONSTRAINT "ContaminatedPointLocation_contaminatedPointId_fkey" FOREIGN KEY ("contaminatedPointId") REFERENCES "ContaminatedPoint"("id") ON DELETE CASCADE ON UPDATE CASCADE;

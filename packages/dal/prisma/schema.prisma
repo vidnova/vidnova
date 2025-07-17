@@ -9,10 +9,14 @@ datasource db {
 
 model User {
   id                String              @id @default(uuid())
-  name              String
+  username          String              @unique
+  firstName         String
+  lastName          String?
   email             String              @unique
   password          String?
   isVerified        Boolean             @default(false)
+  role              UserRole            @default(USER)
+  imageUrl          String              @default("")
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   events            CleanupEvent[]
@@ -23,6 +27,8 @@ model User {
   otp               Otp[]
   blacklistTokens   BlacklistToken[]
   ContaminatedPoint ContaminatedPoint[]
+
+  @@index([role])
 }
 
 model CleanupEvent {
@@ -215,4 +221,10 @@ enum EventStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPERADMIN
 }

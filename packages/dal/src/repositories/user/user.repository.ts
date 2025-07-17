@@ -2,6 +2,7 @@ import { IUserRepository } from './user-repository.interface';
 import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared';
+import { UserRole } from '@ecorally/shared';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -9,27 +10,38 @@ export class UserRepository implements IUserRepository {
 
   async create(user: User): Promise<User> {
     const createdUser = await this.prismaService.user.create({
-      data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      },
+      data: user,
     });
-    return User.fromPersistence(createdUser);
+    return User.fromPersistence({
+      ...createdUser,
+      lastname: createdUser.lastName,
+      role: createdUser.role as UserRole,
+    });
   }
 
   async getByEmail(email: string): Promise<User | null> {
     const user = await this.prismaService.user.findUnique({ where: { email } });
-    return user ? User.fromPersistence(user) : null;
+    return user
+      ? User.fromPersistence({ ...user, lastname: user.lastName, role: user.role as UserRole })
+      : null;
   }
 
   async updatePassword(user: User): Promise<void> {
     await this.prismaService.user.update({
       where: { id: user.id },
       data: { password: user.password },
+    });
+  }
+
+  async findFullById(userId: string): Promise<User | null> {
+    const user = await this.prismaService.user.findUnique({ where: { id: userId } });
+
+    if (!user) return null;
+
+    return User.fromPersistence({
+      ...user,
+      lastname: user.lastName,
+      role: user.role as UserRole,
     });
   }
 }

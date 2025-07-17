@@ -6,4 +6,6 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<User | null>;
 
   updatePassword(user: User): Promise<void>;
+
+  findFullById(userId: string): Promise<User | null>;
 }

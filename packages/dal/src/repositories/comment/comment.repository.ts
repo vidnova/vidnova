@@ -22,7 +22,9 @@ export class CommentRepository implements ICommentRepository {
         user: {
           select: {
             id: true,
-            name: true,
+            imageUrl: true,
+            firstName: true,
+            lastName: true,
           },
         },
       },
@@ -50,7 +52,14 @@ export class CommentRepository implements ICommentRepository {
         id: true,
         eventId: true,
         content: true,
-        user: { select: { id: true, name: true } },
+        user: {
+          select: {
+            id: true,
+            imageUrl: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
     return { comments };
@@ -65,7 +74,14 @@ export class CommentRepository implements ICommentRepository {
         id: true,
         eventId: true,
         content: true,
-        user: { select: { id: true, name: true } },
+        user: {
+          select: {
+            id: true,
+            imageUrl: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
     return { comments };
@@ -81,7 +97,9 @@ export class CommentRepository implements ICommentRepository {
         user: {
           select: {
             id: true,
-            name: true,
+            imageUrl: true,
+            firstName: true,
+            lastName: true,
           },
         },
       },

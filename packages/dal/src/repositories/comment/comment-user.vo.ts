@@ -2,11 +2,17 @@ export class CommentUser {
   constructor(
     private readonly _id: string,
     private readonly _imageUrl: string,
-    private readonly _name: string,
+    private readonly _firstName: string,
+    private readonly _lastName: string | null,
   ) {}
 
-  static fromPersistence(params: { id: string; name: string; imageUrl?: string }): CommentUser {
-    return new CommentUser(params.id, params.name, params.imageUrl ?? '');
+  static fromPersistence(params: {
+    id: string;
+    firstName: string;
+    lastName: string | null;
+    imageUrl: string;
+  }): CommentUser {
+    return new CommentUser(params.id, params.imageUrl, params.firstName, params.lastName);
   }
 
   get id(): string {
@@ -17,15 +23,20 @@ export class CommentUser {
     return this._imageUrl;
   }
 
-  get name(): string {
-    return this._name;
+  get firstName(): string {
+    return this._firstName;
+  }
+
+  get lastName(): string | null {
+    return this._lastName;
   }
 
   toJSON() {
     return {
       id: this._id,
       imageUrl: this._imageUrl,
-      name: this.name,
+      firstName: this.firstName,
+      lastName: this.lastName,
     };
   }
 }
