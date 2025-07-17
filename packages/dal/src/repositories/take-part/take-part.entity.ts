@@ -20,7 +20,7 @@ export class TakePart {
   }
 
   get userId(): string {
-    return this._id;
+    return this._userId;
   }
 
   get eventId(): string {

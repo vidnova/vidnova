@@ -25,4 +25,16 @@ export class TakePartRepository implements ITakePartRepository {
 
     return TakePart.fromPersistence(takePart);
   }
+
+  async delete(takePartId: string): Promise<void> {
+    await this.prismaService.takePart.delete({ where: { id: takePartId } });
+  }
+
+  async findById(takePartId: string): Promise<TakePart | null> {
+    const takePart = await this.prismaService.takePart.findUnique({ where: { id: takePartId } });
+
+    if (!takePart) return null;
+
+    return TakePart.fromPersistence(takePart);
+  }
 }

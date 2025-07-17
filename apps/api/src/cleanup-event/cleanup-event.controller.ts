@@ -29,7 +29,6 @@ import { ICreateCleanupEventDto } from '@ecorally/shared';
 import { CleanupEvent } from '@ecorally/dal';
 import { GetCommentsByEventIdUseCase } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.use-case';
 import { GetCommentsByEventIdCommand } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.command';
-import { CreateTakePartUseCase } from '../take-part/use-cases/create-take-part/create-take-part.use-case';
 
 @Controller('cleanup-events')
 export class CleanupEventController {
