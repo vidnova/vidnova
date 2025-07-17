@@ -10,6 +10,7 @@ import { RegionModule } from './region/region.module';
 import { DatabaseModule } from './database/database.module';
 import { ContaminatedPointModule } from './contaminated-point/contaminated-point.module';
 import { CommentModule } from './comment/comment.module';
+import { TakePartModule } from './take-part/take-part.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CommentModule } from './comment/comment.module';
     DatabaseModule,
     ContaminatedPointModule,
     CommentModule,
+    TakePartModule,
   ],
   controllers: [AppController],
   providers: [AppService],

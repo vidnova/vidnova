@@ -29,6 +29,8 @@ import { ICreateCleanupEventDto } from '@ecorally/shared';
 import { CleanupEvent } from '@ecorally/dal';
 import { GetCommentsByEventIdUseCase } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.use-case';
 import { GetCommentsByEventIdCommand } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.command';
+import { CreateTakePartUseCase } from '../take-part/use-cases/create-take-part/create-take-part.use-case';
+import { CreateTakePartCommand } from '../take-part/use-cases/create-take-part/create-take-part.command';
 
 @Controller('cleanup-events')
 export class CleanupEventController {
@@ -39,6 +41,7 @@ export class CleanupEventController {
     private readonly updateCleanupEventUseCase: UpdateCleanupEventUseCase,
     private readonly deleteCleanupEventUseCase: DeleteCleanupEventUseCase,
     private readonly getCommentsByEventIdUseCase: GetCommentsByEventIdUseCase,
+    private readonly createTakePartUseCase: CreateTakePartUseCase,
   ) {}
 
   @Post('create')
@@ -106,6 +109,22 @@ export class CleanupEventController {
   async getCleanupEventComments(@Param('cleanupEventId') cleanupEventId: string) {
     return this.getCommentsByEventIdUseCase.execute(
       GetCommentsByEventIdCommand.create({
+        eventId: cleanupEventId,
+      }),
+    );
+  }
+
+  @Post(':cleanupEventId/take-part')
+  @UseGuards(AuthGuard)
+  async takePartInCleanupEvent(
+    @Param('cleanupEventId') cleanupEventId: string,
+    @Req() req: FastifyRequest,
+  ) {
+    const user = req.user;
+
+    return this.createTakePartUseCase.execute(
+      CreateTakePartCommand.create({
+        userId: user.id,
         eventId: cleanupEventId,
       }),
     );

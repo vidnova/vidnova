@@ -96,6 +96,8 @@ model TakePart {
   event     CleanupEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+
+  @@unique([userId, eventId])
 }
 
 model CleanupResult {

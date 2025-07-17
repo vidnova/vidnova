@@ -9,9 +9,10 @@ import { IsPointInRegionUseCase } from '../region/use-cases/is-point-in-region/i
 import { IsPointInsideSettlementUseCase } from '../settlement/use-cases/is-point-inside-settlement/is-point-in-settlement.use-case';
 import { USE_CASES } from './use-cases';
 import { CommentModule } from '../comment/comment.module';
+import { TakePartModule } from '../take-part/take-part.module';
 
 @Module({
-  imports: [DatabaseModule, SettlementModule, RegionModule, CommentModule],
+  imports: [DatabaseModule, SettlementModule, RegionModule, CommentModule, TakePartModule],
   controllers: [CleanupEventController],
   providers: [
     PrismaService,

@@ -11,6 +11,7 @@ import {
   RedisService,
   RegionRepository,
   SettlementRepository,
+  TakePartRepository,
   UserRepository,
 } from '@ecorally/dal';
 
@@ -58,6 +59,10 @@ import {
       provide: 'COMMENT_REPOSITORY',
       useClass: CommentRepository,
     },
+    {
+      provide: 'TAKE_PART_REPOSITORY',
+      useClass: TakePartRepository,
+    },
   ],
   exports: [
     'CLEANUP_EVENT_REPOSITORY',
@@ -70,6 +75,7 @@ import {
     'BLACKLISTED_TOKEN_REPOSITORY',
     'CONTAMINATED_POINT_REPOSITORY',
     'COMMENT_REPOSITORY',
+    'TAKE_PART_REPOSITORY',
     RedisService,
     PrismaService,
   ],

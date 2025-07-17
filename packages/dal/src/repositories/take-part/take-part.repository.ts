@@ -1,7 +1,9 @@
 import { ITakePartRepository } from './take-part-repository.interface';
 import { PrismaService } from '../shared';
 import { TakePart } from './take-part.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TakePartRepository implements ITakePartRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
@@ -9,5 +11,18 @@ export class TakePartRepository implements ITakePartRepository {
     const createdTakePart = await this.prismaService.takePart.create({ data: takePart });
 
     return TakePart.fromPersistence(createdTakePart);
+  }
+
+  async findByUserAndEventIds(eventId: string, userId: string): Promise<TakePart | null> {
+    const takePart = await this.prismaService.takePart.findFirst({
+      where: {
+        eventId,
+        userId,
+      },
+    });
+
+    if (!takePart) return null;
+
+    return TakePart.fromPersistence(takePart);
   }
 }
