@@ -8,3 +8,4 @@ export * from './otp';
 export * from './blacklisted-token';
 export * from './contaminated-point';
 export * from './comment';
+export * from './take-part';
