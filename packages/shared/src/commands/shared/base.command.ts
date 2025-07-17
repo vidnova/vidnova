@@ -1,6 +1,5 @@
 import { plainToInstance } from 'class-transformer';
 import { validateSync, ValidationError } from 'class-validator';
-import { BadRequestException } from '@nestjs/common';
 
 export abstract class BaseCommand {
   static create<T extends BaseCommand>(this: new (...args: unknown[]) => T, data: T): T {
@@ -33,7 +32,6 @@ function flattenErrors(
     if (error.constraints) {
       result[currentKey] = {
         messages: Object.values(error.constraints),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         value: error.value,
       };
     }
@@ -53,11 +51,13 @@ function flattenErrors(
   return result;
 }
 
-export class CommandValidationException extends BadRequestException {
+export class CommandValidationException extends Error {
   constructor(
-    public className: string,
-    public constraintsViolated: Record<string, ConstraintValidation>,
+    public readonly className: string,
+    public readonly constraintsViolated: Record<string, ConstraintValidation>,
   ) {
-    super({ message: 'Validation failed', className, constraintsViolated });
+    super('Validation failed');
+    Object.setPrototypeOf(this, CommandValidationException.prototype);
+    this.name = 'CommandValidationException';
   }
 }

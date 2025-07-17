@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import cookie from '@fastify/cookie';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { CommandValidationFilter } from './common/filters/command-validation.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
@@ -27,8 +28,11 @@ async function bootstrap() {
         return new BadRequestException(constrains);
       },
       transform: true,
+      whitelist: true,
     }),
   );
+
+  app.useGlobalFilters(new CommandValidationFilter());
 
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new ResponseInterceptor(reflector));
