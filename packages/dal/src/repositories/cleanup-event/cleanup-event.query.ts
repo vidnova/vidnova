@@ -12,7 +12,9 @@ export class CleanupEventQueries {
     organizer: {
       select: {
         id: true,
-        name: true,
+        firstName: true,
+        lastName: true,
+        imageUrl: true,
       },
     },
     location: {
@@ -55,7 +57,7 @@ export class CleanupEventQueries {
         user: {
           select: {
             id: true,
-            name: true,
+            imageUrl: true,
           },
         },
       },
@@ -88,7 +90,7 @@ export class CleanupEventQueries {
     organizer: {
       select: {
         id: true,
-        name: true,
+        imageUrl: true,
       },
     },
   } as const;

@@ -10,6 +10,7 @@ import {
   PrismaService,
   RedisService,
   RegionRepository,
+  ReportRepository,
   SettlementRepository,
   TakePartRepository,
   UserRepository,
@@ -63,6 +64,10 @@ import {
       provide: 'TAKE_PART_REPOSITORY',
       useClass: TakePartRepository,
     },
+    {
+      provide: 'REPORT_REPOSITORY',
+      useClass: ReportRepository,
+    },
   ],
   exports: [
     'CLEANUP_EVENT_REPOSITORY',
@@ -76,6 +81,7 @@ import {
     'CONTAMINATED_POINT_REPOSITORY',
     'COMMENT_REPOSITORY',
     'TAKE_PART_REPOSITORY',
+    'REPORT_REPOSITORY',
     RedisService,
     PrismaService,
   ],

@@ -2,7 +2,9 @@ import { IReportRepository } from './report-repository.interface';
 import { PrismaService } from '../shared';
 import { Report } from './report.entity';
 import { ReportStatus, ReportTargetType } from '@ecorally/shared';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ReportRepository implements IReportRepository {
   constructor(private readonly prismaService: PrismaService) {}
 

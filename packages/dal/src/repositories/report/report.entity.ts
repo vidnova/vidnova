@@ -85,4 +85,17 @@ export class Report {
   get createdAt(): Date {
     return this._createdAt;
   }
+
+  toJSON() {
+    return {
+      id: this._id,
+      userId: this._userId,
+      targetType: this._targetType,
+      targetId: this._targetId,
+      reason: this._reason,
+      description: this._description,
+      status: this._status,
+      createdAt: this._createdAt,
+    };
+  }
 }

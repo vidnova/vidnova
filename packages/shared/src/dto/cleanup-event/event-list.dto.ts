@@ -20,7 +20,7 @@ export class CleanupEventListDto {
     } | null,
     public organizer: {
       id: string;
-      name: string;
+      imageUrl: string;
     },
   ) {}
 }

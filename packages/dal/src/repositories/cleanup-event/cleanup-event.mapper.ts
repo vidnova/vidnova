@@ -13,7 +13,9 @@ interface PrismaCleanupEventData {
   organizerId: string;
   organizer: {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string | null;
+    imageUrl: string;
   };
   location: {
     id: string;
@@ -41,7 +43,7 @@ interface PrismaCleanupEventData {
     id: string;
     user: {
       id: string;
-      name: string;
+      imageUrl: string;
     };
   }>;
   createdAt: Date;
