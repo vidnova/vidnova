@@ -14,12 +14,12 @@ export class GetContaminatedPointsQueryDto {
   @IsOptional()
   @IsString()
   @IsUUID()
-  regionId: string;
+  region: string;
 
   @IsOptional()
   @IsString()
   @IsUUID()
-  settlementId: string;
+  settlement: string;
 
   @IsOptional()
   @IsNumber()
@@ -30,4 +30,8 @@ export class GetContaminatedPointsQueryDto {
   @IsNumber()
   @Min(1)
   pageSize: number = 10;
+
+  @IsOptional()
+  @IsUUID()
+  user: string;
 }

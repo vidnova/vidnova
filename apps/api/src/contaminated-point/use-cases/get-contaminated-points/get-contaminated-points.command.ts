@@ -15,12 +15,12 @@ export class GetContaminatedPointsCommand extends BaseCommand {
   @IsOptional()
   @IsString()
   @IsUUID()
-  regionId: string;
+  region: string;
 
   @IsOptional()
   @IsString()
   @IsUUID()
-  settlementId: string;
+  settlement: string;
 
   @IsOptional()
   @IsNumber()
@@ -31,4 +31,8 @@ export class GetContaminatedPointsCommand extends BaseCommand {
   @IsNumber()
   @Min(1)
   pageSize: number;
+
+  @IsOptional()
+  @IsUUID()
+  user: string;
 }

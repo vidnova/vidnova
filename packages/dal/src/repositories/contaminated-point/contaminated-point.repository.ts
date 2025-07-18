@@ -111,6 +111,8 @@ export class ContaminatedPointRepository implements IContaminatedPointRepository
 
     if (filters.settlementId && where.location) where.location.settlementId = filters.settlementId;
 
+    if (filters.userId) where.creatorId = filters.userId;
+
     return where;
   }
 }
