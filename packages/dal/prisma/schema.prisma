@@ -27,6 +27,8 @@ model User {
   otp               Otp[]
   blacklistTokens   BlacklistToken[]
   ContaminatedPoint ContaminatedPoint[]
+  reports           Report[]
+  supportRequests   SupportRequest[]
 
   @@index([role])
 }
@@ -203,6 +205,50 @@ model ContaminatedPointLocation {
   region              Region            @relation(fields: [regionId], references: [id])
   settlement          Settlement?       @relation(fields: [settlementId], references: [id])
   contaminatedPoint   ContaminatedPoint @relation(fields: [contaminatedPointId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id          String           @id @default(uuid())
+  userId      String
+  targetType  ReportTargetType
+  targetId    String
+  reason      String
+  description String?
+  status      ReportStatus     @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], references: [id])
+
+  @@index([targetType, targetId])
+}
+
+model SupportRequest {
+  id        String               @id @default(uuid())
+  userId    String
+  subject   String
+  message   String
+  status    SupportRequestStatus @default(IN_PROGRESS)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  user      User                 @relation(fields: [userId], references: [id])
+}
+
+enum SupportRequestStatus {
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  REJECTED
+}
+
+enum ReportTargetType {
+  CLEANUP_EVENT
+  CONTAMINATED_POINT
+  COMMENT
 }
 
 enum ContaminatedPointStatus {
