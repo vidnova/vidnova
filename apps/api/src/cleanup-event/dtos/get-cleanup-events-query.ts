@@ -1,7 +1,12 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min, ValidateIf } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUUID, ValidateIf } from 'class-validator';
 import { IsDateAfter } from '../../common/decorators';
-import { IGetCleanupEventQueryDto, CleanupSortBy, CleanupSortOrder, CleanupEventStatus } from '@ecorally/shared';
+import {
+  IGetCleanupEventQueryDto,
+  CleanupSortBy,
+  CleanupSortOrder,
+  CleanupEventStatus,
+} from '@ecorally/shared';
 
 export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
   @IsOptional()
@@ -32,15 +37,9 @@ export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
   name?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(0)
   pageSize: number = 10;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(1)
   page: number = 1;
 
   @IsOptional()
@@ -50,4 +49,8 @@ export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
   @IsOptional()
   @IsEnum(CleanupSortOrder)
   sortOrder?: CleanupSortOrder;
+
+  @IsOptional()
+  @IsUUID()
+  user: string;
 }

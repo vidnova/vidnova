@@ -12,4 +12,5 @@ export interface ICleanupEventsFilters {
   page: number;
   sortBy?: CleanupSortBy;
   sortOrder?: CleanupSortOrder;
+  user?: string;
 }

@@ -166,6 +166,8 @@ export class CleanupEventRepository implements ICleanupEventRepository {
 
     if (filters.endDate) where.endDate = { lte: filters.endDate };
 
+    if (filters.user) where.organizerId = filters.user;
+
     return where;
   }
 

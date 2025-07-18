@@ -45,4 +45,8 @@ export class GetCleanupEventsCommand extends BaseCommand {
   @IsOptional()
   @IsEnum(CleanupSortOrder)
   sortOrder?: CleanupSortOrder;
+
+  @IsOptional()
+  @IsUUID()
+  user: string;
 }
