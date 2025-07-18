@@ -12,6 +12,7 @@ import { ContaminatedPointModule } from './contaminated-point/contaminated-point
 import { CommentModule } from './comment/comment.module';
 import { TakePartModule } from './take-part/take-part.module';
 import { UserModule } from './user/user.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     CommentModule,
     TakePartModule,
     UserModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
