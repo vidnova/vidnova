@@ -4,7 +4,7 @@ export const sidebarLinks = [
   {
     icon: <Earth />,
     name: 'Події недалеко',
-    path: '/near-events',
+    path: '/overview',
   },
   {
     icon: <Map />,

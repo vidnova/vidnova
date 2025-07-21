@@ -9,7 +9,7 @@ export const CallToAction = () => {
       <h3 className="text-3xl font-bold mb-4 text-white">{t('title')}</h3>
       <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto">{t('subtitle')}</p>
       <Link
-        href={'/near-events'}
+        href={'/overview'}
         className="btn-primary text-white px-6 py-3 rounded-lg text-lg bg-blue-400 hover:bg-blue-500 transition-colors cursor-pointer"
       >
         {t('button.getApp')}

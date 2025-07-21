@@ -7,7 +7,7 @@ export const Sidebar = () => {
 
   return (
     <aside className="sticky top-0 left-0 h-screen w-[300px] py-6">
-      <Link href={'/near-events'} className="gradient-logo text-2xl font-bold">
+      <Link href={'/overview'} className="gradient-logo text-2xl font-bold">
         EcoRally
       </Link>
       <div className="mt-7">

@@ -16,7 +16,7 @@ export const SignUpCompleteForm = () => {
       <SelectSettlementCombobox />
       <div className="flex flex-col gap-3">
         <Button>Зберегти</Button>
-        <Link href={"/near-events"} className="w-full">
+        <Link href={"/overview"} className="w-full">
           <Button variant={"outline"} className="w-full">
             Пропустити
           </Button>

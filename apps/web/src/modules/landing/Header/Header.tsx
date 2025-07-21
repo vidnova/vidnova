@@ -95,7 +95,7 @@ export const Header = () => {
       <div className="hidden md:flex items-center gap-7">
         <LanguageDropdown />
         <Link
-          href={'/near-events'}
+          href={'/overview'}
           className="px-4 py-2 bg-blue-400 hover:bg-blue-500 transition-colors text-white cursor-pointer rounded-lg"
         >
           {t('button.start')}

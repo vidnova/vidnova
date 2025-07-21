@@ -13,7 +13,7 @@ export const Hero = () => {
         {t('subtitle')}
       </h2>
       <Link
-        href={'/near-events'}
+        href={'/overview'}
         className="text-white px-6 py-3 rounded-lg text-lg bg-blue-400 hover:bg-blue-500 transition-colors cursor-pointer"
       >
         {t('button.start')}
