@@ -40,6 +40,7 @@ export const PointMap = () => {
             [52.5, 40.5],
           ]}
           maxBoundsViscosity={1.0}
+          className={'z-20'}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

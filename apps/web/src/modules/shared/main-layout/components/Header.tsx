@@ -8,7 +8,7 @@ import { Bell, LogOut, Plus, Settings, User } from 'lucide-react';
 
 export const Header = () => {
   return (
-    <header className="flex justify-end w-full items-center py-3 sticky top-0 right-0 backdrop-blur-md z-[1001]">
+    <header className="flex justify-end w-full items-center py-3 sticky top-0 right-0 backdrop-blur-md z-[999]">
       <div className="flex items-center gap-4">
         <button className="cursor-pointer">
           <Bell className="text-muted-foreground hover:text-accent transition-colors" />
