@@ -7,13 +7,16 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
 import { SignInCommand } from './sign-in.command';
 import { IUserRepository } from '@ecorally/dal';
+import { AuthService } from '@ecorally/shared';
 
 @Injectable()
 export class SignInUseCase {
-  constructor(@Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   async execute(command: SignInCommand) {
     try {
@@ -28,8 +31,8 @@ export class SignInUseCase {
         throw new ConflictException('Invalid data provided');
       }
 
-      const accessToken = createAccessToken(user.id);
-      const refreshToken = createRefreshToken(user.id);
+      const accessToken = this.authService.createToken(user.id, 'access');
+      const refreshToken = this.authService.createToken(user.id, 'refresh');
 
       return { accessToken, refreshToken };
     } catch (error: unknown) {

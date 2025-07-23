@@ -5,20 +5,17 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  createAccessToken,
-  createRefreshToken,
-  verifyToken,
-} from '../../../common/utils/tokens.util';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { RefreshTokensCommand } from './refresh-token.command';
 import { BlacklistedToken, IBlacklistedTokenRepository } from '@ecorally/dal';
+import { AuthService } from '@ecorally/shared';
 
 @Injectable()
 export class RefreshTokensUseCase {
   constructor(
     @Inject('BLACKLISTED_TOKEN_REPOSITORY')
     private readonly blacklistedTokenRepository: IBlacklistedTokenRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async execute(command: RefreshTokensCommand) {
@@ -32,8 +29,8 @@ export class RefreshTokensUseCase {
       await this.blacklistTokens(command, userId);
 
       return {
-        accessToken: createAccessToken(userId),
-        refreshToken: createRefreshToken(userId),
+        accessToken: this.authService.createToken(userId, 'access'),
+        refreshToken: this.authService.createToken(userId, 'refresh'),
       };
     } catch (error: unknown) {
       if (error instanceof JsonWebTokenError) {
@@ -50,7 +47,7 @@ export class RefreshTokensUseCase {
 
   private verifyRefreshToken(refreshToken: string): string {
     try {
-      const payload = verifyToken(refreshToken);
+      const payload = this.authService.verifyToken(refreshToken);
       if (!payload) {
         throw new ForbiddenException('Invalid refresh token');
       }
@@ -75,7 +72,7 @@ export class RefreshTokensUseCase {
 
     if (command.accessToken) {
       try {
-        const payload = verifyToken(command.accessToken);
+        const payload = this.authService.verifyToken(command.accessToken);
         if (payload === userId) {
           tokensToBlacklist.push(BlacklistedToken.create({ userId, token: command.accessToken }));
         }

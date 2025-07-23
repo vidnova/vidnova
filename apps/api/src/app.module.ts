@@ -13,6 +13,7 @@ import { CommentModule } from './comment/comment.module';
 import { TakePartModule } from './take-part/take-part.module';
 import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
+import { SharedModule } from '@ecorally/shared';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ReportModule } from './report/report.module';
     TakePartModule,
     UserModule,
     ReportModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

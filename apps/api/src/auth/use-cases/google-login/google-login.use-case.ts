@@ -1,10 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { IUserRepository, User } from '@ecorally/dal';
 import { GoogleLoginCommand } from './google-login.command';
-import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
+import { AuthService } from '@ecorally/shared';
 
 export class GoogleLoginUseCase {
-  constructor(@Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   async execute(command: GoogleLoginCommand) {
     let user = await this.userRepository.getByEmail(command.email);
@@ -14,8 +17,8 @@ export class GoogleLoginUseCase {
       user = await this.userRepository.create(createUser);
     }
 
-    const accessToken = createAccessToken(user.id);
-    const refreshToken = createRefreshToken(user.id);
+    const accessToken = this.authService.createToken(user.id, 'access');
+    const refreshToken = this.authService.createToken(user.id, 'refresh');
 
     return { accessToken, refreshToken };
   }

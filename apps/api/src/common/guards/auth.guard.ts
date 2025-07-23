@@ -7,15 +7,17 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { verifyToken } from '../utils/tokens.util';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { FastifyRequest } from 'fastify';
 import { PrismaService, User } from '@ecorally/dal';
-import { UserRole } from '@ecorally/shared';
+import { AuthService, UserRole } from '@ecorally/shared';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly authService: AuthService,
+  ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request: FastifyRequest = ctx.switchToHttp().getRequest();
@@ -26,7 +28,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const id = verifyToken(accessToken);
+      const id = this.authService.verifyToken(accessToken);
       const user = await this.prisma.user.findUnique({ where: { id } });
 
       if (!user) {

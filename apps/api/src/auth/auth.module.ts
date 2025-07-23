@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { OtpModule } from '../otp/otp.module';
 import { USE_CASES } from './use-cases';
@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GoogleService } from './services/google.service';
 import { GoogleConfig } from '../../config';
 
+@Global()
 @Module({
   imports: [DatabaseModule, OtpModule, ConfigModule.forRoot()],
   controllers: [AuthController],

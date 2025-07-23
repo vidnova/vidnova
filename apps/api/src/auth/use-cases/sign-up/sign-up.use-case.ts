@@ -6,13 +6,16 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { createAccessToken, createRefreshToken } from '../../../common/utils/tokens.util';
 import { SignUpCommand } from './sign-up.command';
 import { IUserRepository, User } from '@ecorally/dal';
+import { AuthService } from '@ecorally/shared';
 
 @Injectable()
 export class SignUpUseCase {
-  constructor(@Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   async execute(command: SignUpCommand) {
     try {
@@ -25,8 +28,8 @@ export class SignUpUseCase {
 
       const createdUser = await this.userRepository.create(user);
 
-      const accessToken = createAccessToken(createdUser.id);
-      const refreshToken = createRefreshToken(createdUser.id);
+      const accessToken = this.authService.createToken(createdUser.id, 'access');
+      const refreshToken = this.authService.createToken(createdUser.id, 'refresh');
 
       return { accessToken, refreshToken };
     } catch (error: unknown) {
