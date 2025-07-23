@@ -4,7 +4,7 @@ import { ChatMember } from './chat-member.vo';
 export class Chat {
   constructor(
     private readonly _id: string,
-    private readonly _chatType: ChatType,
+    private readonly _type: ChatType,
     private readonly _imageUrl: string,
     private readonly _createdAt: Date,
     private readonly _updateAt: Date,
@@ -13,12 +13,34 @@ export class Chat {
     private readonly _members: ChatMember[],
   ) {}
 
+  static fromPersistence(params: {
+    id: string;
+    type: ChatType;
+    imageUrl: string;
+    createdAt: Date;
+    updatedAt: Date;
+    name: string | null;
+    description: string | null;
+    members?: ChatMember[];
+  }): Chat {
+    return new Chat(
+      params.id,
+      params.type,
+      params.imageUrl,
+      params.createdAt,
+      params.updatedAt,
+      params.name,
+      params.description,
+      params.members ?? [],
+    );
+  }
+
   get id(): string {
     return this._id;
   }
 
-  get chatType(): ChatType {
-    return this._chatType;
+  get type(): ChatType {
+    return this._type;
   }
 
   get imageUrl(): string {

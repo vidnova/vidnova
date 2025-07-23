@@ -10,3 +10,4 @@ export * from './contaminated-point';
 export * from './comment';
 export * from './take-part';
 export * from './report';
+export * from './chat';
