@@ -29,6 +29,9 @@ model User {
   ContaminatedPoint ContaminatedPoint[]
   reports           Report[]
   supportRequests   SupportRequest[]
+  sentMessages      Message[]           @relation("MessageSender")
+  chatMembers       ChatMember[]
+  messageReactions  MessageReaction[]
 
   @@index([role])
 }
@@ -231,6 +234,96 @@ model SupportRequest {
   createdAt DateTime             @default(now())
   updatedAt DateTime             @updatedAt
   user      User                 @relation(fields: [userId], references: [id])
+}
+
+model Chat {
+  id          String       @id @default(uuid())
+  name        String?
+  description String?
+  type        ChatType     @default(DIRECT)
+  imageUrl    String       @default("")
+  createdAt   DateTime     @default(now())
+  updateAt    DateTime     @updatedAt()
+  members     ChatMember[]
+}
+
+model ChatMember {
+  id       String     @id @default(uuid())
+  userId   String
+  chatId   String
+  role     MemberRole
+  joinedAt DateTime   @default(now())
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat     Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatId])
+}
+
+model Message {
+  id          String              @id() @default(uuid())
+  content     String?
+  type        MessageType         @default(TEXT)
+  senderId    String
+  chatId      String
+  replyToId   String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  sender      User                @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo     Message?            @relation("MessageReply", fields: [replyToId], references: [id])
+  replies     Message[]           @relation("MessageReply")
+  attachments MessageAttachment[]
+  reactions   MessageReaction[]
+}
+
+model MessageAttachment {
+  id        String         @id @default(uuid())
+  messageId String
+  fileName  String
+  fileSize  Int
+  mimeType  String
+  url       String
+  type      AttachmentType
+  message   Message        @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model MessageReaction {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+}
+
+enum AttachmentType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  OTHER
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  AUDIO
+  VIDEO
+  SYSTEM
+}
+
+enum ChatType {
+  DIRECT
+  GROUP
 }
 
 enum SupportRequestStatus {
