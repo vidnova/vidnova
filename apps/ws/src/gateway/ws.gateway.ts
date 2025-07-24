@@ -15,7 +15,7 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly authService: AuthService) {}
 
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   async handleConnection(client: Socket) {
     const accessToken = client.handshake.headers.cookie;

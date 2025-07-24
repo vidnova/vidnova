@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {
   BlacklistedTokenRepository,
   CachingOverpassRepository,
+  ChatRepository,
   CleanupEventRepository,
   CommentRepository,
   ContaminatedPointRepository,
@@ -68,6 +69,10 @@ import {
       provide: 'REPORT_REPOSITORY',
       useClass: ReportRepository,
     },
+    {
+      provide: 'CHAT_REPOSITORY',
+      useClass: ChatRepository,
+    },
   ],
   exports: [
     'CLEANUP_EVENT_REPOSITORY',
@@ -82,6 +87,7 @@ import {
     'COMMENT_REPOSITORY',
     'TAKE_PART_REPOSITORY',
     'REPORT_REPOSITORY',
+    'CHAT_REPOSITORY',
     RedisService,
     PrismaService,
   ],

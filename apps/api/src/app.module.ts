@@ -14,6 +14,7 @@ import { TakePartModule } from './take-part/take-part.module';
 import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
 import { SharedModule } from '@ecorally/shared';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SharedModule } from '@ecorally/shared';
     UserModule,
     ReportModule,
     SharedModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

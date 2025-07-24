@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ChatModule } from './chat/chat.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { SharedModule } from '@ecorally/shared';
 
 @Module({
-  imports: [ChatModule, GatewayModule],
+  imports: [GatewayModule, SharedModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -9,6 +9,10 @@ export class ChatMember {
     private readonly _role: ChatMemberRole,
   ) {}
 
+  static create(params: { id: string; role: ChatMemberRole }): ChatMember {
+    return new ChatMember(params.id, '', '', null, params.role);
+  }
+
   get id(): string {
     return this._id;
   }

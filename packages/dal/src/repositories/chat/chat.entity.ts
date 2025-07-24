@@ -1,5 +1,6 @@
 import { ChatType } from '@ecorally/shared';
 import { ChatMember } from './chat-member.vo';
+import { v4 } from 'uuid';
 
 export class Chat {
   constructor(
@@ -12,6 +13,25 @@ export class Chat {
     private readonly _description: string | null,
     private readonly _members: ChatMember[],
   ) {}
+
+  static create(params: {
+    type: ChatType;
+    imageUrl: string;
+    name: string | null;
+    description: string | null;
+    members: ChatMember[];
+  }): Chat {
+    return new Chat(
+      v4(),
+      params.type,
+      params.imageUrl,
+      new Date(),
+      new Date(),
+      params.name,
+      params.description,
+      params.members,
+    );
+  }
 
   static fromPersistence(params: {
     id: string;

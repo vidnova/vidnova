@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { Global, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 export interface IPayload {
   id: string;
