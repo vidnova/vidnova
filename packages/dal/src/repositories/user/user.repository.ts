@@ -44,4 +44,18 @@ export class UserRepository implements IUserRepository {
       role: user.role as UserRole,
     });
   }
+
+  async findMany(usersIds: string[]): Promise<User[]> {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        id: {
+          in: usersIds,
+        },
+      },
+    });
+
+    return users.map((user) =>
+      User.fromPersistence({ ...user, lastname: user.lastName, role: user.role as UserRole }),
+    );
+  }
 }

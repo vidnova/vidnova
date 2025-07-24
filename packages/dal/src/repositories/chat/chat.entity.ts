@@ -21,6 +21,10 @@ export class Chat {
     description: string | null;
     members: ChatMember[];
   }): Chat {
+    if (params.members.length < 2) {
+      throw Error('Minimum members length is 2');
+    }
+
     return new Chat(
       v4(),
       params.type,

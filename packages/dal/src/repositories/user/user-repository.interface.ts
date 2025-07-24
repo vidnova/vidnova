@@ -8,4 +8,6 @@ export interface IUserRepository {
   updatePassword(user: User): Promise<void>;
 
   findFullById(userId: string): Promise<User | null>;
+
+  findMany(userIds: string[]): Promise<User[]>;
 }
