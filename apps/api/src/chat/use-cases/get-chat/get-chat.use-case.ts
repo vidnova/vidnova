@@ -3,10 +3,12 @@ import {
   ForbiddenException,
   HttpException,
   Inject,
+  Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { GetChatCommand } from './get-chat.command';
 
+@Injectable()
 export class GetChatUseCase {
   private readonly CACHE_TTL = 300;
 

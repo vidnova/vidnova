@@ -6,12 +6,16 @@ import { CreateGroupChatCommand } from './use-cases/create-group-chat/create-gro
 import { CreateGroupChatDto } from './dtos/create-group-chat.dto';
 import { GetChatUseCase } from './use-cases/get-chat/get-chat.use-case';
 import { GetChatCommand } from './use-cases/get-chat/get-chat.command';
+import { AddMembersToChatDto } from './dtos/add-members-to-chat.dto';
+import { AddMembersToChatUseCase } from './use-cases/add-member-to-chat/add-members-to-chat.use-case';
+import { AddMembersToChatCommand } from './use-cases/add-member-to-chat/add-members-to-chat.command';
 
 @Controller('chats')
 export class ChatController {
   constructor(
     private readonly createGroupChatUseCase: CreateGroupChatUseCase,
     private readonly getChatUseCase: GetChatUseCase,
+    private readonly addMemberToChatUseCase: AddMembersToChatUseCase,
   ) {}
 
   @Post('group')
@@ -38,5 +42,25 @@ export class ChatController {
         chatId,
       }),
     );
+  }
+
+  @Post(':chatId/members')
+  @UseGuards(AuthGuard)
+  async addMemberToChat(
+    @Param('chatId') chatId: string,
+    @Req() req: FastifyRequest,
+    @Body() data: AddMembersToChatDto,
+  ) {
+    const user = req.user;
+
+    const result = await this.addMemberToChatUseCase.execute(
+      AddMembersToChatCommand.create({
+        userId: user.id,
+        ...data,
+        chatId,
+      }),
+    );
+
+    return { message: result };
   }
 }

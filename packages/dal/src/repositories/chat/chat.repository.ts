@@ -98,4 +98,17 @@ export class ChatRepository implements IChatRepository {
       members,
     });
   }
+
+  async addMembersToChat(members: ChatMember[], chatId: string): Promise<void> {
+    const data = members.map((member) => ({
+      userId: member.id,
+      role: member.role,
+      chatId,
+    }));
+
+    await this.prismaService.chatMember.createMany({
+      data,
+      skipDuplicates: true,
+    });
+  }
 }
