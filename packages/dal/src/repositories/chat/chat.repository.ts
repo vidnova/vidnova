@@ -18,16 +18,16 @@ export class ChatRepository implements IChatRepository {
         name: chat.name,
         description: chat.description,
         imageUrl: chat.imageUrl,
-        members: {
-          create: [
-            ...chat.members.map((member) => ({
+        ...(chat.members?.length && {
+          members: {
+            create: chat.members.map((member) => ({
               userId: member.id,
               role: member.role,
             })),
-          ],
-        },
+          },
+        }),
       },
-      select: ChatQueries.SELECT_FIELDS,
+      select: ChatQueries.SELECT_FIELDS_WITH_MEMBERS,
     });
 
     const members = persistedChatData.members.map((member) =>
@@ -40,7 +40,11 @@ export class ChatRepository implements IChatRepository {
       }),
     );
 
-    return Chat.fromPersistence({ ...persistedChatData, type: persistedChatData.type as ChatType, members });
+    return Chat.fromPersistence({
+      ...persistedChatData,
+      type: persistedChatData.type as ChatType,
+      members,
+    });
   }
 
   async findDirectChat(firstUserId: string, secondUserId: string): Promise<Chat | null> {
@@ -65,5 +69,33 @@ export class ChatRepository implements IChatRepository {
     if (!chat) return null;
 
     return Chat.fromPersistence({ ...chat, type: chat.type as ChatType });
+  }
+
+  async findById(id: string, includeMembers?: boolean): Promise<Chat | null> {
+    const chat = await this.prismaService.chat.findUnique({
+      where: { id },
+      select: includeMembers ? ChatQueries.SELECT_FIELDS_WITH_MEMBERS : ChatQueries.SELECT_FIELDS,
+    });
+
+    if (!chat) return null;
+
+    const members =
+      includeMembers && 'members' in chat && Array.isArray(chat.members)
+        ? chat.members.map((member) =>
+            ChatMember.fromPersistence({
+              id: member.user.id,
+              firstName: member.user.firstName,
+              lastName: member.user.lastName,
+              imageUrl: member.user.imageUrl,
+              role: member.role as ChatMemberRole,
+            }),
+          )
+        : undefined;
+
+    return Chat.fromPersistence({
+      ...chat,
+      type: chat.type as ChatType,
+      members,
+    });
   }
 }

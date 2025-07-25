@@ -11,7 +11,7 @@ export class Chat {
     private readonly _updateAt: Date,
     private readonly _name: string | null,
     private readonly _description: string | null,
-    private readonly _members: ChatMember[],
+    private readonly _members?: ChatMember[],
   ) {}
 
   static create(params: {
@@ -70,7 +70,7 @@ export class Chat {
       description: this._description,
       type: this._type,
       imageUrl: this._imageUrl,
-      members: this._members,
+      ...(this._members && { members: this._members }),
       createdAt: this._createdAt,
       updatedAt: this._updateAt,
     };
@@ -104,7 +104,7 @@ export class Chat {
     return this._description;
   }
 
-  get members(): ChatMember[] {
+  get members(): ChatMember[] | undefined {
     return this._members;
   }
 }
