@@ -1,5 +1,6 @@
 import { Chat, ChatMember, IChatRepository, IUserRepository } from '@ecorally/dal';
 import {
+  ConflictException,
   HttpException,
   Inject,
   Injectable,
@@ -19,6 +20,10 @@ export class CreateGroupChatUseCase {
   async execute(command: CreateGroupChatCommand) {
     try {
       const uniqueMembers = new Set(command.memberIds);
+
+      if (uniqueMembers.has(command.userId)) {
+        throw new ConflictException('You cannot create a group with yourself.');
+      }
 
       const members = await this.userRepository.findMany(Array.from(uniqueMembers));
 

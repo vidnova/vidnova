@@ -41,6 +41,21 @@ export class User {
     );
   }
 
+  toPersistence() {
+    return {
+      id: this._id,
+      username: this._username,
+      firstName: this._firstName,
+      lastName: this._lastName,
+      email: this._email,
+      isVerified: this._isVerified,
+      role: this._role,
+      imageUrl: this._imageUrl,
+      createdAt: this._createdAt,
+      password: this._password,
+    };
+  }
+
   static fromPersistence(params: {
     id: string;
     username: string;

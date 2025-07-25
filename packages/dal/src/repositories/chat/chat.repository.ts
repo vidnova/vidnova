@@ -1,16 +1,17 @@
 import { IChatRepository } from './chat-repository.interface';
 import { Chat } from './chat.entity';
 import { PrismaService } from '../shared';
-import { ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@ecorally/shared';
 import { Injectable } from '@nestjs/common';
+import { ChatQueries } from './chat.query';
+import { ChatMember } from './chat-member.vo';
 
 @Injectable()
 export class ChatRepository implements IChatRepository {
-  constructor(private readonly prismaService: PrismaService) {
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(chat: Chat): Promise<Chat> {
-    const createdChat = await this.prismaService.chat.create({
+    const persistedChatData = await this.prismaService.chat.create({
       data: {
         id: chat.id,
         type: chat.type,
@@ -26,9 +27,20 @@ export class ChatRepository implements IChatRepository {
           ],
         },
       },
+      select: ChatQueries.SELECT_FIELDS,
     });
 
-    return Chat.fromPersistence({ ...createdChat, type: createdChat.type as ChatType });
+    const members = persistedChatData.members.map((member) =>
+      ChatMember.fromPersistence({
+        id: member.user.id,
+        firstName: member.user.firstName,
+        lastName: member.user.lastName,
+        imageUrl: member.user.imageUrl,
+        role: member.role as ChatMemberRole,
+      }),
+    );
+
+    return Chat.fromPersistence({ ...persistedChatData, type: persistedChatData.type as ChatType, members });
   }
 
   async findDirectChat(firstUserId: string, secondUserId: string): Promise<Chat | null> {

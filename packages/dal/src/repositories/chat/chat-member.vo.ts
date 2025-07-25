@@ -13,6 +13,22 @@ export class ChatMember {
     return new ChatMember(params.id, '', '', null, params.role);
   }
 
+  static fromPersistence(params: {
+    id: string;
+    imageUrl: string;
+    firstName: string;
+    lastName: string | null;
+    role: ChatMemberRole;
+  }): ChatMember {
+    return new ChatMember(
+      params.id,
+      params.imageUrl,
+      params.firstName,
+      params.firstName,
+      params.role,
+    );
+  }
+
   get id(): string {
     return this._id;
   }
@@ -31,5 +47,15 @@ export class ChatMember {
 
   get role(): ChatMemberRole {
     return this._role;
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      firstName: this._firstName,
+      lastName: this._lastName,
+      imageUrl: this._imageUrl,
+      role: this._role,
+    };
   }
 }

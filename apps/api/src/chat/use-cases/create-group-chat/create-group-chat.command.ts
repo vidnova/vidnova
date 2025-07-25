@@ -1,5 +1,6 @@
 import { EnvironmentWithUserCommand } from '@ecorally/shared';
 import {
+  ArrayMaxSize,
   ArrayMinSize,
   ArrayUnique,
   IsArray,
@@ -12,8 +13,9 @@ import {
 
 export class CreateGroupChatCommand extends EnvironmentWithUserCommand {
   @IsString()
+  @IsOptional()
   @MinLength(1)
-  name: string = 'New group';
+  name?: string = 'New group';
 
   @IsString()
   @IsOptional()
@@ -29,6 +31,7 @@ export class CreateGroupChatCommand extends EnvironmentWithUserCommand {
   @IsString({ each: true })
   @IsUUID('4', { each: true })
   @ArrayMinSize(1)
+  @ArrayMaxSize(50)
   @ArrayUnique()
   memberIds: string[];
 }

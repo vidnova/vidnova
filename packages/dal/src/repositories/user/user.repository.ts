@@ -10,7 +10,7 @@ export class UserRepository implements IUserRepository {
 
   async create(user: User): Promise<User> {
     const createdUser = await this.prismaService.user.create({
-      data: user,
+      data: user.toPersistence(),
     });
     return User.fromPersistence({
       ...createdUser,

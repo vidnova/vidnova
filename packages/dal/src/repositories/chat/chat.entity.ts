@@ -25,6 +25,10 @@ export class Chat {
       throw Error('Minimum members length is 2');
     }
 
+    if (params.members.length > 50) {
+      throw Error('Maximum members length is 50');
+    }
+
     return new Chat(
       v4(),
       params.type,
@@ -57,6 +61,19 @@ export class Chat {
       params.description,
       params.members ?? [],
     );
+  }
+
+  toJSON() {
+    return {
+      id: this._id,
+      name: this._name,
+      description: this._description,
+      type: this._type,
+      imageUrl: this._imageUrl,
+      members: this._members,
+      createdAt: this._createdAt,
+      updatedAt: this._updateAt,
+    };
   }
 
   get id(): string {
