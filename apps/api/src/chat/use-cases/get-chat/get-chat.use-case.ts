@@ -1,4 +1,4 @@
-import { IChatRepository } from '@ecorally/dal';
+import { Chat, IChatRepository, RedisService } from '@ecorally/dal';
 import {
   ForbiddenException,
   HttpException,
@@ -8,10 +8,22 @@ import {
 import { GetChatCommand } from './get-chat.command';
 
 export class GetChatUseCase {
-  constructor(@Inject('CHAT_REPOSITORY') private readonly chatRepository: IChatRepository) {}
+  private readonly CACHE_TTL = 300;
+
+  constructor(
+    @Inject('CHAT_REPOSITORY') private readonly chatRepository: IChatRepository,
+    private readonly redisService: RedisService,
+  ) {}
 
   async execute(command: GetChatCommand) {
     try {
+      const cacheKey = `chat:${command.chatId}:with-members`;
+
+      const cachedChat = await this.redisService.get(cacheKey);
+      if (cachedChat) {
+        return JSON.parse(cachedChat) as Chat;
+      }
+
       const chat = await this.chatRepository.findById(command.chatId, true);
 
       const userMember = chat.members.filter((member) => member.id === command.userId);
@@ -19,6 +31,8 @@ export class GetChatUseCase {
       if (userMember.length < 1) {
         throw new ForbiddenException('You have no access to this chat');
       }
+
+      await this.redisService.set(cacheKey, JSON.stringify(chat), this.CACHE_TTL);
 
       return chat;
     } catch (error: unknown) {
