@@ -29,6 +29,10 @@ export class ChatMember {
     );
   }
 
+  updateRole(role: ChatMemberRole): ChatMember {
+    return new ChatMember(this._id, this._imageUrl, this._firstName, this._lastName, role);
+  }
+
   get id(): string {
     return this._id;
   }

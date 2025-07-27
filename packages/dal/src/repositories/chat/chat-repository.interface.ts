@@ -1,5 +1,6 @@
 import { Chat } from './chat.entity';
 import { ChatMember } from './chat-member.vo';
+import { ChatMemberRole } from '@ecorally/shared';
 
 export interface IChatRepository {
   create(chat: Chat): Promise<Chat>;
@@ -13,4 +14,10 @@ export interface IChatRepository {
   deleteChatMemberByUserAndChatIds(userId: string, chatId: string): Promise<void>;
 
   findMemberByUserAndChatIds(userId: string, chatId: string): Promise<ChatMember | null>;
+
+  updateChatMemberRole(
+    userId: string,
+    chatId: string,
+    newRole: ChatMemberRole,
+  ): Promise<ChatMember>;
 }

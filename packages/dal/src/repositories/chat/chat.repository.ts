@@ -135,4 +135,31 @@ export class ChatRepository implements IChatRepository {
       imageUrl: persistedChatData.user.imageUrl,
     });
   }
+
+  async updateChatMemberRole(
+    userId: string,
+    chatId: string,
+    newRole: ChatMemberRole,
+  ): Promise<ChatMember> {
+    const persistedChatMemberData = await this.prismaService.chatMember.update({
+      where: {
+        userId_chatId: {
+          chatId,
+          userId,
+        },
+      },
+      data: {
+        role: newRole,
+      },
+      include: { user: true },
+    });
+
+    return ChatMember.fromPersistence({
+      id: persistedChatMemberData.user.id,
+      firstName: persistedChatMemberData.user.firstName,
+      lastName: persistedChatMemberData.user.lastName,
+      role: persistedChatMemberData.role as ChatMemberRole,
+      imageUrl: persistedChatMemberData.user.imageUrl,
+    });
+  }
 }
