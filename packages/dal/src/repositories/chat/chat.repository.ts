@@ -111,4 +111,28 @@ export class ChatRepository implements IChatRepository {
       skipDuplicates: true,
     });
   }
+
+  async deleteChatMemberByUserAndChatIds(userId: string, chatId: string) {
+    await this.prismaService.chatMember.delete({ where: { userId_chatId: { userId, chatId } } });
+  }
+
+  async findMemberByUserAndChatIds(userId: string, chatId: string): Promise<ChatMember | null> {
+    const persistedChatData = await this.prismaService.chatMember.findFirst({
+      where: {
+        userId: userId,
+        chatId: chatId,
+      },
+      include: { user: true },
+    });
+
+    if (!persistedChatData) return null;
+
+    return ChatMember.fromPersistence({
+      id: persistedChatData.user.id,
+      firstName: persistedChatData.user.firstName,
+      lastName: persistedChatData.user.lastName,
+      role: persistedChatData.role as ChatMemberRole,
+      imageUrl: persistedChatData.user.imageUrl,
+    });
+  }
 }

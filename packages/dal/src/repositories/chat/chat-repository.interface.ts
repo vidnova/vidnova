@@ -9,4 +9,8 @@ export interface IChatRepository {
   findById(chatId: string, includeMembers?: boolean): Promise<Chat | null>;
 
   addMembersToChat(members: ChatMember[], chatId: string): Promise<void>;
+
+  deleteChatMemberByUserAndChatIds(userId: string, chatId: string): Promise<void>;
+
+  findMemberByUserAndChatIds(userId: string, chatId: string): Promise<ChatMember | null>;
 }
