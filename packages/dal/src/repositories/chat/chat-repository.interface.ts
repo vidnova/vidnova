@@ -24,4 +24,6 @@ export interface IChatRepository {
   getChatOwnersCount(chatId: string): Promise<number>;
 
   updateChat(chat: Chat): Promise<Chat>;
+
+  getChatsByUserId(userId: string): Promise<Chat[]>;
 }

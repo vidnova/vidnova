@@ -194,4 +194,21 @@ export class ChatRepository implements IChatRepository {
       members,
     });
   }
+
+  async getChatsByUserId(userId: string): Promise<Chat[]> {
+    const persistedChatsData = await this.prismaService.chat.findMany({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+      select: ChatQueries.SELECT_FIELDS,
+    });
+
+    return persistedChatsData.map((chat) =>
+      Chat.fromPersistence({ ...chat, type: chat.type as ChatType }),
+    );
+  }
 }
