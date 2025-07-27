@@ -242,37 +242,54 @@ model Chat {
   description String?
   type        ChatType     @default(DIRECT)
   imageUrl    String       @default("")
+  isDeleted   Boolean      @default(false)
+  deletedAt   DateTime?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt()
   members     ChatMember[]
 }
 
 model ChatMember {
-  id       String     @id @default(uuid())
-  userId   String
-  chatId   String
-  role     MemberRole
-  joinedAt DateTime   @default(now())
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chat     Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  id        String     @id @default(uuid())
+  userId    String
+  chatId    String
+  role      MemberRole
+  joinedAt  DateTime   @default(now())
+  isDeleted Boolean    @default(false)
+  deletedAt DateTime?
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat      Chat       @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@unique([userId, chatId])
 }
 
 model Message {
-  id          String              @id() @default(uuid())
-  content     String?
-  type        MessageType         @default(TEXT)
-  senderId    String
-  chatId      String
-  replyToId   String?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  sender      User                @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
-  replyTo     Message?            @relation("MessageReply", fields: [replyToId], references: [id])
-  replies     Message[]           @relation("MessageReply")
-  attachments MessageAttachment[]
-  reactions   MessageReaction[]
+  id              String              @id() @default(uuid())
+  content         String?
+  type            MessageType         @default(TEXT)
+  senderId        String
+  chatId          String
+  replyToId       String?
+  isDeletedForAll Boolean             @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  sender          User                @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo         Message?            @relation("MessageReply", fields: [replyToId], references: [id])
+  replies         Message[]           @relation("MessageReply")
+  attachments     MessageAttachment[]
+  reactions       MessageReaction[]
+  hiddenForUsers  MessageHidden[]
+}
+
+model MessageHidden {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  hiddenAt  DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id])
+
+  @@unique([messageId, userId])
 }
 
 model MessageAttachment {
