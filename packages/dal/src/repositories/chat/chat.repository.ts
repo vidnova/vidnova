@@ -162,4 +162,8 @@ export class ChatRepository implements IChatRepository {
       imageUrl: persistedChatMemberData.user.imageUrl,
     });
   }
+
+  getChatOwnersCount(chatId: string): Promise<number> {
+    return this.prismaService.chat.count({ where: { id: chatId } });
+  }
 }

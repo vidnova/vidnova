@@ -20,4 +20,6 @@ export interface IChatRepository {
     chatId: string,
     newRole: ChatMemberRole,
   ): Promise<ChatMember>;
+
+  getChatOwnersCount(chatId: string): Promise<number>;
 }

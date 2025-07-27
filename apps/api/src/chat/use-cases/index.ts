@@ -3,6 +3,7 @@ import { CreateGroupChatUseCase } from './create-group-chat/create-group-chat.us
 import { GetChatUseCase } from './get-chat/get-chat.use-case';
 import { AddMembersToChatUseCase } from './add-member-to-chat/add-members-to-chat.use-case';
 import { DeleteChatMemberUseCase } from './delete-chat-member/delete-chat-member.use-case';
+import { UpdateChatMemberRoleUseCase } from './update-chat-member-role/update-chat-member-role.use-case';
 
 export const USE_CASES = [
   CreateDirectChatUseCase,
@@ -10,4 +11,5 @@ export const USE_CASES = [
   GetChatUseCase,
   AddMembersToChatUseCase,
   DeleteChatMemberUseCase,
+  UpdateChatMemberRoleUseCase,
 ];

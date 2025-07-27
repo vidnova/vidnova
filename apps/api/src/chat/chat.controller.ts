@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
 import { CreateGroupChatUseCase } from './use-cases/create-group-chat/create-group-chat.use-case';
@@ -11,6 +11,9 @@ import { AddMembersToChatUseCase } from './use-cases/add-member-to-chat/add-memb
 import { AddMembersToChatCommand } from './use-cases/add-member-to-chat/add-members-to-chat.command';
 import { DeleteChatMemberUseCase } from './use-cases/delete-chat-member/delete-chat-member.use-case';
 import { DeleteChatMemberCommand } from './use-cases/delete-chat-member/delete-chat-member.command';
+import { UpdateChatMemberRoleDto } from './dtos/update-chat-member-role.dto';
+import { UpdateChatMemberRoleUseCase } from './use-cases/update-chat-member-role/update-chat-member-role.use-case';
+import { UpdateChatMemberRoleCommand } from './use-cases/update-chat-member-role/update-chat-member-role.command';
 
 @Controller('chats')
 export class ChatController {
@@ -19,6 +22,7 @@ export class ChatController {
     private readonly getChatUseCase: GetChatUseCase,
     private readonly addMemberToChatUseCase: AddMembersToChatUseCase,
     private readonly deleteChatMemberUseCase: DeleteChatMemberUseCase,
+    private readonly updateChatMemberRoleUseCase: UpdateChatMemberRoleUseCase,
   ) {}
 
   @Post('group')
@@ -81,6 +85,26 @@ export class ChatController {
         userId: user.id,
         memberUserId,
         chatId,
+      }),
+    );
+  }
+
+  @Patch(':chatId/members/:memberUserId/role')
+  @UseGuards(AuthGuard)
+  async updateChatMemberRole(
+    @Param('chatId') chatId: string,
+    @Param('memberUserId') memberUserId: string,
+    @Req() req: FastifyRequest,
+    @Body() data: UpdateChatMemberRoleDto,
+  ) {
+    const user = req.user;
+
+    return this.updateChatMemberRoleUseCase.execute(
+      UpdateChatMemberRoleCommand.create({
+        userId: user.id,
+        memberUserId,
+        chatId,
+        newRole: data.newRole,
       }),
     );
   }
