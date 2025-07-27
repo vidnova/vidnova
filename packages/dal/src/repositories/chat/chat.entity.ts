@@ -63,6 +63,19 @@ export class Chat {
     );
   }
 
+  update(params: { imageUrl: string; name: string; description: string | null }): Chat {
+    return new Chat(
+      this.id,
+      this._type,
+      params.imageUrl,
+      this._createdAt,
+      new Date(),
+      params.name,
+      params.description,
+      this._members,
+    );
+  }
+
   toJSON() {
     return {
       id: this._id,

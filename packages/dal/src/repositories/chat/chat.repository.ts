@@ -166,4 +166,32 @@ export class ChatRepository implements IChatRepository {
   getChatOwnersCount(chatId: string): Promise<number> {
     return this.prismaService.chat.count({ where: { id: chatId } });
   }
+
+  async updateChat(chat: Chat): Promise<Chat> {
+    const persistedChatData = await this.prismaService.chat.update({
+      where: { id: chat.id },
+      data: {
+        imageUrl: chat.imageUrl,
+        name: chat.name,
+        description: chat.description,
+      },
+      select: ChatQueries.SELECT_FIELDS_WITH_MEMBERS,
+    });
+
+    const members = persistedChatData.members.map((member) =>
+      ChatMember.fromPersistence({
+        id: member.user.id,
+        firstName: member.user.firstName,
+        lastName: member.user.lastName,
+        imageUrl: member.user.imageUrl,
+        role: member.role as ChatMemberRole,
+      }),
+    );
+
+    return Chat.fromPersistence({
+      ...persistedChatData,
+      type: persistedChatData.type as ChatType,
+      members,
+    });
+  }
 }
