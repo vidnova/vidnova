@@ -63,15 +63,15 @@ export class Chat {
     );
   }
 
-  update(params: { imageUrl: string; name: string; description: string | null }): Chat {
+  update(params: { imageUrl?: string; name?: string; description?: string | null }): Chat {
     return new Chat(
       this.id,
       this._type,
-      params.imageUrl,
+      params.imageUrl || this._imageUrl,
       this._createdAt,
       new Date(),
-      params.name,
-      params.description,
+      params.name ?? this._name,
+      params.description ?? this._description,
       this._members,
     );
   }

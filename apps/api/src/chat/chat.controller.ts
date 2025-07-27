@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
 import { CreateGroupChatUseCase } from './use-cases/create-group-chat/create-group-chat.use-case';
@@ -14,6 +25,9 @@ import { DeleteChatMemberCommand } from './use-cases/delete-chat-member/delete-c
 import { UpdateChatMemberRoleDto } from './dtos/update-chat-member-role.dto';
 import { UpdateChatMemberRoleUseCase } from './use-cases/update-chat-member-role/update-chat-member-role.use-case';
 import { UpdateChatMemberRoleCommand } from './use-cases/update-chat-member-role/update-chat-member-role.command';
+import { UpdateChatInfoDto } from './dtos/update-chat-info.dto';
+import { UpdateChatInfoUseCase } from './use-cases/update-chat-info/update-chat-info.use-case';
+import { UpdateChatInfoCommand } from './use-cases/update-chat-info/update-chat-info.command';
 
 @Controller('chats')
 export class ChatController {
@@ -23,6 +37,7 @@ export class ChatController {
     private readonly addMemberToChatUseCase: AddMembersToChatUseCase,
     private readonly deleteChatMemberUseCase: DeleteChatMemberUseCase,
     private readonly updateChatMemberRoleUseCase: UpdateChatMemberRoleUseCase,
+    private readonly updateChatInfoUseCase: UpdateChatInfoUseCase,
   ) {}
 
   @Post('group')
@@ -105,6 +120,24 @@ export class ChatController {
         memberUserId,
         chatId,
         newRole: data.newRole,
+      }),
+    );
+  }
+
+  @Put(':chatId')
+  @UseGuards(AuthGuard)
+  async updateChat(
+    @Req() req: FastifyRequest,
+    @Param('chatId') chatId: string,
+    @Body() data: UpdateChatInfoDto,
+  ) {
+    const user = req.user;
+
+    return this.updateChatInfoUseCase.execute(
+      UpdateChatInfoCommand.create({
+        userId: user.id,
+        ...data,
+        chatId,
       }),
     );
   }
