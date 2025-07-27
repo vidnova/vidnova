@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
 import { CreateGroupChatUseCase } from './use-cases/create-group-chat/create-group-chat.use-case';
@@ -9,6 +9,8 @@ import { GetChatCommand } from './use-cases/get-chat/get-chat.command';
 import { AddMembersToChatDto } from './dtos/add-members-to-chat.dto';
 import { AddMembersToChatUseCase } from './use-cases/add-member-to-chat/add-members-to-chat.use-case';
 import { AddMembersToChatCommand } from './use-cases/add-member-to-chat/add-members-to-chat.command';
+import { DeleteChatMemberUseCase } from './use-cases/delete-chat-member/delete-chat-member.use-case';
+import { DeleteChatMemberCommand } from './use-cases/delete-chat-member/delete-chat-member.command';
 
 @Controller('chats')
 export class ChatController {
@@ -16,6 +18,7 @@ export class ChatController {
     private readonly createGroupChatUseCase: CreateGroupChatUseCase,
     private readonly getChatUseCase: GetChatUseCase,
     private readonly addMemberToChatUseCase: AddMembersToChatUseCase,
+    private readonly deleteChatMemberUseCase: DeleteChatMemberUseCase,
   ) {}
 
   @Post('group')
@@ -62,5 +65,23 @@ export class ChatController {
     );
 
     return { message: result };
+  }
+
+  @Delete(':chatId/members/:memberUserId')
+  @UseGuards(AuthGuard)
+  async deleteMember(
+    @Req() req: FastifyRequest,
+    @Param('chatId') chatId: string,
+    @Param('memberUserId') memberUserId: string,
+  ) {
+    const user = req.user;
+
+    return this.deleteChatMemberUseCase.execute(
+      DeleteChatMemberCommand.create({
+        userId: user.id,
+        memberUserId,
+        chatId,
+      }),
+    );
   }
 }
