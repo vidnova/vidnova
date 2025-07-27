@@ -48,7 +48,7 @@ export class Chat {
     createdAt: Date;
     updatedAt: Date;
     name: string | null;
-    description: string | null;
+    description?: string | null;
     members?: ChatMember[];
   }): Chat {
     return new Chat(
@@ -58,7 +58,7 @@ export class Chat {
       params.createdAt,
       params.updatedAt,
       params.name,
-      params.description,
+      params.description ?? null,
       params.members ?? [],
     );
   }
@@ -83,7 +83,7 @@ export class Chat {
       description: this._description,
       type: this._type,
       imageUrl: this._imageUrl,
-      ...(this._members && { members: this._members }),
+      ...(this._members?.length ? { members: this._members } : {}),
       createdAt: this._createdAt,
       updatedAt: this._updateAt,
     };

@@ -5,6 +5,8 @@ import { ChatMemberRole, ChatType } from '@ecorally/shared';
 import { Injectable } from '@nestjs/common';
 import { ChatQueries } from './chat.query';
 import { ChatMember } from './chat-member.vo';
+import { ChatPreviewDto } from './chat.dto';
+import { ChatMapper } from './chat.mapper';
 
 @Injectable()
 export class ChatRepository implements IChatRepository {
@@ -195,7 +197,7 @@ export class ChatRepository implements IChatRepository {
     });
   }
 
-  async getChatsByUserId(userId: string): Promise<Chat[]> {
+  async findChatsByUserId(userId: string): Promise<ChatPreviewDto[]> {
     const persistedChatsData = await this.prismaService.chat.findMany({
       where: {
         members: {
@@ -204,11 +206,11 @@ export class ChatRepository implements IChatRepository {
           },
         },
       },
-      select: ChatQueries.SELECT_FIELDS,
+      select: ChatQueries.SELECT_FIELDS_WITH_MEMBERS,
     });
 
     return persistedChatsData.map((chat) =>
-      Chat.fromPersistence({ ...chat, type: chat.type as ChatType }),
+      ChatMapper.toPreviewDto({ ...chat, type: chat.type as ChatType }, userId),
     );
   }
 }

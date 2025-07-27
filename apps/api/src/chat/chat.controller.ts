@@ -28,6 +28,8 @@ import { UpdateChatMemberRoleCommand } from './use-cases/update-chat-member-role
 import { UpdateChatInfoDto } from './dtos/update-chat-info.dto';
 import { UpdateChatInfoUseCase } from './use-cases/update-chat-info/update-chat-info.use-case';
 import { UpdateChatInfoCommand } from './use-cases/update-chat-info/update-chat-info.command';
+import { GetUserChatsUseCase } from './use-cases/get-user-chats/get-user-chats.use-case';
+import { GetUserChatsCommand } from './use-cases/get-user-chats/get-user-chats.command';
 
 @Controller('chats')
 export class ChatController {
@@ -38,6 +40,7 @@ export class ChatController {
     private readonly deleteChatMemberUseCase: DeleteChatMemberUseCase,
     private readonly updateChatMemberRoleUseCase: UpdateChatMemberRoleUseCase,
     private readonly updateChatInfoUseCase: UpdateChatInfoUseCase,
+    private readonly getUserChatsUseCase: GetUserChatsUseCase,
   ) {}
 
   @Post('group')
@@ -140,5 +143,13 @@ export class ChatController {
         chatId,
       }),
     );
+  }
+
+  @Get('my')
+  @UseGuards(AuthGuard)
+  getUserChats(@Req() req: FastifyRequest) {
+    const user = req.user;
+
+    return this.getUserChatsUseCase.execute(GetUserChatsCommand.create({ userId: user.id }));
   }
 }

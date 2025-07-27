@@ -1,6 +1,7 @@
 import { Chat } from './chat.entity';
 import { ChatMember } from './chat-member.vo';
 import { ChatMemberRole } from '@ecorally/shared';
+import { ChatPreviewDto } from './chat.dto';
 
 export interface IChatRepository {
   create(chat: Chat): Promise<Chat>;
@@ -25,5 +26,5 @@ export interface IChatRepository {
 
   updateChat(chat: Chat): Promise<Chat>;
 
-  getChatsByUserId(userId: string): Promise<Chat[]>;
+  findChatsByUserId(userId: string): Promise<ChatPreviewDto[]>;
 }
