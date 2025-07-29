@@ -1,6 +1,7 @@
 import { ChatMember, IChatRepository } from '@ecorally/dal';
 import {
   ForbiddenException,
+  GoneException,
   HttpException,
   Inject,
   Injectable,
@@ -16,6 +17,8 @@ export class DeleteChatMemberUseCase {
 
   async execute(command: DeleteChatMemberCommand) {
     try {
+      await this.validateChat(command.chatId);
+
       const [actingMember, targetMember] = await Promise.all([
         this.getMemberOrThrow(command.userId, command.chatId, 'You are not a member of this chat'),
         this.getMemberOrThrow(command.memberUserId, command.chatId, 'Such member not found'),
@@ -33,6 +36,18 @@ export class DeleteChatMemberUseCase {
       if (error instanceof HttpException) throw error;
 
       throw new InternalServerErrorException('Failed to delete member');
+    }
+  }
+
+  private async validateChat(chatId: string) {
+    const chat = await this.chatRepository.findById(chatId, false);
+
+    if (!chat) {
+      throw new NotFoundException(`Chat with ID ${chatId} not found`);
+    }
+
+    if (chat.isDeleted) {
+      throw new GoneException(`Chat with ID ${chatId} was deleted`);
     }
   }
 

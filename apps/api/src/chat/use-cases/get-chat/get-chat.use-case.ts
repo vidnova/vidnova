@@ -1,5 +1,6 @@
 import { Chat, IChatRepository, RedisService } from '@ecorally/dal';
 import {
+  BadRequestException,
   ForbiddenException,
   HttpException,
   Inject,
@@ -27,6 +28,10 @@ export class GetChatUseCase {
       }
 
       const chat = await this.chatRepository.findById(command.chatId, true);
+
+      if (chat?.isDeleted) {
+        throw new BadRequestException(`Chat with ID ${command.chatId} was deleted`);
+      }
 
       const userMember = chat.members.filter((member) => member.id === command.userId);
 

@@ -2,6 +2,7 @@ import { Chat, ChatMember, IChatRepository, IUserRepository, User } from '@ecora
 import {
   ConflictException,
   ForbiddenException,
+  GoneException,
   HttpException,
   Inject,
   Injectable,
@@ -40,6 +41,10 @@ export class AddMembersToChatUseCase {
     const chat = await this.chatRepository.findById(chatId, true);
     if (!chat) {
       throw new NotFoundException(`Chat with ID ${chatId} not found`);
+    }
+
+    if (chat.isDeleted) {
+      throw new GoneException(`Chat with ID ${chatId} was deleted`);
     }
 
     if (chat.type === ChatType.DIRECT) {
