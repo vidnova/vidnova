@@ -7,7 +7,6 @@ import { MailModule } from './mail/mail.module';
 import { CleanupEventModule } from './cleanup-event/cleanup-event.module';
 import { SettlementModule } from './settlement/settlement.module';
 import { RegionModule } from './region/region.module';
-import { DatabaseModule } from './database/database.module';
 import { ContaminatedPointModule } from './contaminated-point/contaminated-point.module';
 import { CommentModule } from './comment/comment.module';
 import { TakePartModule } from './take-part/take-part.module';
@@ -15,6 +14,7 @@ import { UserModule } from './user/user.module';
 import { ReportModule } from './report/report.module';
 import { SharedModule } from '@ecorally/shared';
 import { ChatModule } from './chat/chat.module';
+import { DalModule } from '@ecorally/dal';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { ChatModule } from './chat/chat.module';
     CleanupEventModule,
     SettlementModule,
     RegionModule,
-    DatabaseModule,
+    DalModule,
     ContaminatedPointModule,
     CommentModule,
     TakePartModule,

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import {
   BlacklistedTokenRepository,
   CachingOverpassRepository,
@@ -15,8 +15,9 @@ import {
   SettlementRepository,
   TakePartRepository,
   UserRepository,
-} from '@ecorally/dal';
+} from './repositories';
 
+@Global()
 @Module({
   providers: [
     PrismaService,
@@ -92,4 +93,4 @@ import {
     PrismaService,
   ],
 })
-export class DatabaseModule {}
+export class DalModule {}

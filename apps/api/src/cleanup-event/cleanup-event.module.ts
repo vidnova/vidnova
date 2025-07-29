@@ -4,14 +4,13 @@ import { RegionModule } from '../region/region.module';
 import { SettlementModule } from '../settlement/settlement.module';
 import { PrismaService, RedisService } from '@ecorally/dal';
 import { LocationValidationService } from '@ecorally/shared';
-import { DatabaseModule } from '../database/database.module';
 import { IsPointInRegionUseCase } from '../region/use-cases/is-point-in-region/is-point-in-region.use-case';
 import { IsPointInsideSettlementUseCase } from '../settlement/use-cases/is-point-inside-settlement/is-point-in-settlement.use-case';
 import { USE_CASES } from './use-cases';
 import { CommentModule } from '../comment/comment.module';
 
 @Module({
-  imports: [DatabaseModule, SettlementModule, RegionModule, CommentModule],
+  imports: [SettlementModule, RegionModule, CommentModule],
   controllers: [CleanupEventController],
   providers: [
     PrismaService,
