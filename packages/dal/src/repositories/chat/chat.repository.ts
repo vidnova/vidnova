@@ -34,6 +34,7 @@ export class ChatRepository implements IChatRepository {
 
     const members = persistedChatData.members.map((member) =>
       ChatMember.fromPersistence({
+        ...member,
         id: member.user.id,
         firstName: member.user.firstName,
         lastName: member.user.lastName,
@@ -85,6 +86,7 @@ export class ChatRepository implements IChatRepository {
       includeMembers && 'members' in chat && Array.isArray(chat.members)
         ? chat.members.map((member) =>
             ChatMember.fromPersistence({
+              ...member,
               id: member.user.id,
               firstName: member.user.firstName,
               lastName: member.user.lastName,
@@ -119,7 +121,7 @@ export class ChatRepository implements IChatRepository {
   }
 
   async findMemberByUserAndChatIds(userId: string, chatId: string): Promise<ChatMember | null> {
-    const persistedChatData = await this.prismaService.chatMember.findFirst({
+    const persistedMemberData = await this.prismaService.chatMember.findFirst({
       where: {
         userId: userId,
         chatId: chatId,
@@ -127,14 +129,15 @@ export class ChatRepository implements IChatRepository {
       include: { user: true },
     });
 
-    if (!persistedChatData) return null;
+    if (!persistedMemberData) return null;
 
     return ChatMember.fromPersistence({
-      id: persistedChatData.user.id,
-      firstName: persistedChatData.user.firstName,
-      lastName: persistedChatData.user.lastName,
-      role: persistedChatData.role as ChatMemberRole,
-      imageUrl: persistedChatData.user.imageUrl,
+      ...persistedMemberData,
+      id: persistedMemberData.user.id,
+      firstName: persistedMemberData.user.firstName,
+      lastName: persistedMemberData.user.lastName,
+      role: persistedMemberData.role as ChatMemberRole,
+      imageUrl: persistedMemberData.user.imageUrl,
     });
   }
 
@@ -157,6 +160,7 @@ export class ChatRepository implements IChatRepository {
     });
 
     return ChatMember.fromPersistence({
+      ...persistedChatMemberData,
       id: persistedChatMemberData.user.id,
       firstName: persistedChatMemberData.user.firstName,
       lastName: persistedChatMemberData.user.lastName,
@@ -203,8 +207,10 @@ export class ChatRepository implements IChatRepository {
         members: {
           some: {
             userId,
+            isDeleted: false,
           },
         },
+        isDeleted: false,
       },
       select: ChatQueries.SELECT_FIELDS_WITH_MEMBERS,
     });

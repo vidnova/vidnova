@@ -12,7 +12,7 @@ export class ChatMapper {
           ? `${companion.user.firstName} ${companion.user.lastName ?? ''}`.trim()
           : 'Unknown',
         imageUrl: companion?.user.imageUrl ?? '',
-        type: chat.type,
+        type: chat.type
       };
     }
 

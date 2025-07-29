@@ -11,6 +11,8 @@ export class Chat {
     private readonly _updateAt: Date,
     private readonly _name: string | null,
     private readonly _description: string | null,
+    private readonly _isDeleted?: boolean,
+    private readonly _deletedAt?: Date | null,
     private readonly _members?: ChatMember[],
   ) {}
 
@@ -37,6 +39,8 @@ export class Chat {
       new Date(),
       params.name,
       params.description,
+      false,
+      null,
       params.members,
     );
   }
@@ -49,6 +53,8 @@ export class Chat {
     updatedAt: Date;
     name: string | null;
     description?: string | null;
+    isDeleted?: boolean;
+    deletedAt?: Date | null;
     members?: ChatMember[];
   }): Chat {
     return new Chat(
@@ -59,6 +65,8 @@ export class Chat {
       params.updatedAt,
       params.name,
       params.description ?? null,
+      params.isDeleted,
+      params.deletedAt,
       params.members ?? [],
     );
   }
@@ -72,6 +80,8 @@ export class Chat {
       new Date(),
       params.name ?? this._name,
       params.description ?? this._description,
+      this._isDeleted,
+      this._deletedAt,
       this._members,
     );
   }
@@ -115,6 +125,14 @@ export class Chat {
 
   get description(): string | null {
     return this._description;
+  }
+
+  get isDeleted(): boolean | undefined {
+    return this._isDeleted;
+  }
+
+  get deletedAt(): Date | null | undefined {
+    return this._deletedAt;
   }
 
   get members(): ChatMember[] | undefined {

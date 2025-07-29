@@ -7,10 +7,12 @@ export class ChatMember {
     private readonly _firstName: string,
     private readonly _lastName: string | null,
     private readonly _role: ChatMemberRole,
+    private readonly _isDeleted?: boolean,
+    private readonly _deletedAt?: Date | null,
   ) {}
 
   static create(params: { id: string; role: ChatMemberRole }): ChatMember {
-    return new ChatMember(params.id, '', '', null, params.role);
+    return new ChatMember(params.id, '', '', null, params.role, false, null);
   }
 
   static fromPersistence(params: {
@@ -19,18 +21,30 @@ export class ChatMember {
     firstName: string;
     lastName: string | null;
     role: ChatMemberRole;
+    isDeleted?: boolean;
+    deletedAt?: Date | null;
   }): ChatMember {
     return new ChatMember(
       params.id,
       params.imageUrl,
       params.firstName,
-      params.firstName,
+      params.lastName,
       params.role,
+      params.isDeleted,
+      params.deletedAt,
     );
   }
 
   updateRole(role: ChatMemberRole): ChatMember {
-    return new ChatMember(this._id, this._imageUrl, this._firstName, this._lastName, role);
+    return new ChatMember(
+      this._id,
+      this._imageUrl,
+      this._firstName,
+      this._lastName,
+      role,
+      this._isDeleted,
+      this._deletedAt,
+    );
   }
 
   get id(): string {
@@ -51,6 +65,14 @@ export class ChatMember {
 
   get role(): ChatMemberRole {
     return this._role;
+  }
+
+  get isDeleted(): boolean | undefined {
+    return this._isDeleted;
+  }
+
+  get deletedAt(): Date | null | undefined {
+    return this._deletedAt;
   }
 
   toJSON() {
