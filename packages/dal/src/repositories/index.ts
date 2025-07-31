@@ -11,3 +11,4 @@ export * from './comment';
 export * from './take-part';
 export * from './report';
 export * from './chat';
+export * from './message';
