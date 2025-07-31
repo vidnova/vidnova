@@ -4,16 +4,21 @@
     "."
   ],
   "compilerOptions": {
-    "strictNullChecks": true,
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": [
+      "ES2020"
+    ],
+    "strictNullChecks": false,
     "types": [
       "node"
     ],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
-    "outDir": "dist",
-    "strictPropertyInitialization": false
+    "outDir": "dist"
   },
   "exclude": [
     "dist",
