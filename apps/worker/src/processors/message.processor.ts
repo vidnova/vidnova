@@ -1,4 +1,4 @@
-import { Processor } from '@nestjs/bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Channels, QueueNames } from '@ecorally/shared';
 import { Inject, Logger } from '@nestjs/common';
 import Redis from 'ioredis';
@@ -6,10 +6,12 @@ import { Job } from 'bullmq';
 import { Message } from '@ecorally/dal';
 
 @Processor(QueueNames.MESSAGE_QUEUE)
-export class MessageProcessor {
+export class MessageProcessor extends WorkerHost {
   private readonly logger = new Logger(MessageProcessor.name);
 
-  constructor(@Inject('PUB_SUB_REDIS') private readonly redis: Redis) {}
+  constructor(@Inject('PUB_SUB_REDIS') private readonly redis: Redis) {
+    super();
+  }
 
   async process(job: Job<Message>) {
     const message = job.data;

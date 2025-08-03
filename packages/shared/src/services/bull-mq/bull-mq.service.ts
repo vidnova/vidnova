@@ -16,7 +16,7 @@ export class BullMqService {
       const queue = new Queue(queueName, {
         connection: {
           host: process.env.REDIS_HOST || 'localhost',
-          port: Number(process.env.REDIS_PORT) || 6432,
+          port: Number(process.env.REDIS_PORT) || 6379,
         },
         defaultJobOptions: {
           attempts: 3,
