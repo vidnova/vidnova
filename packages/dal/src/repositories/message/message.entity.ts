@@ -3,6 +3,7 @@ import { MessageSender } from './message-sender.vo';
 import { MessageReply } from './message-reply.vo';
 import { MessageReaction } from './message-reaction.vo';
 import { MessageAttachment } from './message-attachment.vo';
+import { v4 } from 'uuid';
 
 export class Message {
   constructor(
@@ -17,6 +18,27 @@ export class Message {
     private readonly _attachments: MessageAttachment[],
     private readonly _replyTo: MessageReply | null,
   ) {}
+
+  static create(params: {
+    content: string | null;
+    type: MessageType;
+    sender: MessageSender;
+    attachments: MessageAttachment[];
+    replyTo: MessageReply | null;
+  }): Message {
+    return new Message(
+      v4(),
+      params.content,
+      params.type,
+      new Date(),
+      new Date(),
+      false,
+      params.sender,
+      [],
+      params.attachments,
+      params.replyTo,
+    );
+  }
 
   get id(): string {
     return this._id;

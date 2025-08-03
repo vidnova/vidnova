@@ -1,4 +1,5 @@
 import { MessageAttachmentType } from '@ecorally/shared';
+import { v4 } from 'uuid';
 
 export class MessageAttachment {
   constructor(
@@ -10,6 +11,25 @@ export class MessageAttachment {
     private readonly _type: MessageAttachmentType,
     private readonly _messageId: string,
   ) {}
+
+  static create(params: {
+    fileName: string;
+    fileSize: number;
+    mimeType: string;
+    url: string;
+    type: MessageAttachmentType;
+    messageId: string;
+  }): MessageAttachment {
+    return new MessageAttachment(
+      v4(),
+      params.fileName,
+      params.fileSize,
+      params.mimeType,
+      params.url,
+      params.type,
+      params.messageId,
+    );
+  }
 
   get id(): string {
     return this._id;
