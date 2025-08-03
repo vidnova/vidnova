@@ -31,6 +31,26 @@ export class MessageAttachment {
     );
   }
 
+  static fromPersistence(params: {
+    id: string;
+    fileName: string;
+    fileSize: number;
+    mimeType: string;
+    url: string;
+    type: MessageAttachmentType;
+    messageId: string;
+  }): MessageAttachment {
+    return new MessageAttachment(
+      params.id,
+      params.fileName,
+      params.fileSize,
+      params.mimeType,
+      params.url,
+      params.type,
+      params.messageId,
+    );
+  }
+
   get id(): string {
     return this._id;
   }

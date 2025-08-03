@@ -8,6 +8,14 @@ export class MessageReply {
     return new MessageReply(params.id, params.content);
   }
 
+  get id(): string {
+    return this._id;
+  }
+
+  get content(): string | null {
+    return this._content;
+  }
+
   toJSON() {
     return {
       id: this._id,

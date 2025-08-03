@@ -10,6 +10,7 @@ export class Message {
     private readonly _id: string,
     private readonly _content: string | null,
     private readonly _type: MessageType,
+    private readonly _chatId: string,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
     private readonly _isUpdated: boolean,
@@ -22,6 +23,7 @@ export class Message {
   static create(params: {
     content: string | null;
     type: MessageType;
+    chatId: string;
     sender: MessageSender;
     attachments: MessageAttachment[];
     replyTo: MessageReply | null;
@@ -30,11 +32,40 @@ export class Message {
       v4(),
       params.content,
       params.type,
+      params.chatId,
       new Date(),
       new Date(),
       false,
       params.sender,
       [],
+      params.attachments,
+      params.replyTo,
+    );
+  }
+
+  static fromPersistence(params: {
+    id: string;
+    content: string | null;
+    type: MessageType;
+    chatId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    isUpdated: boolean;
+    reactions: MessageReaction[];
+    sender: MessageSender;
+    attachments: MessageAttachment[];
+    replyTo: MessageReply | null;
+  }): Message {
+    return new Message(
+      params.id,
+      params.content,
+      params.type,
+      params.chatId,
+      params.createdAt,
+      params.updatedAt,
+      params.isUpdated,
+      params.sender,
+      params.reactions,
       params.attachments,
       params.replyTo,
     );
@@ -50,6 +81,10 @@ export class Message {
 
   get type(): MessageType {
     return this._type;
+  }
+
+  get chatId(): string {
+    return this._chatId;
   }
 
   get createdAt(): Date {
@@ -68,7 +103,7 @@ export class Message {
     return this._sender;
   }
 
-  get reaction(): MessageReaction[] {
+  get reactions(): MessageReaction[] {
     return this._reactions;
   }
 

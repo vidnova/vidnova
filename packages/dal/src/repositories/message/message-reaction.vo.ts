@@ -21,6 +21,15 @@ export class MessageReaction {
     return new MessageReaction(v4(), params.emoji, params.user, new Date());
   }
 
+  static fromPersistence(params: {
+    id: string;
+    emoji: string;
+    user: MessageSender;
+    createdAt: Date;
+  }): MessageReaction {
+    return new MessageReaction(params.id, params.emoji, params.user, params.createdAt);
+  }
+
   get id(): string {
     return this._id;
   }
