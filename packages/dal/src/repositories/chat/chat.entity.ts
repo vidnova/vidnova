@@ -86,6 +86,21 @@ export class Chat {
     );
   }
 
+  delete(): Chat {
+    return new Chat(
+      this.id,
+      this._type,
+      this._imageUrl,
+      this._createdAt,
+      this._updateAt,
+      this._name,
+      this._description,
+      true,
+      new Date(),
+      this._members,
+    );
+  }
+
   toJSON() {
     return {
       id: this._id,

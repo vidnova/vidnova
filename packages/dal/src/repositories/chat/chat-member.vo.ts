@@ -43,7 +43,7 @@ export class ChatMember {
       this._lastName,
       role,
       this._isDeleted,
-      this._deletedAt,
+      new Date(),
     );
   }
 

@@ -1,6 +1,5 @@
 import { Chat } from './chat.entity';
 import { ChatMember } from './chat-member.vo';
-import { ChatMemberRole } from '@ecorally/shared';
 import { ChatPreviewDto } from './chat.dto';
 
 export interface IChatRepository {

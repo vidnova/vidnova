@@ -156,6 +156,7 @@ export class ChatRepository implements IChatRepository {
       data: {
         role: member.role,
         isDeleted: member.isDeleted,
+        deletedAt: member.deletedAt,
       },
       include: { user: true },
     });
@@ -181,6 +182,8 @@ export class ChatRepository implements IChatRepository {
         imageUrl: chat.imageUrl,
         name: chat.name,
         description: chat.description,
+        isDeleted: chat.isDeleted,
+        deletedAt: chat.deletedAt,
       },
       select: ChatQueries.SELECT_FIELDS_WITH_MEMBERS,
     });

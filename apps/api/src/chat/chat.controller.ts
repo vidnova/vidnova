@@ -35,6 +35,8 @@ import { CreateDirectChatDto } from './dtos/create-direct-chat.dto';
 import { CreateDirectChatCommand } from './use-cases/create-direct-chat/create-direct-chat.command';
 import { DeleteChatSelfUseCase } from './use-cases/delete-chat-self/delete-chat-self.use-case';
 import { DeleteChatSelfCommand } from './use-cases/delete-chat-self/delete-chat-self.command';
+import { DeleteChatUseCase } from './use-cases/delete-chat/delete-chat.use-case';
+import { DeleteChatCommand } from './use-cases/delete-chat/delete-chat.command';
 
 @Controller('chats')
 export class ChatController {
@@ -48,6 +50,7 @@ export class ChatController {
     private readonly getUserChatsUseCase: GetUserChatsUseCase,
     private readonly createDirectChatUseCase: CreateDirectChatUseCase,
     private readonly deleteChatSelfUseCase: DeleteChatSelfUseCase,
+    private readonly deleteChatUseCase: DeleteChatUseCase,
   ) {}
 
   @Post('group')
@@ -180,6 +183,19 @@ export class ChatController {
 
     return this.deleteChatSelfUseCase.execute(
       DeleteChatSelfCommand.create({
+        userId: user.id,
+        chatId,
+      }),
+    );
+  }
+
+  @Delete(':chatId')
+  @UseGuards(AuthGuard)
+  deleteChat(@Param('chatId') chatId: string, @Req() req: FastifyRequest) {
+    const user = req.user;
+
+    return this.deleteChatUseCase.execute(
+      DeleteChatCommand.create({
         userId: user.id,
         chatId,
       }),
