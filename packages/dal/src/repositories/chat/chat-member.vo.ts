@@ -47,6 +47,18 @@ export class ChatMember {
     );
   }
 
+  deleteChatForSelf(): ChatMember {
+    return new ChatMember(
+      this._id,
+      this._imageUrl,
+      this._firstName,
+      this._lastName,
+      this._role,
+      true,
+      this._deletedAt,
+    );
+  }
+
   get id(): string {
     return this._id;
   }

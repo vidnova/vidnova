@@ -38,10 +38,12 @@ export class UpdateChatMemberRoleUseCase {
 
       await this.redisService.delete(cacheKey);
 
-      return this.chatRepository.updateChatMemberRole(
+      const updatedTargetMember = targetMember.deleteChatForSelf();
+
+      return this.chatRepository.updateChatMember(
         command.memberUserId,
         command.chatId,
-        command.newRole,
+        updatedTargetMember,
       );
     } catch (error: unknown) {
       if (error instanceof HttpException) throw error;

@@ -16,11 +16,7 @@ export interface IChatRepository {
 
   findMemberByUserAndChatIds(userId: string, chatId: string): Promise<ChatMember | null>;
 
-  updateChatMemberRole(
-    userId: string,
-    chatId: string,
-    newRole: ChatMemberRole,
-  ): Promise<ChatMember>;
+  updateChatMember(userId: string, chatId: string, member: Partial<ChatMember>): Promise<ChatMember>;
 
   getChatOwnersCount(chatId: string): Promise<number>;
 

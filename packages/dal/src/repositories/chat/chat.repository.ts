@@ -141,10 +141,10 @@ export class ChatRepository implements IChatRepository {
     });
   }
 
-  async updateChatMemberRole(
+  async updateChatMember(
     userId: string,
     chatId: string,
-    newRole: ChatMemberRole,
+    member: Partial<ChatMember>,
   ): Promise<ChatMember> {
     const persistedChatMemberData = await this.prismaService.chatMember.update({
       where: {
@@ -154,7 +154,8 @@ export class ChatRepository implements IChatRepository {
         },
       },
       data: {
-        role: newRole,
+        role: member.role,
+        isDeleted: member.isDeleted,
       },
       include: { user: true },
     });
