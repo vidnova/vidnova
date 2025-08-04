@@ -3,7 +3,9 @@ import { PrismaService } from '../shared';
 import { Message } from './message.entity';
 import { MessageMapper } from './message.mapper';
 import { MessageQuery } from './message.query';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class MessageRepository implements IMessageRepository {
   constructor(private readonly prismaService: PrismaService) {}
 

@@ -6,6 +6,10 @@ export class MessageSender {
     private readonly _imageUrl: string,
   ) {}
 
+  static create(params: { id: string }): MessageSender {
+    return new MessageSender(params.id, '', '', '');
+  }
+
   static fromPersistence(params: {
     id: string;
     firstName: string;

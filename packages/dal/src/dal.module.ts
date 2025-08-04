@@ -16,6 +16,7 @@ import {
   TakePartRepository,
   UserRepository,
 } from './repositories';
+import { MessageRepository } from './repositories/message/message.repository';
 
 @Global()
 @Module({
@@ -74,6 +75,10 @@ import {
       provide: 'CHAT_REPOSITORY',
       useClass: ChatRepository,
     },
+    {
+      provide: 'MESSAGE_REPOSITORY',
+      useClass: MessageRepository,
+    },
   ],
   exports: [
     'CLEANUP_EVENT_REPOSITORY',
@@ -89,6 +94,7 @@ import {
     'TAKE_PART_REPOSITORY',
     'REPORT_REPOSITORY',
     'CHAT_REPOSITORY',
+    'MESSAGE_REPOSITORY',
     RedisService,
     PrismaService,
   ],

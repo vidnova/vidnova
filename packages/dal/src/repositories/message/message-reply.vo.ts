@@ -4,6 +4,10 @@ export class MessageReply {
     private readonly _content: string | null,
   ) {}
 
+  static create(params: { id: string }): MessageReply {
+    return new MessageReply(params.id, '');
+  }
+
   static fromPersistence(params: { id: string; content: string | null }): MessageReply {
     return new MessageReply(params.id, params.content);
   }

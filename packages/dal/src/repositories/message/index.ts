@@ -3,3 +3,7 @@ export * from './message.entity';
 export * from './message-reaction.vo';
 export * from './message-reply.vo';
 export * from './message-sender.vo';
+export * from './message.mapper';
+export * from './message-repository.interface';
+export * from './message.repository';
+export * from './message.query';

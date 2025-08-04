@@ -15,6 +15,7 @@ import { ReportModule } from './report/report.module';
 import { SharedModule } from '@ecorally/shared';
 import { ChatModule } from './chat/chat.module';
 import { DalModule } from '@ecorally/dal';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DalModule } from '@ecorally/dal';
     ReportModule,
     SharedModule,
     ChatModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
