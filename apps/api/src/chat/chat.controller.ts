@@ -30,6 +30,9 @@ import { UpdateChatInfoUseCase } from './use-cases/update-chat-info/update-chat-
 import { UpdateChatInfoCommand } from './use-cases/update-chat-info/update-chat-info.command';
 import { GetUserChatsUseCase } from './use-cases/get-user-chats/get-user-chats.use-case';
 import { GetUserChatsCommand } from './use-cases/get-user-chats/get-user-chats.command';
+import { CreateDirectChatUseCase } from './use-cases/create-direct-chat/create-direct-chat.use-case';
+import { CreateDirectChatDto } from './dtos/create-direct-chat.dto';
+import { CreateDirectChatCommand } from './use-cases/create-direct-chat/create-direct-chat.command';
 
 @Controller('chats')
 export class ChatController {
@@ -41,6 +44,7 @@ export class ChatController {
     private readonly updateChatMemberRoleUseCase: UpdateChatMemberRoleUseCase,
     private readonly updateChatInfoUseCase: UpdateChatInfoUseCase,
     private readonly getUserChatsUseCase: GetUserChatsUseCase,
+    private readonly createDirectChatUseCase: CreateDirectChatUseCase,
   ) {}
 
   @Post('group')
@@ -151,5 +155,18 @@ export class ChatController {
     const user = req.user;
 
     return this.getUserChatsUseCase.execute(GetUserChatsCommand.create({ userId: user.id }));
+  }
+
+  @Post('direct')
+  @UseGuards(AuthGuard)
+  async createDirectChat(@Req() req: FastifyRequest, @Body() data: CreateDirectChatDto) {
+    const user = req.user;
+
+    return this.createDirectChatUseCase.execute(
+      CreateDirectChatCommand.create({
+        initiatorId: user.id,
+        recipientId: data.recipientId,
+      }),
+    );
   }
 }
