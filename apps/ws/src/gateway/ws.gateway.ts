@@ -9,7 +9,12 @@ import { AuthService } from '@ecorally/shared';
 import { Inject, Logger } from '@nestjs/common';
 import { IChatRepository } from '@ecorally/dal';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: ['*'],
+    credentials: true,
+  },
+})
 export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private logger = new Logger();
   // TODO: make subscriptions storage in redis
@@ -24,31 +29,54 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server!: Server;
 
   async handleConnection(client: Socket) {
-    const accessToken = client.handshake.headers.cookie;
-    if (!accessToken) {
+    try {
+      const cookies = client.handshake.headers.cookie;
+      if (!cookies) {
+        client.disconnect();
+        this.logger.log('No cookies provided');
+        return;
+      }
+
+      const tokenCookie = cookies
+        .split(';')
+        .map((cookie) => cookie.trim())
+        .find((cookie) => cookie.startsWith('accessToken='));
+
+      if (!tokenCookie) {
+        client.disconnect();
+        this.logger.log('No access token found');
+        return;
+      }
+
+      const token = tokenCookie.split('=')[1];
+
+      const userId = this.authService.verifyToken(token);
+      if (!userId) {
+        client.disconnect();
+        this.logger.log('User not found');
+        return;
+      }
+
+      this.logger.log(`New connection from ${client.id}`);
+
+      const chats = await this.chatRepository.findChatsByUserId(userId);
+      const chatIds = chats.map((chat) => chat.id);
+      this.subscriptions.set(client.id, new Set(chatIds));
+
+      this.logger.log(
+        `Client ${client.id} (user ${userId}) subscribed to chats: ${chatIds.join(', ')}`,
+      );
+
+      await client.join(userId);
+      for (const chatId of chatIds) {
+        await client.join(chatId);
+      }
+
+      client.emit('subscribed', { chatIds });
+    } catch (error) {
+      this.logger.error('Connection error:', error);
       client.disconnect();
-      return;
     }
-
-    const userId = this.authService.verifyToken(accessToken);
-    if (!userId) {
-      client.disconnect();
-      return;
-    }
-
-    this.logger.log(`New connection from ${client.id}`);
-
-    const chats = await this.chatRepository.findChatsByUserId(userId);
-    const chatIds = chats.map((chat) => chat.id);
-    this.subscriptions.set(client.id, new Set(chatIds));
-
-    this.logger.log(
-      `Client ${client.id} (user ${userId}) subscribed to chats: ${chatIds.join(', ')}`,
-    );
-
-    await client.join(userId);
-
-    client.emit('subscribed', { chatIds });
   }
 
   handleDisconnect(client: Socket) {

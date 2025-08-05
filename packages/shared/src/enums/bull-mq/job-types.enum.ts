@@ -1,3 +1,3 @@
 export enum JobTypes {
-  SEND_MESSAGE = 'send-message',
+  SEND_MESSAGE = 'messages',
 }

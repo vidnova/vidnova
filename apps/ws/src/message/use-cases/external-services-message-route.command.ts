@@ -1,16 +1,10 @@
-import { BaseCommand } from '@ecorally/shared';
-import { IsEnum, IsUUID } from 'class-validator';
-import { WebSocketMessageEvents } from '../enums/message-events.enum';
+import { BaseCommand, JobTypes } from '@ecorally/shared';
+import { IsEnum } from 'class-validator';
+import { Message } from '@ecorally/dal';
 
 export class ExternalServicesMessageRouteCommand extends BaseCommand {
-  @IsUUID()
-  userId: string;
+  @IsEnum(JobTypes)
+  jobType: JobTypes;
 
-  @IsUUID()
-  chatId: string;
-
-  @IsEnum(WebSocketMessageEvents)
-  event: WebSocketMessageEvents;
-
-  payload: unknown;
+  payload: Message;
 }

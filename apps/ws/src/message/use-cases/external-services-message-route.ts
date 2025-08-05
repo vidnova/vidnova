@@ -1,21 +1,24 @@
 import { WsGateway } from '../../gateway/ws.gateway';
 import { ExternalServicesMessageRouteCommand } from './external-services-message-route.command';
-import { Logger } from '@nestjs/common';
-import { WebSocketMessageEvents } from '../enums/message-events.enum';
+import { Injectable, Logger } from '@nestjs/common';
+import { JobTypes } from '@ecorally/shared';
 
+@Injectable()
 export class ExternalServicesMessageRoute {
   private logger = new Logger(ExternalServicesMessageRoute.name);
 
   constructor(private readonly wsGateway: WsGateway) {}
 
   async execute(command: ExternalServicesMessageRouteCommand) {
-    const isOnline = await this.connectionExist(command);
-    if (!isOnline) {
-      this.logger.log(`Connection with ${command.userId} does not exist`);
+    const isChatActive = await this.isChatActive(command.payload.chatId);
+    if (!isChatActive) {
+      this.logger.log(
+        `No active connections for chat ${command.payload.chatId}, skipping message`,
+      );
       return;
     }
 
-    if (command.event === WebSocketMessageEvents.MESSAGES) {
+    if (command.jobType === JobTypes.SEND_MESSAGE) {
       this.processGetMessage(command);
     }
   }
@@ -24,25 +27,18 @@ export class ExternalServicesMessageRoute {
     if (command.payload) {
       this.logger.log('Sending message');
       this.wsGateway.sendMessage(
-        command.chatId,
-        command.event,
+        command.payload.chatId,
+        command.jobType,
         command.payload,
       );
     }
   }
 
-  private async connectionExist(
-    command: ExternalServicesMessageRouteCommand,
-  ): Promise<boolean | undefined> {
+  private async isChatActive(chatId: string): Promise<boolean> {
     if (!this.wsGateway.server) {
-      this.logger.error(
-        'No sw server found, unable to check if connection exists',
-      );
-
-      return;
+      this.logger.error('No WebSocket server found');
+      return false;
     }
-
-    return !!(await this.wsGateway.server.in(command.userId).fetchSockets())
-      .length;
+    return !!(await this.wsGateway.server.in(chatId).fetchSockets()).length;
   }
 }

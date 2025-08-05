@@ -40,11 +40,11 @@ export class CreateMessageUseCase {
 
       const createdMessage = await this.messageRepository.createMessage(message);
 
-      await this.bullMqService.addJob(
-        QueueNames.MESSAGE_QUEUE,
-        JobTypes.SEND_MESSAGE,
-        createdMessage,
-      );
+      await this.bullMqService.addJob(QueueNames.MESSAGE_QUEUE, JobTypes.SEND_MESSAGE, {
+        queueName: QueueNames.MESSAGE_QUEUE,
+        jobType: JobTypes.SEND_MESSAGE,
+        payload: createdMessage,
+      });
 
       return createdMessage;
     } catch (error) {

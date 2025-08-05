@@ -114,4 +114,20 @@ export class Message {
   get replyTo(): MessageReply | null | undefined {
     return this._replyTo;
   }
+
+  toJSON() {
+    return {
+      id: this._id,
+      content: this._content,
+      type: this._type,
+      chatId: this._chatId,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt,
+      isUpdated: this._isUpdated,
+      sender: this._sender,
+      reactions: this._reactions,
+      attachments: this._attachments,
+      replyTo: this._replyTo,
+    };
+  }
 }
