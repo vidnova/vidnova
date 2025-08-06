@@ -11,3 +11,5 @@ export * from './pagination';
 export * from './popover';
 export * from './select';
 export * from './textarea';
+export * from './breadcrumb';
+export * from './badge';

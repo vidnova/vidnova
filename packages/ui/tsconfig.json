@@ -6,11 +6,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
   },
   "exclude": [
     "dist",

@@ -1,34 +1,48 @@
-import { ChartBar, Earth, Map, Plus, Search, User } from 'lucide-react';
+import { Bell, CalendarSearch, Earth, Map, MapPinPlus, PlusCircle, Send } from 'lucide-react';
 
-export const sidebarLinks = [
+export const generalSidebarLinks = [
   {
     icon: <Earth />,
-    name: 'Події недалеко',
+    name: 'Головна',
     path: '/overview',
   },
+];
+
+export const eventsSidebarLinks = [
   {
-    icon: <Map />,
-    name: 'Карта подій',
-    path: '/events-map',
-  },
-  {
-    icon: <Search />,
-    name: 'Всі події',
-    path: '/cleanup-events',
-  },
-  {
-    icon: <Plus />,
+    icon: <PlusCircle />,
     name: 'Створити подію',
     path: '/event/create',
   },
   {
-    icon: <User />,
-    name: 'Мій профіль',
-    path: '/in-development',
+    icon: <CalendarSearch />,
+    name: 'Всі події',
+    path: '/cleanup-events',
+  },
+];
+
+export const pointsSidebarLinks = [
+  {
+    icon: <MapPinPlus />,
+    name: 'Додати точку',
+    path: '/point/create',
   },
   {
-    icon: <ChartBar />,
-    name: 'Статистика додатку',
-    path: '/in-development',
+    icon: <Map />,
+    name: 'Усі точки',
+    path: '/point',
+  },
+];
+
+export const personalSidebarLinks = [
+  {
+    icon: <Bell />,
+    name: 'Сповіщення',
+    path: '/notifications',
+  },
+  {
+    icon: <Send />,
+    name: 'Повідомлення',
+    path: '/messages',
   },
 ];
