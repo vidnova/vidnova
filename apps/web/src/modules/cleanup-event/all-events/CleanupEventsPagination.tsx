@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@ecorally/ui';
+} from '@vidnova/ui';
 
 interface CleanupEventsPaginationProps {
   totalPages: number;

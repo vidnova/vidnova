@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DeleteCleanupEventCommand } from './delete-cleanup-event.command';
-import { ICleanupEventRepository } from '@ecorally/dal';
+import { ICleanupEventRepository } from '@vidnova/dal';
 
 @Injectable()
 export class DeleteCleanupEventUseCase {

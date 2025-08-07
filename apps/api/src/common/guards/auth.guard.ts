@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { FastifyRequest } from 'fastify';
-import { PrismaService, User } from '@ecorally/dal';
-import { AuthService, UserRole } from '@ecorally/shared';
+import { PrismaService, User } from '@vidnova/dal';
+import { AuthService, UserRole } from '@vidnova/shared';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

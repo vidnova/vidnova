@@ -3,7 +3,7 @@ import { Settlement } from './settlement.entity';
 import { Region } from '../region';
 import { PrismaService } from '../shared';
 import { Injectable } from '@nestjs/common';
-import { Pagination, SettlementFilters } from '@ecorally/shared';
+import { Pagination, SettlementFilters } from '@vidnova/shared';
 import { Prisma } from '@prisma/client';
 
 @Injectable()

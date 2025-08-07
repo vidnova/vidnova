@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 
 export class GenerateAndSendOtpCommand extends BaseCommand {
   @IsEmail()

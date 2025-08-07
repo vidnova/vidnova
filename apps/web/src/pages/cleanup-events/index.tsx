@@ -4,7 +4,7 @@ import {
   FilterPopover,
 } from '@/modules/cleanup-event/all-events';
 import { MainLayout } from '@/modules/shared';
-import { Input } from '@ecorally/ui';
+import { Input } from '@vidnova/ui';
 
 export default function CleanupEvents() {
   return (

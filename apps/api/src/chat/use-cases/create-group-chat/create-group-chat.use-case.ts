@@ -1,4 +1,4 @@
-import { Chat, ChatMember, IChatRepository, IUserRepository } from '@ecorally/dal';
+import { Chat, ChatMember, IChatRepository, IUserRepository } from '@vidnova/dal';
 import {
   ConflictException,
   HttpException,
@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateGroupChatCommand } from './create-group-chat.command';
-import { ChatMemberRole, ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@vidnova/shared';
 
 @Injectable()
 export class CreateGroupChatUseCase {

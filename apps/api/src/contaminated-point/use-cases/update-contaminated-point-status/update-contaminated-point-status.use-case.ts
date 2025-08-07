@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { IContaminatedPointRepository, RedisService } from '@ecorally/dal';
+import { IContaminatedPointRepository, RedisService } from '@vidnova/dal';
 import { UpdateContaminatedPointStatusCommand } from './update-contaminated-point-status.command';
 
 export class UpdateContaminatedPointStatusUseCase {

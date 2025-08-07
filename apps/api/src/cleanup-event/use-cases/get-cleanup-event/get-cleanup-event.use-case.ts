@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { GetCleanupEventCommand } from './get-cleanup-event.command';
-import { CleanupEvent, ICleanupEventRepository, RedisService } from '@ecorally/dal';
+import { CleanupEvent, ICleanupEventRepository, RedisService } from '@vidnova/dal';
 
 @Injectable()
 export class GetCleanupEventUseCase {

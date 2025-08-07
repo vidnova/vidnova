@@ -1,5 +1,5 @@
 import { ForbiddenException, Inject, NotFoundException } from '@nestjs/common';
-import { IContaminatedPointRepository } from '@ecorally/dal';
+import { IContaminatedPointRepository } from '@vidnova/dal';
 import { DeleteContaminatedPointCommand } from './delete-contaminated-point.command';
 
 export class DeleteContaminatedPointUseCase {

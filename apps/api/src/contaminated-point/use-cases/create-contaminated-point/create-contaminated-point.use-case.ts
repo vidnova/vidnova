@@ -4,9 +4,9 @@ import {
   Inject,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { ContaminatedPoint, IContaminatedPointRepository } from '@ecorally/dal';
+import { ContaminatedPoint, IContaminatedPointRepository } from '@vidnova/dal';
 import { CreateContaminatedPointCommand } from './create-contaminated-point.command';
-import { Location, LocationValidationService } from '@ecorally/shared';
+import { Location, LocationValidationService } from '@vidnova/shared';
 
 export class CreateContaminatedPointUseCase {
   constructor(

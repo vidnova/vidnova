@@ -1,7 +1,7 @@
 import { IReportRepository } from './report-repository.interface';
 import { PrismaService } from '../shared';
 import { Report } from './report.entity';
-import { ReportStatus, ReportTargetType } from '@ecorally/shared';
+import { ReportStatus, ReportTargetType } from '@vidnova/shared';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

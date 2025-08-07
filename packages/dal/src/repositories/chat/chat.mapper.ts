@@ -1,5 +1,5 @@
 import { ChatPreviewDto, ChatWithMembersPersistenceDto } from './chat.dto';
-import { ChatType } from '@ecorally/shared';
+import { ChatType } from '@vidnova/shared';
 
 export class ChatMapper {
   static toPreviewDto(chat: ChatWithMembersPersistenceDto, currentUserId: string): ChatPreviewDto {

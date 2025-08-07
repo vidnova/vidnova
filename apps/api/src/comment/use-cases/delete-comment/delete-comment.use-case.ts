@@ -1,4 +1,4 @@
-import { ICommentRepository } from '@ecorally/dal';
+import { ICommentRepository } from '@vidnova/dal';
 import { DeleteCommentCommand } from './delete-comment.command';
 import {
   ForbiddenException,

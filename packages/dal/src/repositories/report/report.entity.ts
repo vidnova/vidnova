@@ -1,4 +1,4 @@
-import { ReportStatus, ReportTargetType } from '@ecorally/shared';
+import { ReportStatus, ReportTargetType } from '@vidnova/shared';
 import { v4 } from 'uuid';
 
 export class Report {

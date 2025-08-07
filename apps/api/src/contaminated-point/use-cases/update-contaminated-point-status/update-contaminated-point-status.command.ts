@@ -1,6 +1,6 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 import { IsEnum, IsString, IsUUID } from 'class-validator';
-import { ContaminatedPointStatusEnum } from '@ecorally/dal';
+import { ContaminatedPointStatusEnum } from '@vidnova/dal';
 
 export class UpdateContaminatedPointStatusCommand extends EnvironmentWithUserCommand {
   @IsString()

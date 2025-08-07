@@ -7,8 +7,8 @@ import {
 import * as bcrypt from 'bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { SignUpCommand } from './sign-up.command';
-import { IUserRepository, User } from '@ecorally/dal';
-import { AuthService } from '@ecorally/shared';
+import { IUserRepository, User } from '@vidnova/dal';
+import { AuthService } from '@vidnova/shared';
 
 @Injectable()
 export class SignUpUseCase {

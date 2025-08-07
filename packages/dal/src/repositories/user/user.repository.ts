@@ -2,7 +2,7 @@ import { IUserRepository } from './user-repository.interface';
 import { User } from './user.entity';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../shared';
-import { UserRole } from '@ecorally/shared';
+import { UserRole } from '@vidnova/shared';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

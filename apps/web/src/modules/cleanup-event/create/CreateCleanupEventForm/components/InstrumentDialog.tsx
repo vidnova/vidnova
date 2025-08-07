@@ -6,7 +6,7 @@ import {
   DialogTrigger,
   Input,
   Label,
-} from '@ecorally/ui';
+} from '@vidnova/ui';
 import { Dialog, DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import { Shovel } from 'lucide-react';
 import { useState } from 'react';

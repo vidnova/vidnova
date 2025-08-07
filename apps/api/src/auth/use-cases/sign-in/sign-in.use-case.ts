@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SignInCommand } from './sign-in.command';
-import { IUserRepository } from '@ecorally/dal';
-import { AuthService } from '@ecorally/shared';
+import { IUserRepository } from '@vidnova/dal';
+import { AuthService } from '@vidnova/shared';
 
 @Injectable()
 export class SignInUseCase {

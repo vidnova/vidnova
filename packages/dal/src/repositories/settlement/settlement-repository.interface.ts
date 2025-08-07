@@ -1,5 +1,5 @@
 import { Settlement } from './settlement.entity';
-import { Pagination, SettlementFilters } from '@ecorally/shared';
+import { Pagination, SettlementFilters } from '@vidnova/shared';
 
 export interface ISettlementRepository {
   getById(settlementId: string, options?: { includeRegion: boolean }): Promise<Settlement | null>;

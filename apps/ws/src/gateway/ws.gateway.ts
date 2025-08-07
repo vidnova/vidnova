@@ -5,9 +5,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { AuthService } from '@ecorally/shared';
+import { AuthService } from '@vidnova/shared';
 import { Inject, Logger } from '@nestjs/common';
-import { IChatRepository } from '@ecorally/dal';
+import { IChatRepository } from '@vidnova/dal';
 
 @WebSocketGateway({
   cors: {

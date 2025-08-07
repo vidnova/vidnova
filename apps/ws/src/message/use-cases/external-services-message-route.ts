@@ -1,7 +1,7 @@
 import { WsGateway } from '../../gateway/ws.gateway';
 import { ExternalServicesMessageRouteCommand } from './external-services-message-route.command';
 import { Injectable, Logger } from '@nestjs/common';
-import { JobTypes } from '@ecorally/shared';
+import { JobTypes } from '@vidnova/shared';
 
 @Injectable()
 export class ExternalServicesMessageRoute {

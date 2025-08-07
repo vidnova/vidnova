@@ -1,8 +1,8 @@
 import * as turf from '@turf/turf';
 import { Feature, FeatureCollection, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { IIsPointInRegion, IsPointInRegionCommand } from '@ecorally/shared';
-import { OverpassRepository, RegionRepository } from '@ecorally/dal';
+import { IIsPointInRegion, IsPointInRegionCommand } from '@vidnova/shared';
+import { OverpassRepository, RegionRepository } from '@vidnova/dal';
 
 @Injectable()
 export class IsPointInRegionUseCase implements IIsPointInRegion {

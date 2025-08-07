@@ -1,7 +1,7 @@
 import { CleanupEventsList } from '@/modules/cleanup-event/near';
 import { ContaminatedPointsList } from '@/modules/contaminated-point';
 import { MainLayout } from '@/modules/shared';
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 
 export default function Home() {
   return (

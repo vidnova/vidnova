@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
-import { ReportTargetType } from '@ecorally/shared';
+import { ReportTargetType } from '@vidnova/shared';
 
 export class CreateReportDto {
   @IsString()

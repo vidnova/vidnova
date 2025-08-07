@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { CommandValidationException } from '@ecorally/shared';
+import { CommandValidationException } from '@vidnova/shared';
 import { FastifyReply } from 'fastify';
 
 @Catch(CommandValidationException)

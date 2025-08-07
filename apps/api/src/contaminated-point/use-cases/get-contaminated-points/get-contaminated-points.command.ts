@@ -1,6 +1,6 @@
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
-import { ContaminatedPointStatusEnum } from '@ecorally/dal';
+import { ContaminatedPointStatusEnum } from '@vidnova/dal';
 
 export class GetContaminatedPointsCommand extends BaseCommand {
   @IsOptional()

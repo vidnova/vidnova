@@ -1,4 +1,4 @@
-import { IChatRepository, RedisService } from '@ecorally/dal';
+import { IChatRepository, RedisService } from '@vidnova/dal';
 import {
   ConflictException,
   ForbiddenException,
@@ -10,7 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateChatInfoCommand } from './update-chat-info.command';
-import { ChatMemberRole, ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@vidnova/shared';
 
 @Injectable()
 export class UpdateChatInfoUseCase {

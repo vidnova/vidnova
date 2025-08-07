@@ -2,7 +2,7 @@ import { IRegionRepository } from './region-repository.interface';
 import { Region } from './region.entity';
 import { PrismaService } from '../shared';
 import { Injectable } from '@nestjs/common';
-import { Pagination, RegionFilters } from '@ecorally/shared';
+import { Pagination, RegionFilters } from '@vidnova/shared';
 import { Prisma } from '@prisma/client';
 
 @Injectable()

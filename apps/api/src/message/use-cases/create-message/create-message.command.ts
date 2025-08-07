@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand, MessageAttachmentType, MessageType } from '@ecorally/shared';
+import { EnvironmentWithUserCommand, MessageAttachmentType, MessageType } from '@vidnova/shared';
 import {
   ArrayNotEmpty,
   IsEnum,

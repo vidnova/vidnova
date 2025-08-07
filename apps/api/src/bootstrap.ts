@@ -13,7 +13,7 @@ export async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('EcoRally API documentation')
+    .setTitle('VIDNOVA API documentation')
     .setDescription('API description')
     .setVersion('1.0')
     .build();

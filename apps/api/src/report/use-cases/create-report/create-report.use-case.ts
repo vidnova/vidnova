@@ -4,7 +4,7 @@ import {
   IContaminatedPointRepository,
   IReportRepository,
   Report,
-} from '@ecorally/dal';
+} from '@vidnova/dal';
 import { CreateReportCommand } from './create-report.command';
 import {
   BadRequestException,
@@ -13,7 +13,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { ReportTargetType } from '@ecorally/shared';
+import { ReportTargetType } from '@vidnova/shared';
 
 export class CreateReportUseCase {
   constructor(

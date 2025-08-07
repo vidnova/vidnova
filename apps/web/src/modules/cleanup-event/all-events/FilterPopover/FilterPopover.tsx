@@ -1,4 +1,4 @@
-import { Popover, PopoverContent, PopoverTrigger } from '@ecorally/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@vidnova/ui';
 import {
   EndEventDatePicker,
   RegionCombobox,

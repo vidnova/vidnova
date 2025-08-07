@@ -12,8 +12,8 @@
       }
     },
     "Hero": {
-      "title": "Restore Ukraine’s Beauty with EcoRally",
-      "subtitle": "EcoRally is a platform to unite communities in cleaning Ukraine’s lands from pollution. Organize or join events to make a lasting impact.",
+      "title": "Restore Ukraine’s Beauty with VIDNOVA",
+      "subtitle": "VIDNOVA is a platform to unite communities in cleaning Ukraine’s lands from pollution. Organize or join events to make a lasting impact.",
       "button": {
         "start": "Start a Cleanup Now"
       }
@@ -21,8 +21,8 @@
     "Mission": {
       "title": "Our Mission: A Cleaner Ukraine",
       "paragraph": {
-        "first": "Ukraine’s forests, rivers, and fields face growing threats from pollution—plastic waste, industrial debris, and neglected landfills harm our environment and communities. EcoRally is here to change that. We’re building a platform where anyone, from city residents to rural volunteers, can take action to clean up their surroundings.",
-        "second": "Our vision is a Ukraine where every region thrives in its natural beauty. EcoRally connects people passionate about environmental change, enabling them to organize cleanup events, share resources, and inspire others. Whether it’s clearing a park in Dnipro, a beach in Odesa, or a village roadside in Ternopil, every step forward counts.",
+        "first": "Ukraine’s forests, rivers, and fields face growing threats from pollution—plastic waste, industrial debris, and neglected landfills harm our environment and communities. VIDNOVA is here to change that. We’re building a platform where anyone, from city residents to rural volunteers, can take action to clean up their surroundings.",
+        "second": "Our vision is a Ukraine where every region thrives in its natural beauty. VIDNOVA connects people passionate about environmental change, enabling them to organize cleanup events, share resources, and inspire others. Whether it’s clearing a park in Dnipro, a beach in Odesa, or a village roadside in Ternopil, every step forward counts.",
         "third": "We’re starting small but dreaming big. By empowering communities to act locally, we aim to create a nationwide movement for a cleaner, healthier Ukraine."
       }
     },
@@ -35,12 +35,12 @@
       },
       "stepDescription": {
         "first": "Sign up and plan a cleanup event in your area. Choose a location—like a park, riverbank, or street—set a date, and add details about what volunteers should bring, such as gloves or bags.",
-        "second": "Share your event through the app, social media, or local groups. Invite friends, neighbors, or organizations to join. EcoRally helps you coordinate participants and keep everyone updated.",
+        "second": "Share your event through the app, social media, or local groups. Invite friends, neighbors, or organizations to join. VIDNOVA helps you coordinate participants and keep everyone updated.",
         "third": "Lead or join the cleanup, collect waste, and document your efforts with photos. Log the results in the app to inspire others and track Ukraine’s progress toward a cleaner future."
       }
     },
     "Features": {
-      "title": "What EcoRally Offers",
+      "title": "What VIDNOVA Offers",
       "featureTitle": {
         "first": "Simple Event Planning",
         "second": "Community Collaboration",
@@ -57,14 +57,14 @@
     "WhyItMatters": {
       "title": "Why It Matters",
       "paragraph": {
-        "first": "Pollution in Ukraine isn’t just an environmental issue—it affects our health, wildlife, and future generations. Illegal dumpsites, littered waterways, and urban waste piles degrade the land we cherish. EcoRally tackles this by giving every Ukrainian the tools to fight pollution directly.",
+        "first": "Pollution in Ukraine isn’t just an environmental issue—it affects our health, wildlife, and future generations. Illegal dumpsites, littered waterways, and urban waste piles degrade the land we cherish. VIDNOVA tackles this by giving every Ukrainian the tools to fight pollution directly.",
         "second": "From small village cleanups to large-scale urban projects, every action adds up. We’re building a community-driven solution to address local challenges, whether it’s clearing plastic from the Dnister River or removing debris from war-affected areas. The app also encourages sustainable practices, like sorting recyclables during cleanups.",
         "third": "Together, we can protect Ukraine’s landscapes, from the Carpathian Mountains to the Black Sea coast, and create a cleaner, prouder nation."
       }
     },
     "CallToAction": {
       "title": "Join the Fight for a Cleaner Ukraine",
-      "subtitle": "Join EcoRally to organize or join cleanup events in your community. Be the change Ukraine needs—one cleanup at a time.",
+      "subtitle": "Join VIDNOVA to organize or join cleanup events in your community. Be the change Ukraine needs—one cleanup at a time.",
       "button": {
         "getApp": "Go to App"
       }

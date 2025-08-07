@@ -1,4 +1,4 @@
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 import { UserMinus, UserPlus } from 'lucide-react';
 
 export const TakePartButton = ({ isTaken }: { isTaken: boolean }) => {

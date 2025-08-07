@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Match } from '../../../common/decorators';
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 
 export class SignUpCommand extends BaseCommand {
   @IsString()

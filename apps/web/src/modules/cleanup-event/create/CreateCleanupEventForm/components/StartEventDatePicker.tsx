@@ -1,7 +1,7 @@
 import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@ecorally/ui';
+import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@vidnova/ui';
 
 export const StartEventDatePicker = () => {
   const [date, setDate] = useState<Date>();

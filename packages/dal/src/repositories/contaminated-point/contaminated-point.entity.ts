@@ -1,5 +1,5 @@
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
-import { Location } from '@ecorally/shared';
+import { Location } from '@vidnova/shared';
 import { v4 } from 'uuid';
 
 export class ContaminatedPoint {

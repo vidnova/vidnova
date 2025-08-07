@@ -1,4 +1,4 @@
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 import {
   Command,
   CommandEmpty,
@@ -6,8 +6,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@ecorally/ui';
-import { Popover, PopoverContent, PopoverTrigger } from '@ecorally/ui';
+} from '@vidnova/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@vidnova/ui';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 

@@ -1,5 +1,5 @@
 import { IsNumber, Max, Min } from 'class-validator';
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 
 export class VerifyOtpCommand extends EnvironmentWithUserCommand {
   @IsNumber()

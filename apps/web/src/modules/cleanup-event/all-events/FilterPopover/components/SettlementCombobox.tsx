@@ -8,7 +8,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@ecorally/ui';
+} from '@vidnova/ui';
 import { Check, ChevronsUpDown, Command } from 'lucide-react';
 import { useState } from 'react';
 

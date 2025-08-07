@@ -1,5 +1,5 @@
 {
-  "name": "ecorally-api",
+  "name": "vidnova-api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -60,8 +60,8 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@ecorally/dal": "*",
-    "@ecorally/shared": "*",
+    "@vidnova/dal": "*",
+    "@vidnova/shared": "*",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",

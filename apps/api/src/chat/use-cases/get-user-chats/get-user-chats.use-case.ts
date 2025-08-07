@@ -1,4 +1,4 @@
-import { IChatRepository } from '@ecorally/dal';
+import { IChatRepository } from '@vidnova/dal';
 import { GetUserChatsCommand } from './get-user-chats.command';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 

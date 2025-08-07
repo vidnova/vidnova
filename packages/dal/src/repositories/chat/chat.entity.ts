@@ -1,4 +1,4 @@
-import { ChatType } from '@ecorally/shared';
+import { ChatType } from '@vidnova/shared';
 import { ChatMember } from './chat-member.vo';
 import { v4 } from 'uuid';
 

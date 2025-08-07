@@ -1,5 +1,5 @@
 import { Region } from './region.entity';
-import { Pagination, RegionFilters } from '@ecorally/shared';
+import { Pagination, RegionFilters } from '@vidnova/shared';
 
 export interface IRegionRepository {
   getById(id: string): Promise<Region | null>;

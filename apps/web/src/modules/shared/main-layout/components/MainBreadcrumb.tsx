@@ -5,7 +5,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@ecorally/ui';
+} from '@vidnova/ui';
 import Link from 'next/link';
 import { SlashIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { ResetPasswordCommand } from './reset-password.command';
-import { IUserRepository } from '@ecorally/dal';
+import { IUserRepository } from '@vidnova/dal';
 import { IVerifyOtp } from '../../../otp/use-cases/verify-otp/verify-otp.interface';
 import { VerifyOtpCommand } from '../../../otp/use-cases/verify-otp/verify-otp-command';
 

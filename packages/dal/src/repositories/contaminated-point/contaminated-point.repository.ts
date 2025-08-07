@@ -7,7 +7,7 @@ import { ContaminatedPointMapper } from './contaminated-point.mapper';
 import { Injectable } from '@nestjs/common';
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 import { Prisma } from '@prisma/client';
-import { GetContaminatedPointsFilters, Pagination } from '@ecorally/shared';
+import { GetContaminatedPointsFilters, Pagination } from '@vidnova/shared';
 
 @Injectable()
 export class ContaminatedPointRepository implements IContaminatedPointRepository {

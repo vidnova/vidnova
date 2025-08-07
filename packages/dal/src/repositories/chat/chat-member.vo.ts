@@ -1,4 +1,4 @@
-import { ChatMemberRole } from '@ecorally/shared';
+import { ChatMemberRole } from '@vidnova/shared';
 
 export class ChatMember {
   constructor(

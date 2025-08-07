@@ -1,4 +1,4 @@
-import { ISettlementRepository } from '@ecorally/dal';
+import { ISettlementRepository } from '@vidnova/dal';
 import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { GetSettlementsCommand } from './get-settlements.command';
 

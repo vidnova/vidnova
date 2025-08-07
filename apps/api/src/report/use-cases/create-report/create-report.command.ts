@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand, ReportTargetType } from '@ecorally/shared';
+import { EnvironmentWithUserCommand, ReportTargetType } from '@vidnova/shared';
 import { IsEnum, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateReportCommand extends EnvironmentWithUserCommand {

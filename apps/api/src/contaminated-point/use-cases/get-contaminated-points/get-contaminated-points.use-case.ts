@@ -1,5 +1,5 @@
 import { Inject, InternalServerErrorException } from '@nestjs/common';
-import { IContaminatedPointRepository } from '@ecorally/dal';
+import { IContaminatedPointRepository } from '@vidnova/dal';
 import { GetContaminatedPointsCommand } from './get-contaminated-points.command';
 
 export class GetContaminatedPointsUseCase {

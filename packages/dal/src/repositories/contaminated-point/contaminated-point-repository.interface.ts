@@ -1,6 +1,6 @@
 import { ContaminatedPoint } from './contaminated-point.entity';
 import { ContaminatedPointDto, ContaminatedPointSummaryDto } from './contaminated-point.dto';
-import { GetContaminatedPointsFilters, Pagination } from '@ecorally/shared';
+import { GetContaminatedPointsFilters, Pagination } from '@vidnova/shared';
 import { ContaminatedPointStatusEnum } from './contaminated-point-status.enum';
 
 export interface IContaminatedPointRepository {

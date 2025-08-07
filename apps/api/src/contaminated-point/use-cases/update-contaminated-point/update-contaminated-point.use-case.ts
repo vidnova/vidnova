@@ -6,9 +6,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { ContaminatedPoint, ContaminatedPointRepository, RedisService } from '@ecorally/dal';
+import { ContaminatedPoint, ContaminatedPointRepository, RedisService } from '@vidnova/dal';
 import { UpdateContaminatedPointCommand } from './update-contaminated-point.command';
-import { Location, LocationValidationService } from '@ecorally/shared';
+import { Location, LocationValidationService } from '@vidnova/shared';
 
 export class UpdateContaminatedPointUseCase {
   constructor(

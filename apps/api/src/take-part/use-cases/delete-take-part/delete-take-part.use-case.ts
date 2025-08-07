@@ -6,7 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { ITakePartRepository } from '@ecorally/dal';
+import { ITakePartRepository } from '@vidnova/dal';
 import { DeleteTakePartCommand } from './delete-take-part.command';
 
 @Injectable()

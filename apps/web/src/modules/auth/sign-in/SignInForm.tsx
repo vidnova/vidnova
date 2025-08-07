@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { SubmitButton } from '../shared/SubmitButton';
-import { Button, Input } from '@ecorally/ui';
+import { Button, Input } from '@vidnova/ui';
 
 export default function SignInForm() {
   const router = useRouter();

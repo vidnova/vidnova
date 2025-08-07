@@ -1,4 +1,4 @@
-import { Comment, ICommentRepository } from '@ecorally/dal';
+import { Comment, ICommentRepository } from '@vidnova/dal';
 import { CreateCommentCommand } from './create-comment.command';
 import {
   ConflictException,

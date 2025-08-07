@@ -1,3 +1,3 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 
 export class GetUserFullInfoCommand extends EnvironmentWithUserCommand {}

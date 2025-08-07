@@ -3,10 +3,10 @@ import { ICleanupEventRepository } from './cleanup-event-repository.interface';
 import { CleanupEvent } from './cleanup-event.entity';
 import { CleanupEventQueries } from './cleanup-event.query';
 import { CleanupEventMapper } from './cleanup-event.mapper';
-import { CleanupEventListDto, CleanupSortBy } from '@ecorally/shared';
+import { CleanupEventListDto, CleanupSortBy } from '@vidnova/shared';
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { ICleanupEventsFilters } from '@ecorally/shared';
+import { ICleanupEventsFilters } from '@vidnova/shared';
 
 @Injectable()
 export class CleanupEventRepository implements ICleanupEventRepository {

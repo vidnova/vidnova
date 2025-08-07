@@ -1,5 +1,5 @@
 import { CleanupEvent } from './cleanup-event.entity';
-import { CleanupEventListDto } from '@ecorally/shared';
+import { CleanupEventListDto } from '@vidnova/shared';
 
 export interface ICleanupEventRepository {
   getById(id: string): Promise<CleanupEvent | null>;

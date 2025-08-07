@@ -1,4 +1,4 @@
-import { MessageType } from '@ecorally/shared';
+import { MessageType } from '@vidnova/shared';
 import { MessageSender } from './message-sender.vo';
 import { MessageReply } from './message-reply.vo';
 import { MessageReaction } from './message-reaction.vo';

@@ -1,4 +1,4 @@
-import { IOtpRepository, IUserRepository } from '@ecorally/dal';
+import { IOtpRepository, IUserRepository } from '@vidnova/dal';
 import { Inject, Injectable } from '@nestjs/common';
 import { GenerateAndSendOtpCommand } from './generate-and-send-otp.command';
 import bcrypt from 'bcrypt';

@@ -1,5 +1,5 @@
 import { VerifyAccountInputOTP } from './components';
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 
 export const VerifyAccountForm = () => {
   return (

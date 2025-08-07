@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { CleanupEventStatus, Location } from '@ecorally/shared';
+import { CleanupEventStatus, Location } from '@vidnova/shared';
 import { EquipmentItem } from './equipment-item.vo';
 
 export class CleanupEvent {

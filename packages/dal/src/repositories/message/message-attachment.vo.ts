@@ -1,4 +1,4 @@
-import { MessageAttachmentType } from '@ecorally/shared';
+import { MessageAttachmentType } from '@vidnova/shared';
 import { v4 } from 'uuid';
 
 export class MessageAttachment {

@@ -1,4 +1,4 @@
-import { Input, Textarea } from '@ecorally/ui';
+import { Input, Textarea } from '@vidnova/ui';
 import {
   ChooseRegionCombobox,
   ChooseSettlementCombobox,

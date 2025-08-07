@@ -1,4 +1,4 @@
-import { ICommentRepository } from '@ecorally/dal';
+import { ICommentRepository } from '@vidnova/dal';
 import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { GetCommentRepliesCommand } from './get-comment-replies.command';
 

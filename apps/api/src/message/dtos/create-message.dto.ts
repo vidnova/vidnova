@@ -9,7 +9,7 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { MessageAttachmentType, MessageType } from '@ecorally/shared';
+import { MessageAttachmentType, MessageType } from '@vidnova/shared';
 import { Type } from 'class-transformer';
 
 export class CreateMessageDto {

@@ -1,4 +1,4 @@
-import { CleanupEventStatus } from '@ecorally/shared';
+import { CleanupEventStatus } from '@vidnova/shared';
 import { CleanupEvent } from './cleanup-event.entity';
 import { EquipmentItem } from './equipment-item.vo';
 

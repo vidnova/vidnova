@@ -1,4 +1,4 @@
-import { Button } from "@ecorally/ui";
+import { Button } from "@vidnova/ui";
 import { SelectRegionCombobox, SelectSettlementCombobox } from "./components";
 import Link from "next/link";
 

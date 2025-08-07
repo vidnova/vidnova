@@ -6,9 +6,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { IChatRepository } from '@ecorally/dal';
+import { IChatRepository } from '@vidnova/dal';
 import { DeleteChatSelfCommand } from './delete-chat-self.command';
-import { ChatType } from '@ecorally/shared';
+import { ChatType } from '@vidnova/shared';
 
 @Injectable()
 export class DeleteChatSelfUseCase {

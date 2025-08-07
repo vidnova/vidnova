@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 
 export class GetCleanupEventCommand extends BaseCommand {
   @IsUUID()

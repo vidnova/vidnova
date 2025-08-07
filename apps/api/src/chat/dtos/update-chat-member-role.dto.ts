@@ -1,5 +1,5 @@
 import { IsEnum, IsString } from 'class-validator';
-import { ChatMemberRole } from '@ecorally/shared';
+import { ChatMemberRole } from '@vidnova/shared';
 
 export class UpdateChatMemberRoleDto {
   @IsString()

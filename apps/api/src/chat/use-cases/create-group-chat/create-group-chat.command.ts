@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 import {
   ArrayMaxSize,
   ArrayMinSize,

@@ -1,4 +1,4 @@
-import { IChatRepository } from '@ecorally/dal';
+import { IChatRepository } from '@vidnova/dal';
 import { DeleteChatCommand } from './delete-chat.command';
 import {
   ForbiddenException,
@@ -8,7 +8,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { ChatMemberRole, ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@vidnova/shared';
 
 @Injectable()
 export class DeleteChatUseCase {

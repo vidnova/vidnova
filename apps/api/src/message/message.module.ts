@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MessageController } from './message.controller';
 import { USE_CASES } from './use-cases';
-import { DalModule } from '@ecorally/dal';
-import { BullMqService } from '@ecorally/shared';
+import { DalModule } from '@vidnova/dal';
+import { BullMqService } from '@vidnova/shared';
 
 @Module({
   imports: [DalModule],

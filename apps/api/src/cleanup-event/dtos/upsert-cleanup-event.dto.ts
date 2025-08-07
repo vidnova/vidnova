@@ -10,7 +10,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ICreateCleanupEventDto } from '@ecorally/shared';
+import { ICreateCleanupEventDto } from '@vidnova/shared';
 
 class EquipmentItemDto {
   @IsString()

@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsString, IsUUID } from 'class-validator';
 
 export class AddMembersToChatCommand extends EnvironmentWithUserCommand {

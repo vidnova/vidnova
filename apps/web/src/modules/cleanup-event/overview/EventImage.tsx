@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Expand } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from '@ecorally/ui';
+import { Dialog, DialogContent, DialogTrigger } from '@vidnova/ui';
 
 export const EventImage = ({ imageUrl }: { imageUrl: string }) => {
   const [open, setOpen] = useState(false);

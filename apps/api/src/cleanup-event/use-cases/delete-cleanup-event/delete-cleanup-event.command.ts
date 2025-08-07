@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 
 export class DeleteCleanupEventCommand extends EnvironmentWithUserCommand {
   @IsUUID()

@@ -1,5 +1,5 @@
 import { IsJWT, IsOptional } from 'class-validator';
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 
 export class RefreshTokensCommand extends BaseCommand {
   @IsOptional()

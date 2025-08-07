@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { RefreshTokensCommand } from './refresh-token.command';
-import { BlacklistedToken, IBlacklistedTokenRepository } from '@ecorally/dal';
-import { AuthService } from '@ecorally/shared';
+import { BlacklistedToken, IBlacklistedTokenRepository } from '@vidnova/dal';
+import { AuthService } from '@vidnova/shared';
 
 @Injectable()
 export class RefreshTokensUseCase {

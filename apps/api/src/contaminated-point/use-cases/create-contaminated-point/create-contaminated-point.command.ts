@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 import { IsNumber, IsOptional, IsString, IsUrl, IsUUID, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
 

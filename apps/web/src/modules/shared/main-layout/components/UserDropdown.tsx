@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@ecorally/ui';
+} from '@vidnova/ui';
 import { ShieldQuestion, LogOut, Settings, User } from 'lucide-react';
 
 export const UserDropdown = () => {

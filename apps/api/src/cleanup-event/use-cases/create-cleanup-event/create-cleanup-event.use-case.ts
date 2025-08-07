@@ -5,8 +5,8 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { CleanupEvent, EquipmentItem, ICleanupEventRepository } from '@ecorally/dal';
-import { LocationValidationService } from '@ecorally/shared';
+import { CleanupEvent, EquipmentItem, ICleanupEventRepository } from '@vidnova/dal';
+import { LocationValidationService } from '@vidnova/shared';
 import { CreateCleanupEventCommand } from './create-cleanup-event.command';
 
 @Injectable()

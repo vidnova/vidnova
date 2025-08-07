@@ -1,4 +1,4 @@
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 import { IsOptional, IsString, IsUrl, IsUUID, MinLength } from 'class-validator';
 
 export class UpdateChatInfoCommand extends EnvironmentWithUserCommand {

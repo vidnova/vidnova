@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { QueueNames, WebSocketDataDto } from '@ecorally/shared';
-import { Message } from '@ecorally/dal';
+import { QueueNames, WebSocketDataDto } from '@vidnova/shared';
+import { Message } from '@vidnova/dal';
 import { Job } from 'bullmq';
 import { ExternalServicesMessageRoute } from '../use-cases/external-services-message-route';
 import { ExternalServicesMessageRouteCommand } from '../use-cases/external-services-message-route.command';

@@ -1,4 +1,4 @@
-import { IUserRepository, RedisService, User } from '@ecorally/dal';
+import { IUserRepository, RedisService, User } from '@vidnova/dal';
 import {
   HttpException,
   Inject,

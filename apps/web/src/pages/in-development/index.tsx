@@ -1,4 +1,4 @@
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 import { Undo2 } from 'lucide-react';
 
 export default function InDevelopment() {

@@ -1,4 +1,4 @@
-import { Button, Input } from '@ecorally/ui';
+import { Button, Input } from '@vidnova/ui';
 
 export const CreateCommentForm = () => {
   return (

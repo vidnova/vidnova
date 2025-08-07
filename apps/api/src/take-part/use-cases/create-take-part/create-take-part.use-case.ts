@@ -1,4 +1,4 @@
-import { ITakePartRepository, TakePart } from '@ecorally/dal';
+import { ITakePartRepository, TakePart } from '@vidnova/dal';
 import {
   ConflictException,
   HttpException,

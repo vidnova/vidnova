@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { ContaminatedPoint, IContaminatedPointRepository, RedisService } from '@ecorally/dal';
+import { ContaminatedPoint, IContaminatedPointRepository, RedisService } from '@vidnova/dal';
 import { GetContaminatedPointCommand } from './get-contaminated-point.command';
 
 export class GetContaminatedPointUseCase {

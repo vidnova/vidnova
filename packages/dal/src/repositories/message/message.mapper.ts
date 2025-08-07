@@ -3,7 +3,7 @@ import { MessageSender } from './message-sender.vo';
 import { MessageReaction } from './message-reaction.vo';
 import { MessageAttachment } from './message-attachment.vo';
 import { MessageReply } from './message-reply.vo';
-import { MessageType } from '@ecorally/shared';
+import { MessageType } from '@vidnova/shared';
 
 export class MessageMapper {
   static toDomain(message: any): Message {

@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
-import { ContaminatedPointStatusEnum } from '@ecorally/dal';
+import { ContaminatedPointStatusEnum } from '@vidnova/dal';
 
 export class GetContaminatedPointsQueryDto {
   @IsOptional()

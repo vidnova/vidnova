@@ -1,7 +1,7 @@
 
 import { Check, Earth } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ecorally/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@vidnova/ui';
 
 export const LanguageDropdown = () => {
   const router = useRouter();

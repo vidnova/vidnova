@@ -1,7 +1,7 @@
 import { Calendar, MapPin, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Badge } from '@ecorally/ui';
+import { Badge } from '@vidnova/ui';
 
 export const CleanupEventCard = () => {
   return (

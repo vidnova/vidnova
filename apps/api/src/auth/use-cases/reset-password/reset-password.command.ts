@@ -1,6 +1,6 @@
 import { IsEmail, IsNumber, IsString, Max, Min, MinLength } from 'class-validator';
 import { Match } from '../../../common/decorators';
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 
 export class ResetPasswordCommand extends BaseCommand {
   @IsEmail()

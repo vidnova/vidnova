@@ -1,4 +1,4 @@
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class GetRegionsCommand extends BaseCommand {

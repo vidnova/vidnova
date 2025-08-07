@@ -1,4 +1,4 @@
-import { Chat, IChatRepository, RedisService } from '@ecorally/dal';
+import { Chat, IChatRepository, RedisService } from '@vidnova/dal';
 import {
   BadRequestException,
   ForbiddenException,

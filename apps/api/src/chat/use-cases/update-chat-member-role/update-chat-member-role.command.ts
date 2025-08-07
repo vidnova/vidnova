@@ -1,4 +1,4 @@
-import { ChatMemberRole, EnvironmentWithUserCommand } from '@ecorally/shared';
+import { ChatMemberRole, EnvironmentWithUserCommand } from '@vidnova/shared';
 import { IsEnum, IsString, IsUUID } from 'class-validator';
 
 export class UpdateChatMemberRoleCommand extends EnvironmentWithUserCommand {

@@ -18,8 +18,8 @@ import {
   MessageReply,
   MessageSender,
   RedisService,
-} from '@ecorally/dal';
-import { BullMqService, JobTypes, QueueNames } from '@ecorally/shared';
+} from '@vidnova/dal';
+import { BullMqService, JobTypes, QueueNames } from '@vidnova/shared';
 
 @Injectable()
 export class CreateMessageUseCase {

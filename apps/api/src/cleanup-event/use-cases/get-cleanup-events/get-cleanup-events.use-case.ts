@@ -1,6 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GetCleanupEventsCommand } from './get-cleanup-events.command';
-import { ICleanupEventRepository } from '@ecorally/dal';
+import { ICleanupEventRepository } from '@vidnova/dal';
 
 @Injectable()
 export class GetCleanupEventsUseCase {

@@ -1,6 +1,6 @@
-import { BaseCommand, JobTypes } from '@ecorally/shared';
+import { BaseCommand, JobTypes } from '@vidnova/shared';
 import { IsEnum } from 'class-validator';
-import { Message } from '@ecorally/dal';
+import { Message } from '@vidnova/dal';
 
 export class ExternalServicesMessageRouteCommand extends BaseCommand {
   @IsEnum(JobTypes)

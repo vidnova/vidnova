@@ -1,4 +1,4 @@
-import { User } from '@ecorally/dal';
+import { User } from '@vidnova/dal';
 
 declare module 'fastify' {
   interface FastifyRequest {

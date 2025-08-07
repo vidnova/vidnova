@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import * as turf from '@turf/turf';
 import { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-import { IIsPointInsideSettlement, IsPointInSettlementCommand } from '@ecorally/shared';
-import { IOverpassRepository, ISettlementRepository } from '@ecorally/dal';
+import { IIsPointInsideSettlement, IsPointInSettlementCommand } from '@vidnova/shared';
+import { IOverpassRepository, ISettlementRepository } from '@vidnova/dal';
 
 @Injectable()
 export class IsPointInsideSettlementUseCase implements IIsPointInsideSettlement {

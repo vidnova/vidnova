@@ -1,4 +1,4 @@
-import { Chat, ChatMember, IChatRepository, IUserRepository, User } from '@ecorally/dal';
+import { Chat, ChatMember, IChatRepository, IUserRepository, User } from '@vidnova/dal';
 import {
   ConflictException,
   ForbiddenException,
@@ -10,7 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AddMembersToChatCommand } from './add-members-to-chat.command';
-import { ChatMemberRole, ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@vidnova/shared';
 
 @Injectable()
 export class AddMembersToChatUseCase {

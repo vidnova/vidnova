@@ -1,4 +1,4 @@
-import { Button } from '@ecorally/ui';
+import { Button } from '@vidnova/ui';
 import * as React from 'react';
 
 interface SubmitButtonProps {

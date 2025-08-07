@@ -25,8 +25,8 @@ import { GetCleanupEventCommand } from './use-cases/get-cleanup-event/get-cleanu
 import { GetCleanupEventsCommand } from './use-cases/get-cleanup-events/get-cleanup-events.command';
 import { UpdateCleanupEventCommand } from './use-cases/update-cleanup-event/update-cleanup-event.command';
 import { DeleteCleanupEventCommand } from './use-cases/delete-cleanup-event/delete-cleanup-event.command';
-import { ICreateCleanupEventDto } from '@ecorally/shared';
-import { CleanupEvent } from '@ecorally/dal';
+import { ICreateCleanupEventDto } from '@vidnova/shared';
+import { CleanupEvent } from '@vidnova/dal';
 import { GetCommentsByEventIdUseCase } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.use-case';
 import { GetCommentsByEventIdCommand } from '../comment/use-cases/get-comments-by-event-id/get-comments-by-event-id.command';
 

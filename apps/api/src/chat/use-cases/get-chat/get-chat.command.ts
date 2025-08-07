@@ -1,5 +1,5 @@
 import { IsString, IsUUID } from 'class-validator';
-import { EnvironmentWithUserCommand } from '@ecorally/shared';
+import { EnvironmentWithUserCommand } from '@vidnova/shared';
 
 export class GetChatCommand extends EnvironmentWithUserCommand {
   @IsString()

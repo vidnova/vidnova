@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
-import { IUserRepository, User } from '@ecorally/dal';
+import { IUserRepository, User } from '@vidnova/dal';
 import { GoogleLoginCommand } from './google-login.command';
-import { AuthService } from '@ecorally/shared';
+import { AuthService } from '@vidnova/shared';
 
 export class GoogleLoginUseCase {
   constructor(

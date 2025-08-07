@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { IVerifyOtp } from './verify-otp.interface';
 import * as bcrypt from 'bcrypt';
-import { IOtpRepository } from '@ecorally/dal';
+import { IOtpRepository } from '@vidnova/dal';
 import { VerifyOtpCommand } from './verify-otp-command';
 
 @Injectable()

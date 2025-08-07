@@ -1,4 +1,4 @@
-import { BaseCommand } from '@ecorally/shared';
+import { BaseCommand } from '@vidnova/shared';
 import { IsEmail } from 'class-validator';
 
 export class GoogleLoginCommand extends BaseCommand {

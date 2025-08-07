@@ -1,4 +1,4 @@
-import { BaseCommand, CleanupEventStatus, CleanupSortBy, CleanupSortOrder } from '@ecorally/shared';
+import { BaseCommand, CleanupEventStatus, CleanupSortBy, CleanupSortOrder } from '@vidnova/shared';
 import { IsDateString, IsEnum, IsOptional, IsString, IsUUID, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 

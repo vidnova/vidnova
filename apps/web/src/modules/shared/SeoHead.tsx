@@ -13,9 +13,9 @@ export const SeoHead = ({
   locale,
   description,
   image = locale === 'uk'
-    ? 'https://ecorally.vercel.app/og_uk.png'
-    : 'https://ecorally.vercel.app/og_en.png',
-  url = 'https://ecorally.vercel.app/',
+    ? 'https://vidnova.vercel.app/og_uk.png'
+    : 'https://vidnova.vercel.app/og_en.png',
+  url = 'https://vidnova.vercel.app/',
 }: SeoHeadProps) => {
   return (
     <Head>

@@ -1,6 +1,6 @@
 import { IsEnum, IsNumber, IsOptional, IsString, IsUrl, IsUUID, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ContaminatedPointStatusEnum } from '@ecorally/dal';
+import { ContaminatedPointStatusEnum } from '@vidnova/dal';
 
 class Location {
   @IsNumber()

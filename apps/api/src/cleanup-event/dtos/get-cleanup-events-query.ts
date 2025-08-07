@@ -6,7 +6,7 @@ import {
   CleanupSortBy,
   CleanupSortOrder,
   CleanupEventStatus,
-} from '@ecorally/shared';
+} from '@vidnova/shared';
 
 export class GetCleanupEventsQueryDto implements IGetCleanupEventQueryDto {
   @IsOptional()

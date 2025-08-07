@@ -1,5 +1,5 @@
 import { Inject, InternalServerErrorException } from '@nestjs/common';
-import { IRegionRepository } from '@ecorally/dal';
+import { IRegionRepository } from '@vidnova/dal';
 import { GetRegionsCommand } from './get-regions.command';
 
 export class GetRegionsUseCase {

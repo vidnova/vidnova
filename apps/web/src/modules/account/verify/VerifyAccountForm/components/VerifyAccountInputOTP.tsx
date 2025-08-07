@@ -1,4 +1,4 @@
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@ecorally/ui';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@vidnova/ui';
 
 export const VerifyAccountInputOTP = () => {
   return (

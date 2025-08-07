@@ -1,7 +1,7 @@
 import { IChatRepository } from './chat-repository.interface';
 import { Chat } from './chat.entity';
 import { PrismaService } from '../shared';
-import { ChatMemberRole, ChatType } from '@ecorally/shared';
+import { ChatMemberRole, ChatType } from '@vidnova/shared';
 import { Injectable } from '@nestjs/common';
 import { ChatQueries } from './chat.query';
 import { ChatMember } from './chat-member.vo';

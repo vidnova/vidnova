@@ -1,4 +1,4 @@
-import { ChatType } from '@ecorally/shared';
+import { ChatType } from '@vidnova/shared';
 
 export interface ChatPreviewDto {
   id: string;

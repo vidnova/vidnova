@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { UserRole } from '@ecorally/shared';
+import { UserRole } from '@vidnova/shared';
 
 export class User {
   constructor(

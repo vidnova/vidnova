@@ -31,7 +31,7 @@ export const Header = () => {
   return (
     <header className="bg-transparent flex items-center justify-between px-4 sm:px-8 py-6 relative">
       <div className="flex items-center gap-8">
-        <div className="text-2xl font-bold gradient-logo">EcoRally</div>
+        <div className="text-2xl font-bold gradient-logo">VIDNOVA</div>
         <nav className="hidden md:block">
           <ul className="flex gap-6">
             <li className="text-gray-400 hover:text-white transition-colors">
