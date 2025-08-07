@@ -9,7 +9,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "docker": "docker compose up",
-    "db": "docker compose up -d ecorally-db && docker compose up -d ecorally-redis",
+    "db": "docker compose up -d ecorally-db && docker compose up -d ecorally-redis && docker compose up -d vidnova-geo-db",
     "prepare": "husky"
   },
   "devDependencies": {
