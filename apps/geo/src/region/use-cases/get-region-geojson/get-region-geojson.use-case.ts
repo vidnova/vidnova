@@ -1,23 +1,23 @@
+import {
+  HttpException,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Region } from '../../entities/region.entity';
 import { Repository } from 'typeorm';
-import {
-  HttpException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { GetRegionGeoJSONCommand } from './get-region-geojson.command';
 
-@Injectable()
-export class GetRegionsGeoJSONUseCase {
-  private logger = new Logger(GetRegionsGeoJSONUseCase.name);
+export class GetRegionGeoJSONUseCase {
+  private logger = new Logger(GetRegionGeoJSONUseCase.name);
 
   constructor(
     @InjectRepository(Region)
     private readonly regionRepository: Repository<Region>,
   ) {}
 
-  async execute() {
+  async execute(command: GetRegionGeoJSONCommand) {
     try {
       const query = `
         SELECT json_build_object(
@@ -35,11 +35,23 @@ export class GetRegionsGeoJSONUseCase {
                    )
                              )
                ) as geojson
-        FROM regions;
+        FROM regions
+        WHERE id = $1;
       `;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const result = await this.regionRepository.query(query);
+      const result = await this.regionRepository.query(query, [
+        command.regionId,
+      ]);
+
+      const geojson = result?.[0]?.geojson;
+
+      if (!geojson || !geojson.features || geojson.features.length === 0) {
+        throw new NotFoundException(
+          `Region with ID ${command.regionId} not found`,
+        );
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
       return result[0].geojson;
     } catch (error) {
