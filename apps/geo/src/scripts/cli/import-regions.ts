@@ -4,7 +4,7 @@ import { GeoJsonImporter } from '../geo-json-importer';
   const filePath = process.argv[2];
 
   if (!filePath) {
-    console.log('Usage: yarn run import:regions <path-to-regions.geojson>');
+    console.log('Usage: yarn run import:regions <path-to-ukraine_regions.geojson>');
     process.exit(1);
   }
 
