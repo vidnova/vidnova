@@ -243,62 +243,66 @@ export class GeoJsonImporter {
         pointWKT = `POINT(${coords[0]} ${coords[1]})`;
         break;
       }
-    }
+      case 'Polygon': {
+        const coords = feature.geometry.coordinates as number[][][];
 
-    if (feature.geometry.type === 'Point') {
-      const coords = feature.geometry.coordinates as number[];
-      pointWKT = `POINT(${coords[0]} ${coords[1]})`;
-    } else if (feature.geometry.type === 'Polygon') {
-      const coords = feature.geometry.coordinates as number[][][];
+        coords.forEach((ring) => closeRing(ring));
 
-      coords.forEach((ring) => closeRing(ring));
+        const outerRing = coords[0];
+        const centerLon =
+          outerRing.reduce((sum, coord) => sum + coord[0], 0) /
+          outerRing.length;
+        const centerLat =
+          outerRing.reduce((sum, coord) => sum + coord[1], 0) /
+          outerRing.length;
 
-      const outerRing = coords[0];
-      const centerLon =
-        outerRing.reduce((sum, coord) => sum + coord[0], 0) / outerRing.length;
-      const centerLat =
-        outerRing.reduce((sum, coord) => sum + coord[1], 0) / outerRing.length;
+        pointWKT = `POINT(${centerLon} ${centerLat})`;
 
-      pointWKT = `POINT(${centerLon} ${centerLat})`;
+        const wktCoords = coords
+          .map((ring) => ring.map((c) => `${c[0]} ${c[1]}`).join(', '))
+          .map((ringWkt) => `(${ringWkt})`)
+          .join(', ');
+        boundaryWKT = `MULTIPOLYGON((${wktCoords}))`;
+        break;
+      }
+      case 'MultiPolygon': {
+        const polygons = feature.geometry.coordinates as number[][][][];
 
-      const wktCoords = coords
-        .map((ring) => ring.map((c) => `${c[0]} ${c[1]}`).join(', '))
-        .map((ringWkt) => `(${ringWkt})`)
-        .join(', ');
-      boundaryWKT = `MULTIPOLYGON((${wktCoords}))`;
-    } else if (feature.geometry.type === 'MultiPolygon') {
-      const polygons = feature.geometry.coordinates as number[][][][];
-
-      polygons.forEach((polygon) => {
-        polygon.forEach((ring) => closeRing(ring));
-      });
-
-      let allCoords: number[][] = [];
-      polygons.forEach((polygon) => {
-        polygon.forEach((ring) => {
-          allCoords = allCoords.concat(ring);
+        polygons.forEach((polygon) => {
+          polygon.forEach((ring) => closeRing(ring));
         });
-      });
 
-      const centerLon =
-        allCoords.reduce((sum, coord) => sum + coord[0], 0) / allCoords.length;
-      const centerLat =
-        allCoords.reduce((sum, coord) => sum + coord[1], 0) / allCoords.length;
+        let allCoords: number[][] = [];
+        polygons.forEach((polygon) => {
+          polygon.forEach((ring) => {
+            allCoords = allCoords.concat(ring);
+          });
+        });
 
-      pointWKT = `POINT(${centerLon} ${centerLat})`;
+        const centerLon =
+          allCoords.reduce((sum, coord) => sum + coord[0], 0) /
+          allCoords.length;
+        const centerLat =
+          allCoords.reduce((sum, coord) => sum + coord[1], 0) /
+          allCoords.length;
 
-      const wktPolygons = polygons
-        .map((polygon) =>
-          polygon
-            .map((ring) => ring.map((c) => `${c[0]} ${c[1]}`).join(', '))
-            .map((ringWkt) => `(${ringWkt})`)
-            .join(', '),
-        )
-        .map((p) => `(${p})`)
-        .join(', ');
-      boundaryWKT = `MULTIPOLYGON(${wktPolygons})`;
-    } else {
-      throw new Error(`Unsupported geometry type: ${feature.geometry.type}`);
+        pointWKT = `POINT(${centerLon} ${centerLat})`;
+
+        const wktPolygons = polygons
+          .map((polygon) =>
+            polygon
+              .map((ring) => ring.map((c) => `${c[0]} ${c[1]}`).join(', '))
+              .map((ringWkt) => `(${ringWkt})`)
+              .join(', '),
+          )
+          .map((p) => `(${p})`)
+          .join(', ');
+        boundaryWKT = `MULTIPOLYGON(${wktPolygons})`;
+        break;
+      }
+      default: {
+        throw new Error(`Unsupported geometry type: ${feature.geometry.type}`);
+      }
     }
 
     const region = await this.findRegionForPoint(
