@@ -30,8 +30,9 @@ export class Settlement {
 
   @Column({
     type: 'geometry',
-    spatialFeatureType: 'Polygon',
+    spatialFeatureType: 'MultiPolygon',
     srid: 4326,
+    nullable: true,
   })
   boundary: string;
 
@@ -46,7 +47,9 @@ export class Settlement {
   @Column()
   regionId: number;
 
-  @ManyToOne(() => Region, (region) => region.settlements)
+  @ManyToOne(() => Region, (region) => region.settlements, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'regionId' })
   region: Region;
 }
