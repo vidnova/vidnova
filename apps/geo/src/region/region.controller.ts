@@ -1,10 +1,13 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { FindAllRegionsUseCase } from './use-cases/find-all-regions/find-all-regions.use-case';
 import { FindAllRegionsDto } from './dtos/find-all-regions.dto';
 import { FindAllRegionsCommand } from './use-cases/find-all-regions/find-all-regions.command';
 import { GetRegionsGeoJSONUseCase } from './use-cases/get-regions-geojson/get-regions-geojson.use-case';
 import { GetRegionGeoJSONUseCase } from './use-cases/get-region-geojson/get-region-geojson.use-case';
 import { GetRegionGeoJSONCommand } from './use-cases/get-region-geojson/get-region-geojson.command';
+import { RegionContainsPointDto } from './dtos/region-contains-point.dto';
+import { RegionContainsPointUseCase } from './use-cases/region-contains-point/region-contains-point.use-case';
+import { RegionContainsPointCommand } from './use-cases/region-contains-point/region-contains-point.command';
 
 @Controller('regions')
 export class RegionController {
@@ -12,6 +15,7 @@ export class RegionController {
     private readonly findAllRegionsUseCase: FindAllRegionsUseCase,
     private readonly getRegionsGeoJSONUseCase: GetRegionsGeoJSONUseCase,
     private readonly getRegionGeoJSONUseCase: GetRegionGeoJSONUseCase,
+    private readonly regionContainsPointUseCase: RegionContainsPointUseCase,
   ) {}
 
   @Get()
@@ -38,6 +42,19 @@ export class RegionController {
     return this.getRegionGeoJSONUseCase.execute(
       GetRegionGeoJSONCommand.create({
         regionId,
+      }),
+    );
+  }
+
+  @Post(':regionId/contains-point')
+  async regionContainsPoint(
+    @Body() data: RegionContainsPointDto,
+    @Param('regionId') regionId: string,
+  ) {
+    return this.regionContainsPointUseCase.execute(
+      RegionContainsPointCommand.create({
+        regionId,
+        ...data,
       }),
     );
   }
