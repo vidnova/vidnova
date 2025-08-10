@@ -45,7 +45,7 @@ export class Settlement {
   areaKm2: number;
 
   @Column()
-  regionId: number;
+  regionId: string;
 
   @ManyToOne(() => Region, (region) => region.settlements, {
     onDelete: 'CASCADE',

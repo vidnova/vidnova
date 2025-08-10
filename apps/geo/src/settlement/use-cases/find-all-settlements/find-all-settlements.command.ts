@@ -7,7 +7,7 @@ import {
   IsUUID,
 } from 'class-validator';
 
-export class FindAllRegionsCommand extends BaseCommand {
+export class FindAllSettlementsCommand extends BaseCommand {
   @IsNumber()
   @IsOptional()
   page: number = 1;
@@ -23,4 +23,8 @@ export class FindAllRegionsCommand extends BaseCommand {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @IsUUID()
+  @IsOptional()
+  region: string;
 }
