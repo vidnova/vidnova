@@ -20,29 +20,11 @@ export class GetSettlementGeoJSONUseCase {
 
   async execute(command: GetSettlementGeoJSONCommand) {
     try {
-      const query = `
-        SELECT json_build_object(
-                 'type', 'FeatureCollection',
-                 'features', json_agg(
-                   json_build_object(
-                     'type', 'Feature',
-                     'boundary', ST_AsGeoJSON(boundary)::json,
-                     'properties', json_build_object(
-                       'id', id,
-                       'name', name,
-                       'nameEn', "nameEn",
-                       'areaKm2', "areaKm2"
-                                   )
-                   )
-                             )
-               ) as geojson
-        FROM settlements
-        WHERE id = $1;
-      `;
-
       const result = await this.settlementRepository.query<
         { geojson: GeoJSONCollection | null }[]
-      >(query, [command.settlementId]);
+      >(GetSettlementGeoJSONUseCase.GET_SETTLEMENT_GEOJSON_SQL, [
+        command.settlementId,
+      ]);
 
       const geojson = result?.[0]?.geojson;
 
@@ -60,4 +42,24 @@ export class GetSettlementGeoJSONUseCase {
       throw new InternalServerErrorException('Failed to get regions');
     }
   }
+
+  private static GET_SETTLEMENT_GEOJSON_SQL = `
+    SELECT json_build_object(
+             'type', 'FeatureCollection',
+             'features', json_agg(
+               json_build_object(
+                 'type', 'Feature',
+                 'boundary', ST_AsGeoJSON(boundary)::json,
+                 'properties', json_build_object(
+                   'id', id,
+                   'name', name,
+                   'nameEn', "nameEn",
+                   'areaKm2', "areaKm2"
+                               )
+               )
+                         )
+           ) as geojson
+    FROM settlements
+    WHERE id = $1;
+  `;
 }
