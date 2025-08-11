@@ -1,22 +1,26 @@
 import { BaseCommand } from '@vidnova/shared';
 import {
-  IsEnum,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class FindAllRegionsCommand extends BaseCommand {
   @IsNumber()
+  @Min(1)
   @IsOptional()
   page: number = 1;
 
   @IsNumber()
   @IsOptional()
+  @Min(1)
+  @Max(100)
   pageSize: number = 10;
 
-  @IsEnum(['asc', 'desc'])
+  @IsIn(['asc', 'desc'])
   @IsOptional()
   sortOrder: 'asc' | 'desc' = 'desc';
 

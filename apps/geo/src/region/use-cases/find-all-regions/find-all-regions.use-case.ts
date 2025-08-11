@@ -1,4 +1,4 @@
-import { ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { Region } from '../../entities/region.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllRegionsCommand } from './find-all-regions.command';
@@ -20,24 +20,30 @@ export class FindAllRegionsUseCase {
 
   async execute(command: FindAllRegionsCommand) {
     try {
-      const where = command.name
+      const trimmedName = command.name?.trim();
+      const where: FindOptionsWhere<Region>[] | object = trimmedName
         ? [
-            { name: ILike(`%${command.name}%`) },
-            { nameEn: ILike(`%${command.name}%`) },
+            { name: ILike(`%${trimmedName}%`) },
+            { nameEn: ILike(`%${trimmedName}%`) },
           ]
         : {};
-      const [regions, count] = await Promise.all([
-        this.regionRepository.find({
-          skip: (command.page - 1) * command.pageSize,
-          take: command.pageSize,
-          order: { ['name']: command.sortOrder },
-          select: ['id', 'name', 'nameEn'],
-          where,
-        }),
-        this.regionRepository.count({ where }),
-      ]);
 
-      return { regions, count };
+      const skip = (command.page - 1) * command.pageSize;
+      const take = command.pageSize + 1;
+
+      const regions = await this.regionRepository.find({
+        skip,
+        take,
+        order: { ['name']: command.sortOrder },
+        select: ['id', 'name', 'nameEn'],
+        where,
+      });
+      const hasMore = regions.length > command.pageSize;
+
+      return {
+        regions: hasMore ? regions.slice(0, command.pageSize) : regions,
+        hasMore,
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
 
