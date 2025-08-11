@@ -1,4 +1,4 @@
-import { ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   HttpException,
@@ -20,24 +20,27 @@ export class FindAllSettlementsUseCase {
 
   async execute(command: FindAllSettlementsCommand) {
     try {
-      const nameFilter = command.name
+      const trimmedName = command.name?.trim();
+      const where: FindOptionsWhere<Settlement>[] | object = trimmedName
         ? [
-            { name: ILike(`%${command.name}%`), regionId: command.region },
-            { nameEn: ILike(`%${command.name}%`), regionId: command.region },
+            { name: ILike(`%${trimmedName}%`) },
+            { nameEn: ILike(`%${trimmedName}%`) },
           ]
-        : { regionId: command.region };
+        : {};
 
-      const [settlements, count] = await this.settlementRepository.findAndCount(
-        {
-          skip: (command.page - 1) * command.pageSize,
-          take: command.pageSize,
-          order: { name: command.sortOrder },
-          select: ['id', 'name', 'nameEn'],
-          where: nameFilter,
-        },
-      );
+      const skip = (command.page - 1) * command.pageSize;
+      const take = command.pageSize + 1;
 
-      return { settlements, count };
+      const settlements = await this.settlementRepository.find({
+        skip,
+        take,
+        order: { ['name']: command.sortOrder },
+        select: ['id', 'name', 'nameEn'],
+        where,
+      });
+      const hasMore = settlements.length > command.pageSize;
+
+      return { settlements, hasMore };
     } catch (error) {
       if (error instanceof HttpException) throw error;
 
