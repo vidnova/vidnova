@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import * as turf from '@turf/turf';
 import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
-import { Feature, GeoJsonProperties, MultiPolygon, Polygon } from 'geojson';
+import { Feature, Polygon } from 'geojson';
 
 export class RegionContainsPointUseCase {
   private logger = new Logger(RegionContainsPointUseCase.name);
@@ -22,45 +22,8 @@ export class RegionContainsPointUseCase {
 
   async execute(command: RegionContainsPointCommand) {
     try {
-      const query = `
-        SELECT json_build_object(
-                 'type', 'FeatureCollection',
-                 'features', json_agg(
-                   json_build_object(
-                     'type', 'Feature',
-                     'geometry', ST_AsGeoJSON(geometry)::json,
-                     'properties', json_build_object(
-                       'id', id,
-                       'name', name,
-                       'nameEn', "nameEn",
-                       'areaKm2', "areaKm2"
-                                   )
-                   )
-                             )
-               ) as geojson
-        FROM regions
-        WHERE id = $1;
-      `;
-
-      const result = await this.regionRepository.query<
-        { geojson: GeoJSONCollection | null }[]
-      >(query, [command.regionId]);
-
-      const geojson = result?.[0]?.geojson;
-
-      if (!geojson || !geojson.features || geojson.features.length === 0) {
-        throw new NotFoundException(
-          `Region with ID ${command.regionId} not found`,
-        );
-      }
-
-      const point = turf.point([command.lon, command.lat]);
-      const polygon = geojson.features[0] as Feature<
-        Polygon | MultiPolygon,
-        GeoJsonProperties
-      >;
-
-      const isBelongs = turf.booleanPointInPolygon(point, polygon);
+      const geojson = await this.parseGeoJSON(command.regionId);
+      const isBelongs = this.isContainsPoint(geojson, command.lat, command.lon);
 
       return { isBelongs };
     } catch (error) {
@@ -70,4 +33,48 @@ export class RegionContainsPointUseCase {
       throw new InternalServerErrorException('Failed to check point');
     }
   }
+
+  private async parseGeoJSON(regionId: string) {
+    const result = await this.regionRepository.query<
+      { geojson: GeoJSONCollection | null }[]
+    >(RegionContainsPointUseCase.GET_REGION_GEOJSON_SQL, [regionId]);
+    const geojson = result?.[0]?.geojson;
+
+    if (!geojson?.features?.length) {
+      throw new NotFoundException(`Region with ID ${regionId} not found`);
+    }
+
+    return geojson;
+  }
+
+  private isContainsPoint(
+    geoJSON: GeoJSONCollection,
+    lat: number,
+    lon: number,
+  ) {
+    const point = turf.point([lon, lat]);
+    const polygon = geoJSON.features[0] as Feature<Polygon>;
+
+    return turf.booleanPointInPolygon(point, polygon);
+  }
+
+  private static readonly GET_REGION_GEOJSON_SQL = `
+    SELECT json_build_object(
+             'type', 'FeatureCollection',
+             'features', json_agg(
+               json_build_object(
+                 'type', 'Feature',
+                 'geometry', ST_AsGeoJSON(geometry)::json,
+                 'properties', json_build_object(
+                   'id', id,
+                   'name', name,
+                   'nameEn', "nameEn",
+                   'areaKm2', "areaKm2"
+                               )
+               )
+                         )
+           ) AS geojson
+    FROM regions
+    WHERE id = $1
+  `;
 }
