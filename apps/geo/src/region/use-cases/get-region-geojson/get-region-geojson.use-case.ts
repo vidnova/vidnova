@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Region } from '../../entities/region.entity';
 import { Repository } from 'typeorm';
 import { GetRegionGeoJSONCommand } from './get-region-geojson.command';
+import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
 
 export class GetRegionGeoJSONUseCase {
   private logger = new Logger(GetRegionGeoJSONUseCase.name);
@@ -19,41 +20,17 @@ export class GetRegionGeoJSONUseCase {
 
   async execute(command: GetRegionGeoJSONCommand) {
     try {
-      const query = `
-        SELECT json_build_object(
-                 'type', 'FeatureCollection',
-                 'features', json_agg(
-                   json_build_object(
-                     'type', 'Feature',
-                     'geometry', ST_AsGeoJSON(geometry)::json,
-                     'properties', json_build_object(
-                       'id', id,
-                       'name', name,
-                       'nameEn', "nameEn",
-                       'areaKm2', "areaKm2"
-                                   )
-                   )
-                             )
-               ) as geojson
-        FROM regions
-        WHERE id = $1;
-      `;
+      const [{ geojson }] = await this.regionRepository.query<
+        { geojson: GeoJSONCollection | null }[]
+      >(GetRegionGeoJSONUseCase.GET_REGION_GEOJSON_SQL, [command.regionId]);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const result = await this.regionRepository.query(query, [
-        command.regionId,
-      ]);
-
-      const geojson = result?.[0]?.geojson;
-
-      if (!geojson || !geojson.features || geojson.features.length === 0) {
+      if (!geojson?.features?.length) {
         throw new NotFoundException(
           `Region with ID ${command.regionId} not found`,
         );
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
-      return result[0].geojson;
+      return geojson;
     } catch (error) {
       if (error instanceof HttpException) throw error;
 
@@ -61,4 +38,24 @@ export class GetRegionGeoJSONUseCase {
       throw new InternalServerErrorException('Failed to get regions');
     }
   }
+
+  private static readonly GET_REGION_GEOJSON_SQL = `
+    SELECT json_build_object(
+             'type', 'FeatureCollection',
+             'features', json_agg(
+               json_build_object(
+                 'type', 'Feature',
+                 'geometry', ST_AsGeoJSON(geometry)::json,
+                 'properties', json_build_object(
+                   'id', id,
+                   'name', name,
+                   'nameEn', "nameEn",
+                   'areaKm2', "areaKm2"
+                 )
+               )
+             )
+           ) AS geojson
+    FROM regions
+    WHERE id = $1
+  `;
 }
