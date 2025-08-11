@@ -22,41 +22,8 @@ export class SettlementContainsPointUseCase {
 
   async execute(command: SettlementContainsPointCommand) {
     try {
-      const query = `
-        SELECT json_build_object(
-                 'type', 'FeatureCollection',
-                 'features', json_agg(
-                   json_build_object(
-                     'type', 'Feature',
-                     'geometry', ST_AsGeoJSON(boundary)::json,
-                     'properties', json_build_object(
-                       'id', id,
-                       'name', name,
-                       'nameEn', "nameEn",
-                       'areaKm2', "areaKm2"
-                                   )
-                   )
-                             )
-               ) as geojson
-        FROM settlements
-        WHERE id = $1;
-      `;
-
-      const result = await this.settlementRepository.query<
-        { geojson: GeoJSONCollection | null }[]
-      >(query, [command.settlementId]);
-
-      const geojson = result?.[0]?.geojson;
-
-      if (!geojson || !geojson.features || geojson.features.length === 0) {
-        throw new NotFoundException(
-          `Settlement with ID ${command.settlementId} not found`,
-        );
-      }
-
-      const point = turf.point([command.lon, command.lat]);
-      const polygon = geojson.features[0] as Feature<Polygon | MultiPolygon>;
-      const isBelongs = turf.booleanPointInPolygon(point, polygon);
+      const geojson = await this.parseGeoJSON(command.settlementId);
+      const isBelongs = this.isContainsPoint(geojson, command.lat, command.lon);
 
       return { isBelongs };
     } catch (error) {
@@ -66,4 +33,52 @@ export class SettlementContainsPointUseCase {
       throw new InternalServerErrorException('Failed to check point');
     }
   }
+
+  private async parseGeoJSON(settlementId: string) {
+    const result = await this.settlementRepository.query<
+      { geojson: GeoJSONCollection | null }[]
+    >(SettlementContainsPointUseCase.GET_SETTLEMENT_GEOJSON_SQL, [
+      settlementId,
+    ]);
+    const geojson = result?.[0]?.geojson;
+
+    if (!geojson?.features?.length) {
+      throw new NotFoundException(
+        `Settlement with ID ${settlementId} not found`,
+      );
+    }
+
+    return geojson;
+  }
+
+  private isContainsPoint(
+    geoJSON: GeoJSONCollection,
+    lat: number,
+    lon: number,
+  ) {
+    const point = turf.point([lon, lat]);
+    const polygon = geoJSON.features[0] as Feature<Polygon>;
+
+    return turf.booleanPointInPolygon(point, polygon);
+  }
+
+  private static readonly GET_SETTLEMENT_GEOJSON_SQL = `
+    SELECT json_build_object(
+             'type', 'FeatureCollection',
+             'features', json_agg(
+               json_build_object(
+                 'type', 'Feature',
+                 'geometry', ST_AsGeoJSON(boundary)::json,
+                 'properties', json_build_object(
+                   'id', id,
+                   'name', name,
+                   'nameEn', "nameEn",
+                   'areaKm2', "areaKm2"
+                               )
+               )
+                         )
+           ) as geojson
+    FROM settlements
+    WHERE id = $1;
+  `;
 }
