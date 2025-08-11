@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
 
 @Injectable()
 export class GetRegionsGeoJSONUseCase {
@@ -19,29 +20,10 @@ export class GetRegionsGeoJSONUseCase {
 
   async execute() {
     try {
-      const query = `
-        SELECT json_build_object(
-                 'type', 'FeatureCollection',
-                 'features', json_agg(
-                   json_build_object(
-                     'type', 'Feature',
-                     'geometry', ST_AsGeoJSON(geometry)::json,
-                     'properties', json_build_object(
-                       'id', id,
-                       'name', name,
-                       'nameEn', "nameEn",
-                       'areaKm2', "areaKm2"
-                                   )
-                   )
-                             )
-               ) as geojson
-        FROM regions;
-      `;
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const result = await this.regionRepository.query(query);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
-      return result[0].geojson;
+      const [{ geojson }] = await this.regionRepository.query<
+        { geojson: GeoJSONCollection | null }[]
+      >(GetRegionsGeoJSONUseCase.GET_REGIONS_GEOJSON_SQL);
+      return geojson;
     } catch (error) {
       if (error instanceof HttpException) throw error;
 
@@ -49,4 +31,23 @@ export class GetRegionsGeoJSONUseCase {
       throw new InternalServerErrorException('Failed to get regions');
     }
   }
+
+  private static readonly GET_REGIONS_GEOJSON_SQL = `
+    SELECT json_build_object(
+             'type', 'FeatureCollection',
+             'features', json_agg(
+               json_build_object(
+                 'type', 'Feature',
+                 'geometry', ST_AsGeoJSON(geometry)::json,
+                 'properties', json_build_object(
+                   'id', id,
+                   'name', name,
+                   'nameEn', "nameEn",
+                   'areaKm2', "areaKm2"
+                 )
+               )
+             )
+           ) AS geojson
+    FROM regions
+  `;
 }
