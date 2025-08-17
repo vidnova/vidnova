@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Region } from '../../entities/region.entity';
+import { Region } from '../../../../../../packages/geo-dal/src/region/region.entity';
 import { Repository } from 'typeorm';
 import { GetRegionGeoJSONCommand } from './get-region-geojson.command';
 import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';

@@ -6,7 +6,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { Settlement } from '../../entities/settlement.entity';
+import { Settlement } from '../../../../../../packages/geo-dal/src/settlement/settlement.entity';
 import { FindAllSettlementsCommand } from './find-all-settlements.command';
 
 @Injectable()

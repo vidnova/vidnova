@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Settlement } from '../../settlement/entities/settlement.entity';
+import { Settlement } from '../settlement';
 
 @Entity('regions')
 export class Region {

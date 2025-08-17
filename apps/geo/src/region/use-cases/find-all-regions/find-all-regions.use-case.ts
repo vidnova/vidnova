@@ -1,5 +1,5 @@
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
-import { Region } from '../../entities/region.entity';
+import { Region } from '../../../../../../packages/geo-dal/src/region/region.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllRegionsCommand } from './find-all-regions.command';
 import {

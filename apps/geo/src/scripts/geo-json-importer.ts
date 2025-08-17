@@ -2,8 +2,8 @@ import { DataSource, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { databaseConfig } from '../config/database.config';
 import * as fs from 'node:fs';
-import { Region } from '../region/entities/region.entity';
-import { Settlement } from '../settlement/entities/settlement.entity';
+import { Region } from '../../../../packages/geo-dal/src/region/region.entity';
+import { Settlement } from '../../../../packages/geo-dal/src/settlement/settlement.entity';
 import { GeoJSONCollection } from '../common/interfaces/geo-json-collection.interface';
 import { GeoJSONFeature } from '../common/interfaces/geo-json-feature.interface';
 

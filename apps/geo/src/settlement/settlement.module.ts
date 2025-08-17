@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SettlementController } from './settlement.controller';
-import { Settlement } from './entities/settlement.entity';
+import { Settlement } from '../../../../packages/geo-dal/src/settlement/settlement.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { USE_CASES } from './use-cases';
 

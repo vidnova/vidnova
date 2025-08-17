@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Settlement } from '../../entities/settlement.entity';
+import { Settlement } from '../../../../../../packages/geo-dal/src/settlement/settlement.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettlementContainsPointCommand } from './settlement-contains-point.command';
 import {
