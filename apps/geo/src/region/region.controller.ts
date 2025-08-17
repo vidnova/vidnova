@@ -32,13 +32,11 @@ export class RegionController {
 
   @Get('geojson')
   async getGeoJSON() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.getRegionsGeoJSONUseCase.execute();
   }
 
   @Get(':regionId/geojson')
   async getRegionGeoJSON(@Param('regionId') regionId: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.getRegionGeoJSONUseCase.execute(
       GetRegionGeoJSONCommand.create({
         regionId,

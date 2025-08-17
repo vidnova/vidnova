@@ -1,14 +1,17 @@
-import { GeoJsonImporter } from '../geo-json-importer';
+import { GeoJsonImporter } from '@vidnova/geo-dal';
+import { databaseConfig } from '../config/database.config';
 
 (async function () {
   const filePath = process.argv[2];
 
   if (!filePath) {
-    console.log('Usage: yarn run import:regions <path-to-ukraine_regions.geojson>');
+    console.log(
+      'Usage: yarn run import:regions <path-to-ukraine_regions.geojson>',
+    );
     process.exit(1);
   }
 
-  const importer = new GeoJsonImporter();
+  const importer = new GeoJsonImporter(databaseConfig);
 
   try {
     await importer.connect();

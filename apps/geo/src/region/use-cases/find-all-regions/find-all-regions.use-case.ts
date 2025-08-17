@@ -1,49 +1,25 @@
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
-import { Region } from '../../../../../../packages/geo-dal/src/region/region.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllRegionsCommand } from './find-all-regions.command';
 import {
   HttpException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { IRegionRepository } from '@vidnova/geo-dal';
 
 @Injectable()
 export class FindAllRegionsUseCase {
   private logger = new Logger(FindAllRegionsUseCase.name);
 
   constructor(
-    @InjectRepository(Region)
-    private readonly regionRepository: Repository<Region>,
+    @Inject('REGION_REPOSITORY')
+    private readonly regionRepository: IRegionRepository,
   ) {}
 
   async execute(command: FindAllRegionsCommand) {
     try {
-      const trimmedName = command.name?.trim();
-      const where: FindOptionsWhere<Region>[] | object = trimmedName
-        ? [
-            { name: ILike(`%${trimmedName}%`) },
-            { nameEn: ILike(`%${trimmedName}%`) },
-          ]
-        : {};
-
-      const skip = (command.page - 1) * command.pageSize;
-      const take = command.pageSize + 1;
-
-      const regions = await this.regionRepository.find({
-        skip,
-        take,
-        order: { ['name']: command.sortOrder },
-        select: ['id', 'name', 'nameEn'],
-        where,
-      });
-      const hasMore = regions.length > command.pageSize;
-
-      return {
-        regions: hasMore ? regions.slice(0, command.pageSize) : regions,
-        hasMore,
-      };
+      return this.regionRepository.findAll({ ...command });
     } catch (error) {
       if (error instanceof HttpException) throw error;
 

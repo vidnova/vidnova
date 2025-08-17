@@ -1,23 +1,21 @@
-import { Repository } from 'typeorm';
-import { Region } from '../../../../../../packages/geo-dal/src/region/region.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { RegionContainsPointCommand } from './region-contains-point.command';
 import {
   HttpException,
+  Inject,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
 import * as turf from '@turf/turf';
-import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
-import { Feature, Polygon } from 'geojson';
+import { Feature, FeatureCollection, Polygon } from 'geojson';
+import { IRegionRepository } from '@vidnova/geo-dal';
 
 export class RegionContainsPointUseCase {
   private logger = new Logger(RegionContainsPointUseCase.name);
 
   constructor(
-    @InjectRepository(Region)
-    private readonly regionRepository: Repository<Region>,
+    @Inject('REGION_REPOSITORY')
+    private readonly regionRepository: IRegionRepository,
   ) {}
 
   async execute(command: RegionContainsPointCommand) {
@@ -35,12 +33,9 @@ export class RegionContainsPointUseCase {
   }
 
   private async parseGeoJSON(regionId: string) {
-    const result = await this.regionRepository.query<
-      { geojson: GeoJSONCollection | null }[]
-    >(RegionContainsPointUseCase.GET_REGION_GEOJSON_SQL, [regionId]);
-    const geojson = result?.[0]?.geojson;
+    const geojson = await this.regionRepository.findRegionGeoJSON(regionId);
 
-    if (!geojson?.features?.length) {
+    if (!geojson) {
       throw new NotFoundException(`Region with ID ${regionId} not found`);
     }
 
@@ -48,7 +43,7 @@ export class RegionContainsPointUseCase {
   }
 
   private isContainsPoint(
-    geoJSON: GeoJSONCollection,
+    geoJSON: FeatureCollection,
     lat: number,
     lon: number,
   ) {
@@ -57,24 +52,4 @@ export class RegionContainsPointUseCase {
 
     return turf.booleanPointInPolygon(point, polygon);
   }
-
-  private static readonly GET_REGION_GEOJSON_SQL = `
-    SELECT json_build_object(
-             'type', 'FeatureCollection',
-             'features', json_agg(
-               json_build_object(
-                 'type', 'Feature',
-                 'geometry', ST_AsGeoJSON(geometry)::json,
-                 'properties', json_build_object(
-                   'id', id,
-                   'name', name,
-                   'nameEn', "nameEn",
-                   'areaKm2', "areaKm2"
-                               )
-               )
-                         )
-           ) AS geojson
-    FROM regions
-    WHERE id = $1
-  `;
 }

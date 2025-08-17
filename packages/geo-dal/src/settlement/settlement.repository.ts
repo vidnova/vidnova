@@ -16,24 +16,26 @@ export class SettlementRepository implements ISettlementRepository {
   async findAll(
     filters: GetSettlementsFilter,
   ): Promise<{ settlements: Settlement[]; hasMore: boolean }> {
-    const trimmedName = filters.name?.trim();
-    const where: FindOptionsWhere<Settlement>[] | object = trimmedName
-      ? [{ name: ILike(`%${trimmedName}%`) }, { nameEn: ILike(`%${trimmedName}%`) }]
-      : {};
+    const { page = 1, pageSize = 10 } = filters;
 
-    const skip = (filters.page - 1) * filters.pageSize;
-    const take = filters.pageSize + 1;
+    const skip = (page - 1) * pageSize;
+    const take = pageSize + 1;
+    const order = this.buildFindAllOrder(filters);
+    const where = this.buildFindAllWhere(filters);
 
     const settlements = await this.repo.find({
       skip,
       take,
-      order: { ['name']: filters.sortOrder },
+      order,
       select: ['id', 'name', 'nameEn'],
       where,
     });
-    const hasMore = settlements.length > filters.pageSize;
+    const hasMore = settlements.length > (filters.pageSize ?? 10);
 
-    return { settlements, hasMore };
+    return {
+      settlements: settlements.slice(0, pageSize),
+      hasMore,
+    };
   }
 
   async findSettlementGeoJSON(settlementId: string): Promise<FeatureCollection | null> {
@@ -47,13 +49,38 @@ export class SettlementRepository implements ISettlementRepository {
     return geojson;
   }
 
+  private buildFindAllWhere(
+    filters: GetSettlementsFilter,
+  ): FindOptionsWhere<Settlement>[] | FindOptionsWhere<Settlement> {
+    let where: FindOptionsWhere<Settlement>[] = [];
+
+    const trimmedName = filters.name?.trim();
+    if (trimmedName) {
+      where.push({ name: ILike(`%${trimmedName}%`) }, { nameEn: ILike(`%${trimmedName}%`) });
+    }
+
+    if (where.length === 0) {
+      where = [{}];
+    }
+
+    if (filters.region) {
+      where = where.map((w) => ({ ...w, regionId: filters.region }));
+    }
+
+    return where;
+  }
+
+  private buildFindAllOrder(filters: GetSettlementsFilter) {
+    return { name: filters.sortOrder ?? 'asc' };
+  }
+
   private static GET_SETTLEMENT_GEOJSON_SQL = `
     SELECT json_build_object(
              'type', 'FeatureCollection',
              'features', json_agg(
                json_build_object(
                  'type', 'Feature',
-                 'boundary', ST_AsGeoJSON(boundary)::json,
+                 'geometry', ST_AsGeoJSON(boundary)::json,
                  'properties', json_build_object(
                    'id', id,
                    'name', name,

@@ -1,4 +1,5 @@
-import { GeoJsonImporter } from '../geo-json-importer';
+import { databaseConfig } from '../config/database.config';
+import { GeoJsonImporter } from '@vidnova/geo-dal';
 
 (async function () {
   const filePath = process.argv[2];
@@ -10,7 +11,7 @@ import { GeoJsonImporter } from '../geo-json-importer';
     process.exit(1);
   }
 
-  const importer = new GeoJsonImporter();
+  const importer = new GeoJsonImporter(databaseConfig);
 
   try {
     await importer.connect();

@@ -1,30 +1,28 @@
 import {
   HttpException,
+  Inject,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Region } from '../../../../../../packages/geo-dal/src/region/region.entity';
-import { Repository } from 'typeorm';
 import { GetRegionGeoJSONCommand } from './get-region-geojson.command';
-import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
+import { IRegionRepository } from '@vidnova/geo-dal';
 
 export class GetRegionGeoJSONUseCase {
   private logger = new Logger(GetRegionGeoJSONUseCase.name);
 
   constructor(
-    @InjectRepository(Region)
-    private readonly regionRepository: Repository<Region>,
+    @Inject('REGION_REPOSITORY')
+    private readonly regionRepository: IRegionRepository,
   ) {}
 
   async execute(command: GetRegionGeoJSONCommand) {
     try {
-      const [{ geojson }] = await this.regionRepository.query<
-        { geojson: GeoJSONCollection | null }[]
-      >(GetRegionGeoJSONUseCase.GET_REGION_GEOJSON_SQL, [command.regionId]);
+      const geojson = await this.regionRepository.findRegionGeoJSON(
+        command.regionId,
+      );
 
-      if (!geojson?.features?.length) {
+      if (!geojson) {
         throw new NotFoundException(
           `Region with ID ${command.regionId} not found`,
         );
@@ -38,24 +36,4 @@ export class GetRegionGeoJSONUseCase {
       throw new InternalServerErrorException('Failed to get regions');
     }
   }
-
-  private static readonly GET_REGION_GEOJSON_SQL = `
-    SELECT json_build_object(
-             'type', 'FeatureCollection',
-             'features', json_agg(
-               json_build_object(
-                 'type', 'Feature',
-                 'geometry', ST_AsGeoJSON(geometry)::json,
-                 'properties', json_build_object(
-                   'id', id,
-                   'name', name,
-                   'nameEn', "nameEn",
-                   'areaKm2', "areaKm2"
-                 )
-               )
-             )
-           ) AS geojson
-    FROM regions
-    WHERE id = $1
-  `;
 }

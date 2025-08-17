@@ -1,23 +1,21 @@
-import { Repository } from 'typeorm';
-import { Settlement } from '../../../../../../packages/geo-dal/src/settlement/settlement.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { SettlementContainsPointCommand } from './settlement-contains-point.command';
 import {
   HttpException,
+  Inject,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { GeoJSONCollection } from '../../../common/interfaces/geo-json-collection.interface';
-import { Feature, MultiPolygon, Polygon } from 'geojson';
+import { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import * as turf from '@turf/turf';
+import { ISettlementRepository } from '@vidnova/geo-dal';
 
 export class SettlementContainsPointUseCase {
   private logger = new Logger(SettlementContainsPointUseCase.name);
 
   constructor(
-    @InjectRepository(Settlement)
-    private readonly settlementRepository: Repository<Settlement>,
+    @Inject('SETTLEMENT_REPOSITORY')
+    private readonly settlementRepository: ISettlementRepository,
   ) {}
 
   async execute(command: SettlementContainsPointCommand) {
@@ -35,14 +33,10 @@ export class SettlementContainsPointUseCase {
   }
 
   private async parseGeoJSON(settlementId: string) {
-    const result = await this.settlementRepository.query<
-      { geojson: GeoJSONCollection | null }[]
-    >(SettlementContainsPointUseCase.GET_SETTLEMENT_GEOJSON_SQL, [
-      settlementId,
-    ]);
-    const geojson = result?.[0]?.geojson;
+    const geojson =
+      await this.settlementRepository.findSettlementGeoJSON(settlementId);
 
-    if (!geojson?.features?.length) {
+    if (!geojson) {
       throw new NotFoundException(
         `Settlement with ID ${settlementId} not found`,
       );
@@ -52,33 +46,13 @@ export class SettlementContainsPointUseCase {
   }
 
   private isContainsPoint(
-    geoJSON: GeoJSONCollection,
+    geoJSON: FeatureCollection,
     lat: number,
     lon: number,
   ) {
     const point = turf.point([lon, lat]);
-    const polygon = geoJSON.features[0] as Feature<Polygon>;
+    const polygon = geoJSON.features[0] as Feature<Polygon | MultiPolygon>;
 
     return turf.booleanPointInPolygon(point, polygon);
   }
-
-  private static readonly GET_SETTLEMENT_GEOJSON_SQL = `
-    SELECT json_build_object(
-             'type', 'FeatureCollection',
-             'features', json_agg(
-               json_build_object(
-                 'type', 'Feature',
-                 'geometry', ST_AsGeoJSON(boundary)::json,
-                 'properties', json_build_object(
-                   'id', id,
-                   'name', name,
-                   'nameEn', "nameEn",
-                   'areaKm2', "areaKm2"
-                               )
-               )
-                         )
-           ) as geojson
-    FROM settlements
-    WHERE id = $1;
-  `;
 }

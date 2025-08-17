@@ -1,20 +1,22 @@
-import { DataSource, Repository } from 'typeorm';
-import { Logger } from '@nestjs/common';
-import { databaseConfig } from '../config/database.config';
+import { DataSource, DataSourceOptions, Repository } from 'typeorm';
+import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'node:fs';
-import { Region } from '../../../../packages/geo-dal/src/region/region.entity';
-import { Settlement } from '../../../../packages/geo-dal/src/settlement/settlement.entity';
-import { GeoJSONCollection } from '../common/interfaces/geo-json-collection.interface';
-import { GeoJSONFeature } from '../common/interfaces/geo-json-feature.interface';
+import { Region } from '../region';
+import { Settlement } from '../settlement';
+import { Feature, FeatureCollection } from 'geojson';
 
+@Injectable()
 export class GeoJsonImporter {
-  private dataSource: DataSource;
+  private readonly dataSource: DataSource;
   private batchSize = 50;
   private logger = new Logger(GeoJsonImporter.name);
 
+  constructor(databaseConfig: DataSourceOptions) {
+    this.dataSource = new DataSource(databaseConfig);
+  }
+
   async connect() {
     this.logger.log('Connecting to database...');
-    this.dataSource = new DataSource(databaseConfig);
     await this.dataSource.initialize();
   }
 
@@ -36,9 +38,7 @@ export class GeoJsonImporter {
 
       this.logger.log('Clearing the regions table...');
 
-      await this.dataSource.query(
-        'TRUNCATE TABLE "settlements", "regions" CASCADE',
-      );
+      await this.dataSource.query('TRUNCATE TABLE "settlements", "regions" CASCADE');
 
       for (let i = 0; i < geoData.features.length; i += this.batchSize) {
         const batch = geoData.features.slice(i, i + this.batchSize);
@@ -50,9 +50,7 @@ export class GeoJsonImporter {
       }
 
       const totalRegions = await regionRepository.count();
-      this.logger.log(
-        `Total number of regions in the database: ${totalRegions}`,
-      );
+      this.logger.log(`Total number of regions in the database: ${totalRegions}`);
     } catch (error) {
       this.logger.error('Critical error importing regions:', error);
       throw error;
@@ -76,12 +74,7 @@ export class GeoJsonImporter {
 
       for (let i = 0; i < geoData.features.length; i += this.batchSize) {
         const batch = geoData.features.slice(i, i + this.batchSize);
-        await this.processBatchSettlements(
-          batch,
-          settlementRepository,
-          regionRepository,
-          regions,
-        );
+        await this.processBatchSettlements(batch, settlementRepository, regionRepository, regions);
 
         if (i + this.batchSize < geoData.features.length) {
           await this.sleep(200);
@@ -89,9 +82,7 @@ export class GeoJsonImporter {
       }
 
       const totalSettlements = await settlementRepository.count();
-      this.logger.log(
-        `Total number of settlements in the database: ${totalSettlements}`,
-      );
+      this.logger.log(`Total number of settlements in the database: ${totalSettlements}`);
     } catch (error) {
       this.logger.error('Critical error importing settlements:', error);
       throw error;
@@ -104,9 +95,7 @@ export class GeoJsonImporter {
     }
 
     const jsonData = fs.readFileSync(filePath, 'utf8');
-    const geoData: GeoJSONCollection = JSON.parse(
-      jsonData,
-    ) as GeoJSONCollection;
+    const geoData: FeatureCollection = JSON.parse(jsonData) as FeatureCollection;
 
     this.logger.log(`File ${filePath} was read`);
 
@@ -117,10 +106,7 @@ export class GeoJsonImporter {
     return geoData;
   }
 
-  private async processBatchRegions(
-    batch: GeoJSONFeature[],
-    repository: Repository<Region>,
-  ) {
+  private async processBatchRegions(batch: Feature[], repository: Repository<Region>) {
     for (const feature of batch) {
       try {
         if (this.isValidRegionFeature(feature)) {
@@ -134,7 +120,7 @@ export class GeoJsonImporter {
   }
 
   private async processBatchSettlements(
-    batch: GeoJSONFeature[],
+    batch: Feature[],
     settlementRepository: Repository<Settlement>,
     regionRepository: Repository<Region>,
     regions: Region[],
@@ -156,7 +142,7 @@ export class GeoJsonImporter {
     }
   }
 
-  private isValidSettlementFeature(feature: GeoJSONFeature): boolean {
+  private isValidSettlementFeature(feature: Feature): boolean {
     return !!(
       feature.properties?.place &&
       ['village', 'town', 'city'].includes(feature.properties.place) &&
@@ -164,10 +150,7 @@ export class GeoJsonImporter {
     );
   }
 
-  private async saveRegionFeature(
-    feature: GeoJSONFeature,
-    repository: Repository<Region>,
-  ) {
+  private async saveRegionFeature(feature: Feature, repository: Repository<Region>) {
     const props = feature.properties;
 
     const name = props['name:uk'] || props.name;
@@ -175,6 +158,10 @@ export class GeoJsonImporter {
 
     if (!name) {
       throw new Error('Missing region name');
+    }
+
+    if (feature.geometry.type === 'GeometryCollection') {
+      throw new Error('GeometryCollection not supported for regions');
     }
 
     const coordinates = feature.geometry.coordinates[0];
@@ -202,7 +189,7 @@ export class GeoJsonImporter {
   }
 
   private async saveSettlementFeature(
-    feature: GeoJSONFeature,
+    feature: Feature,
     regionRepository: Repository<Region>,
     settlementRepository: Repository<Settlement>,
     regions: Region[],
@@ -249,12 +236,8 @@ export class GeoJsonImporter {
         coords.forEach((ring) => closeRing(ring));
 
         const outerRing = coords[0];
-        const centerLon =
-          outerRing.reduce((sum, coord) => sum + coord[0], 0) /
-          outerRing.length;
-        const centerLat =
-          outerRing.reduce((sum, coord) => sum + coord[1], 0) /
-          outerRing.length;
+        const centerLon = outerRing.reduce((sum, coord) => sum + coord[0], 0) / outerRing.length;
+        const centerLat = outerRing.reduce((sum, coord) => sum + coord[1], 0) / outerRing.length;
 
         pointWKT = `POINT(${centerLon} ${centerLat})`;
 
@@ -279,12 +262,8 @@ export class GeoJsonImporter {
           });
         });
 
-        const centerLon =
-          allCoords.reduce((sum, coord) => sum + coord[0], 0) /
-          allCoords.length;
-        const centerLat =
-          allCoords.reduce((sum, coord) => sum + coord[1], 0) /
-          allCoords.length;
+        const centerLon = allCoords.reduce((sum, coord) => sum + coord[0], 0) / allCoords.length;
+        const centerLat = allCoords.reduce((sum, coord) => sum + coord[1], 0) / allCoords.length;
 
         pointWKT = `POINT(${centerLon} ${centerLat})`;
 
@@ -305,18 +284,12 @@ export class GeoJsonImporter {
       }
     }
 
-    const region = await this.findRegionForPoint(
-      pointWKT,
-      regions,
-      regionRepository,
-    );
+    const region = await this.findRegionForPoint(pointWKT, regions, regionRepository);
     if (!region) {
       throw new Error('No matching region found');
     }
 
-    const boundarySql = boundaryWKT
-      ? `ST_GeomFromText('${boundaryWKT}', 4326)`
-      : 'NULL';
+    const boundarySql = boundaryWKT ? `ST_GeomFromText('${boundaryWKT}', 4326)` : 'NULL';
 
     await settlementRepository.query(
       `
@@ -331,7 +304,7 @@ export class GeoJsonImporter {
     );
   }
 
-  private isValidRegionFeature(feature: GeoJSONFeature): boolean {
+  private isValidRegionFeature(feature: Feature): boolean {
     return (
       feature.properties?.admin_level === '4' &&
       feature.properties?.boundary === 'administrative' &&

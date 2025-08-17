@@ -5,6 +5,7 @@ import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { GetRegionsFilter } from '@vidnova/shared';
 import { FeatureCollection } from 'geojson';
 import { Injectable } from '@nestjs/common';
+import { Settlement } from '../settlement';
 
 @Injectable()
 export class RegionRepository implements IRegionRepository {
@@ -14,25 +15,25 @@ export class RegionRepository implements IRegionRepository {
   ) {}
 
   async findAll(filters: GetRegionsFilter): Promise<{ regions: Region[]; hasMore: boolean }> {
-    const trimmedName = filters.name?.trim();
-    const where: FindOptionsWhere<Region>[] | object = trimmedName
-      ? [{ name: ILike(`%${trimmedName}%`) }, { nameEn: ILike(`%${trimmedName}%`) }]
-      : {};
+    const { page = 1, pageSize = 10 } = filters;
 
-    const skip = (filters.page - 1) * filters.pageSize;
-    const take = filters.pageSize + 1;
+    const skip = (page - 1) * pageSize;
+    const take = pageSize + 1;
+    const order = this.buildFindAllOrder(filters);
+    const where = this.buildFindAllWhere(filters);
 
     const regions = await this.repo.find({
       skip,
       take,
-      order: { ['name']: filters.sortOrder },
+      order,
       select: ['id', 'name', 'nameEn'],
       where,
     });
-    const hasMore = regions.length > filters.pageSize;
+
+    const hasMore = regions.length > pageSize;
 
     return {
-      regions: hasMore ? regions.slice(0, filters.pageSize) : regions,
+      regions: regions.slice(0, pageSize),
       hasMore,
     };
   }
@@ -48,6 +49,19 @@ export class RegionRepository implements IRegionRepository {
         features: [],
       }
     );
+  }
+
+  private buildFindAllWhere(
+    filters: GetRegionsFilter,
+  ): FindOptionsWhere<Settlement>[] | FindOptionsWhere<Settlement> {
+    const trimmedName = filters.name?.trim();
+    if (!trimmedName) return {};
+
+    return [{ name: ILike(`%${trimmedName}%`) }, { nameEn: ILike(`%${trimmedName}%`) }];
+  }
+
+  private buildFindAllOrder(filters: GetRegionsFilter) {
+    return { name: filters.sortOrder ?? 'asc' };
   }
 
   private async fetchGeoJSON(
