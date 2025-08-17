@@ -1,4 +1,4 @@
-import { ChatMember, IChatRepository, RedisService } from '@vidnova/dal';
+import { ChatMember, IChatRepository } from '@vidnova/dal';
 import {
   ConflictException,
   ForbiddenException,
@@ -10,7 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateChatMemberRoleCommand } from './update-chat-member-role.command';
-import { ChatMemberRole, ChatType } from '@vidnova/shared';
+import { ChatMemberRole, ChatType, RedisService } from '@vidnova/shared';
 
 @Injectable()
 export class UpdateChatMemberRoleUseCase {

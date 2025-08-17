@@ -8,8 +8,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateCleanupEventCommand } from './update-cleanup-event.command';
-import { CleanupEvent, EquipmentItem, ICleanupEventRepository, RedisService } from '@vidnova/dal';
-import { LocationValidationService } from '@vidnova/shared';
+import { CleanupEvent, EquipmentItem, ICleanupEventRepository } from '@vidnova/dal';
+import { LocationValidationService, RedisService } from '@vidnova/shared';
 
 @Injectable()
 export class UpdateCleanupEventUseCase {

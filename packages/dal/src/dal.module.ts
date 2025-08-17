@@ -9,20 +9,18 @@ import {
   OtpRepository,
   OverpassRepository,
   PrismaService,
-  RedisService,
   RegionRepository,
   ReportRepository,
   SettlementRepository,
   TakePartRepository,
   UserRepository,
 } from './repositories';
-import { MessageRepository } from './repositories/message/message.repository';
+import { MessageRepository } from './repositories';
 
 @Global()
 @Module({
   providers: [
     PrismaService,
-    RedisService,
     {
       provide: 'CLEANUP_EVENT_REPOSITORY',
       useClass: CleanupEventRepository,
@@ -95,7 +93,6 @@ import { MessageRepository } from './repositories/message/message.repository';
     'REPORT_REPOSITORY',
     'CHAT_REPOSITORY',
     'MESSAGE_REPOSITORY',
-    RedisService,
     PrismaService,
   ],
 })

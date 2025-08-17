@@ -1,4 +1,4 @@
-import { IUserRepository, RedisService, User } from '@vidnova/dal';
+import { IUserRepository, User } from '@vidnova/dal';
 import {
   HttpException,
   Inject,
@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { GetUserFullInfoCommand } from './get-user-full-info.command';
+import { RedisService } from '@vidnova/shared';
 
 export class GetUserFullInfoUseCase {
   private readonly CACHE_TTL = 300;

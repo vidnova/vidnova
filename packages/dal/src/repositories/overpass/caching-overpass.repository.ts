@@ -1,7 +1,6 @@
 import { IOverpassRepository } from './overpass-repository.inteface';
 import { GeoJSON } from 'geojson';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RedisService } from '../shared/services';
 import { Settlement } from '../settlement';
 import { Region } from '../region';
 
@@ -13,7 +12,6 @@ export class CachingOverpassRepository implements IOverpassRepository {
 
   constructor(
     @Inject('BASE_OVERPASS_REPOSITORY') private readonly overpassRepository: IOverpassRepository,
-    private readonly redisService: RedisService,
   ) {}
 
   async fetchSettlementBoundaries(settlement: Settlement, region: Region): Promise<GeoJSON> {
@@ -39,7 +37,7 @@ export class CachingOverpassRepository implements IOverpassRepository {
     logContext: string,
     fetchFn: () => Promise<GeoJSON>,
   ): Promise<GeoJSON> {
-    const cachedData = await this.redisService.get(cacheKey);
+    const cachedData = null;
     if (cachedData) {
       try {
         const geojson = this.parseGeoJSON(cachedData, logContext);
@@ -81,7 +79,6 @@ export class CachingOverpassRepository implements IOverpassRepository {
     logContext: string,
   ): Promise<void> {
     try {
-      await this.redisService.set(cacheKey, JSON.stringify(geojson), this.CACHE_TTL_SECONDS);
       this.logger.log(`Cached GeoJSON for ${logContext}`);
     } catch (error: unknown) {
       this.logger.error(

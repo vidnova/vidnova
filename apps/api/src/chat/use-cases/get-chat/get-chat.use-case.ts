@@ -1,4 +1,4 @@
-import { Chat, IChatRepository, RedisService } from '@vidnova/dal';
+import { Chat, IChatRepository } from '@vidnova/dal';
 import {
   BadRequestException,
   ForbiddenException,
@@ -8,6 +8,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { GetChatCommand } from './get-chat.command';
+import { RedisService } from '@vidnova/shared';
 
 @Injectable()
 export class GetChatUseCase {

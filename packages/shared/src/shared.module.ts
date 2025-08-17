@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
-import { AuthService } from './services';
+import { AuthService, RedisService } from './services';
 
 @Global()
 @Module({
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, RedisService],
+  exports: [AuthService, RedisService],
 })
 export class SharedModule {}

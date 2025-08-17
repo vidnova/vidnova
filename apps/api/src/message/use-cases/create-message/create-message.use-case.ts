@@ -17,9 +17,8 @@ import {
   MessageAttachment,
   MessageReply,
   MessageSender,
-  RedisService,
 } from '@vidnova/dal';
-import { BullMqService, JobTypes, QueueNames } from '@vidnova/shared';
+import { BullMqService, JobTypes, QueueNames, RedisService } from '@vidnova/shared';
 
 @Injectable()
 export class CreateMessageUseCase {
