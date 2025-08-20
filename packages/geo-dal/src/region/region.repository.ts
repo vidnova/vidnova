@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Region } from './region.entity';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { GetRegionsFilter } from '@vidnova/shared';
-import { FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection } from 'geojson';
 import { Injectable } from '@nestjs/common';
 import { Settlement } from '../settlement';
 
@@ -38,7 +38,7 @@ export class RegionRepository implements IRegionRepository {
     };
   }
 
-  async findRegionGeoJSON(regionId: string): Promise<FeatureCollection | null> {
+  async findRegionGeoJSON(regionId: string): Promise<Feature | null> {
     return this.fetchGeoJSON(RegionRepository.GET_REGION_GEOJSON_SQL, [regionId]);
   }
 
@@ -67,30 +67,25 @@ export class RegionRepository implements IRegionRepository {
   private async fetchGeoJSON(
     sql: string,
     params: unknown[] = [],
-  ): Promise<FeatureCollection | null> {
+  ) {
     const result = await this.repo.query(sql, params);
     const geojson = result[0]?.geojson ?? null;
 
-    if (!geojson?.features?.length) return null;
+    if (!geojson) return null;
 
     return geojson;
   }
 
   private static readonly GET_REGION_GEOJSON_SQL = `
     SELECT json_build_object(
-             'type', 'FeatureCollection',
-             'features', json_agg(
-               json_build_object(
-                 'type', 'Feature',
-                 'geometry', ST_AsGeoJSON(geometry)::json,
-                 'properties', json_build_object(
-                   'id', id,
-                   'name', name,
-                   'nameEn', "nameEn",
-                   'areaKm2', "areaKm2"
-                               )
-               )
-                         )
+             'type', 'Feature',
+             'geometry', ST_AsGeoJSON(geometry)::json,
+             'properties', json_build_object(
+               'id', id,
+               'name', name,
+               'nameEn', "nameEn",
+               'areaKm2', "areaKm2"
+                           )
            ) AS geojson
     FROM regions
     WHERE id = $1

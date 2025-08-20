@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as turf from '@turf/turf';
-import { Feature, FeatureCollection, Polygon } from 'geojson';
+import { Feature, Polygon } from 'geojson';
 import { IRegionRepository } from '@vidnova/geo-dal';
 
 export class RegionContainsPointUseCase {
@@ -42,13 +42,9 @@ export class RegionContainsPointUseCase {
     return geojson;
   }
 
-  private isContainsPoint(
-    geoJSON: FeatureCollection,
-    lat: number,
-    lon: number,
-  ) {
+  private isContainsPoint(geoJSON: Feature, lat: number, lon: number) {
     const point = turf.point([lon, lat]);
-    const polygon = geoJSON.features[0] as Feature<Polygon>;
+    const polygon = geoJSON as Feature<Polygon>;
 
     return turf.booleanPointInPolygon(point, polygon);
   }
