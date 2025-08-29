@@ -1,12 +1,12 @@
 import { databaseConfig } from '../config/database.config';
-import { GeoJsonImporter } from '@vidnova/geo-dal';
+import { GeoJsonImporter } from '../scripts';
 
 (async function () {
   const filePath = process.argv[2];
 
   if (!filePath) {
     console.log(
-      'Usage: yarn run import:settlements <path-to-settlements.geojson>',
+      'Usage: yarn run import:regions <path-to-ukraine_regions.geojson>',
     );
     process.exit(1);
   }
@@ -15,8 +15,8 @@ import { GeoJsonImporter } from '@vidnova/geo-dal';
 
   try {
     await importer.connect();
-    await importer.importSettlements(filePath);
-    console.log('Settlement import complete!');
+    await importer.importRegions(filePath);
+    console.log('Region import complete!');
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);

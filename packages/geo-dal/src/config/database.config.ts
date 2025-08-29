@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
-import { Region, Settlement } from '@vidnova/geo-dal';
 import { DataSourceOptions } from 'typeorm';
+import { Region } from '../region';
+import { Settlement } from '../settlement';
 
 dotenv.config();
 

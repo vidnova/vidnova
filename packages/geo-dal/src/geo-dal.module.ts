@@ -1,11 +1,18 @@
 import { Global, Module } from '@nestjs/common';
 import { Settlement, SettlementRepository } from './settlement';
 import { Region, RegionRepository } from './region';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { databaseConfig } from './config/database.config';
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forFeature([Region, Settlement])],
+  imports: [
+    TypeOrmModule.forFeature([Region, Settlement]),
+    TypeOrmModule.forRoot({
+      ...(databaseConfig as TypeOrmModuleOptions),
+      autoLoadEntities: true,
+    }),
+  ],
   providers: [
     {
       provide: 'SETTLEMENT_REPOSITORY',

@@ -13,7 +13,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "import:settlements": "ts-node ./src/cli/import-settlements.ts.ts",
+    "import:regions": "ts-node ./src/cli/import-regions.ts",
+    "import:all": "ts-node ./src/cli/import-all.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

@@ -1,5 +1,5 @@
-import { GeoJsonImporter } from '@vidnova/geo-dal';
 import { databaseConfig } from '../config/database.config';
+import { GeoJsonImporter } from '../scripts';
 
 (async function () {
   const regionsPath = process.argv[2] || 'data/geojson/ukraine_regions.geojson';
