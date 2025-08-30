@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id                String                        @id @default(uuid())
-  username          String                        @unique
+  id                String              @id @default(uuid())
+  username          String              @unique
   firstName         String
   lastName          String?
-  email             String                        @unique
+  email             String              @unique
   password          String?
-  isVerified        Boolean                       @default(false)
-  role              UserRole                      @default(USER)
-  imageUrl          String                        @default("")
-  createdAt         DateTime                      @default(now())
-  updatedAt         DateTime                      @updatedAt
+  isVerified        Boolean             @default(false)
+  role              UserRole            @default(USER)
+  imageUrl          String              @default("")
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
   events            CleanupEvent[]
   takePart          TakePart[]
   cleanupResult     CleanupResult[]
@@ -29,34 +29,35 @@ model User {
   ContaminatedPoint ContaminatedPoint[]
   reports           Report[]
   supportRequests   SupportRequest[]
-  sentMessages      Message[]                     @relation("MessageSender")
+  sentMessages      Message[]           @relation("MessageSender")
   chatMembers       ChatMember[]
   messageReactions  MessageReaction[]
-  questionAnswears  CleanupEventQuestionAnswear[]
+  takePartRequests  TakePartRequest[]
 
   @@index([role])
 }
 
 model CleanupEvent {
-  id            String                 @id @default(uuid())
-  name          String
-  description   String
-  startDate     DateTime
-  endDate       DateTime
-  status        EventStatus
-  dates         CleanupEventDate[]
-  imageUrl      String
-  equipments    CleanupEquipment[]
-  location      CleanupEventLocation?  @relation
-  organizerId   String
-  organizer     User                   @relation(fields: [organizerId], references: [id])
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
-  takePart      TakePart[]
-  result        CleanupResult?
-  comments      Comment[]
-  notifications Notification[]
-  questions     CleanupEventQuestion[]
+  id               String                 @id @default(uuid())
+  name             String
+  description      String
+  startDate        DateTime
+  endDate          DateTime
+  status           EventStatus
+  dates            CleanupEventDate[]
+  imageUrl         String
+  equipments       CleanupEquipment[]
+  location         CleanupEventLocation?  @relation
+  organizerId      String
+  organizer        User                   @relation(fields: [organizerId], references: [id])
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  takePart         TakePart[]
+  result           CleanupResult?
+  comments         Comment[]
+  notifications    Notification[]
+  questions        CleanupEventQuestion[]
+  takePartRequests TakePartRequest[]
 }
 
 model CleanupEventDate {
@@ -319,26 +320,37 @@ model MessageReaction {
 }
 
 model CleanupEventQuestion {
-  id               String                        @id @default(uuid())
-  eventId          String
-  type             CleanupEventQuestionType
-  text             String
-  options          String[]
-  order            Int
-  required         Boolean
-  event            CleanupEvent                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  questionAnswears CleanupEventQuestionAnswear[]
+  id              String                        @id @default(uuid())
+  eventId         String
+  type            CleanupEventQuestionType
+  text            String
+  options         String[]
+  order           Int
+  required        Boolean
+  event           CleanupEvent                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  questionAnswers CleanupEventQuestionAnswear[]
 }
 
 model CleanupEventQuestionAnswear {
   id         String               @id @default(uuid())
-  userId     String
+  requestId  String
   questionId String
   answear    String
-  user       User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  request    TakePartRequest      @relation(fields: [requestId], references: [id], onDelete: Cascade)
   question   CleanupEventQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, questionId])
+  @@unique([requestId, questionId])
+}
+
+model TakePartRequest {
+  id      String                        @id @default(uuid())
+  userId  String
+  eventId String
+  user    User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event   CleanupEvent                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  answers CleanupEventQuestionAnswear[]
+
+  @@unique([userId, eventId])
 }
 
 enum CleanupEventQuestionType {
