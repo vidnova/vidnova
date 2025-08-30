@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Settlement } from '../settlement';
 
 @Entity('regions')
@@ -6,9 +6,11 @@ export class Region {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index()
   @Column()
   name: string;
 
+  @Index()
   @Column()
   nameEn: string;
 
