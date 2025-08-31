@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -37,6 +38,9 @@ import { DeleteChatSelfUseCase } from './use-cases/delete-chat-self/delete-chat-
 import { DeleteChatSelfCommand } from './use-cases/delete-chat-self/delete-chat-self.command';
 import { DeleteChatUseCase } from './use-cases/delete-chat/delete-chat.use-case';
 import { DeleteChatCommand } from './use-cases/delete-chat/delete-chat.command';
+import { GetChatMessagesDto } from './dtos/get-chat-messages.dto';
+import { GetMessagesUseCase } from '../message/use-cases/get-messages/get-messages.use-case';
+import { GetMessagesCommand } from '../message/use-cases/get-messages/get-messages.command';
 
 @Controller('chats')
 export class ChatController {
@@ -51,6 +55,7 @@ export class ChatController {
     private readonly createDirectChatUseCase: CreateDirectChatUseCase,
     private readonly deleteChatSelfUseCase: DeleteChatSelfUseCase,
     private readonly deleteChatUseCase: DeleteChatUseCase,
+    private readonly getMessagesUseCase: GetMessagesUseCase,
   ) {}
 
   @Post('group')
@@ -198,6 +203,25 @@ export class ChatController {
       DeleteChatCommand.create({
         userId: user.id,
         chatId,
+      }),
+    );
+  }
+
+  @Get(':chatId/messages')
+  @UseGuards(AuthGuard)
+  async getChatMessages(
+    @Query() query: GetChatMessagesDto,
+    @Req() req: FastifyRequest,
+    @Param('chatId') chatId: string,
+  ) {
+    const user = req.user;
+
+    return this.getMessagesUseCase.execute(
+      GetMessagesCommand.create({
+        page: query.page,
+        limit: query.pageSize,
+        chatId,
+        userId: user.id,
       }),
     );
   }

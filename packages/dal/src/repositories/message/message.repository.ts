@@ -4,6 +4,7 @@ import { Message } from './message.entity';
 import { MessageMapper } from './message.mapper';
 import { MessageQuery } from './message.query';
 import { Injectable } from '@nestjs/common';
+import { GetAllMessagesFilters } from '@vidnova/shared';
 
 @Injectable()
 export class MessageRepository implements IMessageRepository {
@@ -38,5 +39,29 @@ export class MessageRepository implements IMessageRepository {
     });
 
     return MessageMapper.toDomain(persistedMessageData);
+  }
+
+  async getAllByChatId(
+    chatId: string,
+    filters: GetAllMessagesFilters,
+  ): Promise<{ messages: Message[]; hasMore: boolean }> {
+    const { page = 1, limit = 100 } = filters;
+
+    const skip = (page - 1) * limit;
+    const take = limit + 1;
+
+    const messages = await this.prismaService.message.findMany({
+      where: { chatId },
+      skip,
+      take,
+      select: MessageQuery.SELECT_FIELDS,
+    });
+
+    const hasMore = messages.length > limit;
+
+    return {
+      messages: messages.slice(0, limit).map((message) => MessageMapper.toDomain(message)),
+      hasMore,
+    };
   }
 }
