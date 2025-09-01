@@ -1,8 +1,8 @@
 import { MessageType } from '@vidnova/shared';
-import { MessageSender } from './message-sender.vo';
-import { MessageReply } from './message-reply.vo';
-import { MessageReaction } from './message-reaction.vo';
-import { MessageAttachment } from './message-attachment.vo';
+import { MessageSender } from './value-objects/message-sender.vo';
+import { MessageReply } from './value-objects/message-reply.vo';
+import { MessageReaction } from './value-objects/message-reaction.vo';
+import { MessageAttachment } from './value-objects/message-attachment.vo';
 import { v4 } from 'uuid';
 
 export class Message {

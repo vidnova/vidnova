@@ -1,10 +1,13 @@
 import { IMessageRepository } from './message-repository.interface';
 import { PrismaService } from '../shared';
 import { Message } from './message.entity';
-import { MessageMapper } from './message.mapper';
-import { MessageQuery } from './message.query';
+import { MessageMapper } from './mappers/message.mapper';
+import { MessageQuery } from './queries/message.query';
 import { Injectable } from '@nestjs/common';
 import { GetAllMessagesFilters } from '@vidnova/shared';
+import { MessageReaction } from './value-objects/message-reaction.vo';
+import { MessageReactionQuery } from './queries/message-reaction.query';
+import { MessageReactionMapper } from './mappers/message-reaction.mapper';
 
 @Injectable()
 export class MessageRepository implements IMessageRepository {
@@ -63,5 +66,42 @@ export class MessageRepository implements IMessageRepository {
       messages: messages.slice(0, limit).map((message) => MessageMapper.toDomain(message)),
       hasMore,
     };
+  }
+
+  async upsertReaction(reaction: MessageReaction): Promise<MessageReaction | null> {
+    const message = await this.prismaService.message.findUnique({
+      where: { id: reaction.messageId },
+    });
+
+    if (!message) return null;
+
+    const persistedReaction = await this.prismaService.messageReaction.upsert({
+      where: { messageId_userId: { messageId: reaction.messageId, userId: reaction.userId } },
+      create: {
+        id: reaction.id,
+        userId: reaction.userId,
+        messageId: reaction.messageId,
+        createdAt: reaction.createdAt,
+        emoji: reaction.emoji,
+      },
+      update: {
+        emoji: reaction.emoji,
+        createdAt: reaction.createdAt,
+      },
+      select: MessageReactionQuery.SELECT_FIELDS,
+    });
+
+    return MessageReactionMapper.toDomainMessageReaction(persistedReaction);
+  }
+
+  async findMessageById(messageId: string): Promise<Message | null> {
+    const persistedMessage = await this.prismaService.message.findUnique({
+      where: { id: messageId },
+      select: MessageQuery.SELECT_FIELDS,
+    });
+
+    if (!persistedMessage) return null;
+
+    return MessageMapper.toDomain(persistedMessage);
   }
 }

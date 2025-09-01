@@ -4,11 +4,13 @@ import {
   ForbiddenException,
   HttpException,
   Inject,
+  Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
 
+@Injectable()
 export class GetMessagesUseCase {
   private logger = new Logger(GetMessagesUseCase.name);
 
