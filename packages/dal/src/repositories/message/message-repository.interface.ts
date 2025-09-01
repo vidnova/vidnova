@@ -5,6 +5,8 @@ import { MessageReaction } from './value-objects/message-reaction.vo';
 export interface IMessageRepository {
   createMessage(message: Message): Promise<Message>;
 
+  updateMessage(message: Message): Promise<Message>;
+
   getAllByChatId(
     chatId: string,
     filters?: GetAllMessagesFilters,

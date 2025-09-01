@@ -104,4 +104,16 @@ export class MessageRepository implements IMessageRepository {
 
     return MessageMapper.toDomain(persistedMessage);
   }
+
+  async updateMessage(message: Message): Promise<Message> {
+    const persistedMessage = await this.prismaService.message.update({
+      where: { id: message.id },
+      data: {
+        content: message.content,
+      },
+      select: MessageQuery.SELECT_FIELDS,
+    });
+
+    return MessageMapper.toDomain(persistedMessage);
+  }
 }
