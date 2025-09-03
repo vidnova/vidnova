@@ -6,6 +6,8 @@ import { MessageAttachment } from './value-objects/message-attachment.vo';
 import { v4 } from 'uuid';
 
 export class Message {
+  private readonly MAX_DAYS = 7 * 24 * 60 * 60 * 1000;
+
   constructor(
     private readonly _id: string,
     private readonly _content: string | null,
@@ -68,6 +70,26 @@ export class Message {
       params.reactions,
       params.attachments,
       params.replyTo,
+    );
+  }
+
+  update(content: string): Message {
+    if (Date.now() - this._createdAt.getTime() > this.MAX_DAYS) {
+      throw new Error('Time to change message expired');
+    }
+
+    return new Message(
+      this._id,
+      content,
+      this._type,
+      this._chatId,
+      this._createdAt,
+      new Date(),
+      true,
+      this._sender,
+      this._reactions,
+      this._attachments,
+      this._replyTo,
     );
   }
 

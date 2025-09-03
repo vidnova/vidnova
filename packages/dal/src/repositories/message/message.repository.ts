@@ -110,6 +110,8 @@ export class MessageRepository implements IMessageRepository {
       where: { id: message.id },
       data: {
         content: message.content,
+        isUpdated: message.isUpdated,
+        updatedAt: message.updatedAt,
       },
       select: MessageQuery.SELECT_FIELDS,
     });
