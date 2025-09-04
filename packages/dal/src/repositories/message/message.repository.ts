@@ -118,4 +118,8 @@ export class MessageRepository implements IMessageRepository {
 
     return MessageMapper.toDomain(persistedMessage);
   }
+
+  async deleteMessage(messageId: string): Promise<void> {
+    await this.prismaService.message.delete({ where: { id: messageId } });
+  }
 }
