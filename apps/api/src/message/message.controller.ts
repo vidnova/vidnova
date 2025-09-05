@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { CreateMessageUseCase } from './use-cases/create-message/create-message.use-case';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { FastifyRequest } from 'fastify';
@@ -10,6 +10,8 @@ import { CreateMessageReactionCommand } from './use-cases/create-message-reactio
 import { UpdateMessageDto } from './dtos/update-message.dto';
 import { UpdateMessageUseCase } from './use-cases/update-message/update-message.use-case';
 import { UpdateMessageCommand } from './use-cases/update-message/update-message.command';
+import { DeleteMessageForAllUseCase } from './use-cases/delete-message-for-all/delete-message-for-all.use-case';
+import { DeleteMessageForAllCommand } from './use-cases/delete-message-for-all/delete-message-for-all.command';
 
 @Controller('messages')
 export class MessageController {
@@ -17,6 +19,7 @@ export class MessageController {
     private readonly createMessageUseCase: CreateMessageUseCase,
     private readonly createMessageReactionUseCase: CreateMessageReactionUseCase,
     private readonly updateMessageUseCase: UpdateMessageUseCase,
+    private readonly deleteMessageForAllUseCase: DeleteMessageForAllUseCase,
   ) {}
 
   @Post()
@@ -64,6 +67,19 @@ export class MessageController {
         userId: user.id,
         messageId,
         content: data.content,
+      }),
+    );
+  }
+
+  @Delete(':messageId')
+  @UseGuards(AuthGuard)
+  async deleteMessage(@Req() req: FastifyRequest, @Param('messageId') messageId: string) {
+    const { id: userId } = req.user;
+
+    return this.deleteMessageForAllUseCase.execute(
+      DeleteMessageForAllCommand.create({
+        userId,
+        messageId,
       }),
     );
   }

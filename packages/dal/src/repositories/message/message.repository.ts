@@ -112,14 +112,11 @@ export class MessageRepository implements IMessageRepository {
         content: message.content,
         isUpdated: message.isUpdated,
         updatedAt: message.updatedAt,
+        isDeletedForAll: message.isDeletedForAll,
       },
       select: MessageQuery.SELECT_FIELDS,
     });
 
     return MessageMapper.toDomain(persistedMessage);
-  }
-
-  async deleteMessage(messageId: string): Promise<void> {
-    await this.prismaService.message.delete({ where: { id: messageId } });
   }
 }

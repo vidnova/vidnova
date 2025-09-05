@@ -15,6 +15,4 @@ export interface IMessageRepository {
   upsertReaction(reaction: MessageReaction): Promise<MessageReaction | null>;
 
   findMessageById(messageId: string): Promise<Message | null>;
-
-  deleteMessage(messageId: string): Promise<void>;
 }

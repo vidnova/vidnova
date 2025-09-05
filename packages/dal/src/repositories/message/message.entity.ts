@@ -13,8 +13,10 @@ export class Message {
     private readonly _content: string | null,
     private readonly _type: MessageType,
     private readonly _chatId: string,
+    private readonly _isDeletedForAll: boolean,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
+    private readonly _deletedAt: Date | null,
     private readonly _isUpdated: boolean,
     private readonly _sender: MessageSender,
     private readonly _reactions: MessageReaction[],
@@ -35,8 +37,10 @@ export class Message {
       params.content,
       params.type,
       params.chatId,
+      false,
       new Date(),
       new Date(),
+      null,
       false,
       params.sender,
       [],
@@ -50,8 +54,10 @@ export class Message {
     content: string | null;
     type: MessageType;
     chatId: string;
+    isDeletedForAll: boolean;
     createdAt: Date;
     updatedAt: Date;
+    deletedAt: Date | null;
     isUpdated: boolean;
     reactions: MessageReaction[];
     sender: MessageSender;
@@ -63,8 +69,10 @@ export class Message {
       params.content,
       params.type,
       params.chatId,
+      params.isDeletedForAll,
       params.createdAt,
       params.updatedAt,
+      params.deletedAt,
       params.isUpdated,
       params.sender,
       params.reactions,
@@ -83,9 +91,29 @@ export class Message {
       content,
       this._type,
       this._chatId,
+      this._isDeletedForAll,
       this._createdAt,
       new Date(),
+      this._deletedAt,
       true,
+      this._sender,
+      this._reactions,
+      this._attachments,
+      this._replyTo,
+    );
+  }
+
+  deleteForAll(): Message {
+    return new Message(
+      this._id,
+      this._content,
+      this._type,
+      this._chatId,
+      true,
+      this._createdAt,
+      this._updatedAt,
+      new Date(),
+      this._isUpdated,
       this._sender,
       this._reactions,
       this._attachments,
@@ -135,6 +163,14 @@ export class Message {
 
   get replyTo(): MessageReply | null | undefined {
     return this._replyTo;
+  }
+
+  get isDeletedForAll(): boolean {
+    return this._isDeletedForAll;
+  }
+
+  get deletedAt(): Date | null {
+    return this._deletedAt;
   }
 
   toJSON() {
