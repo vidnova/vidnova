@@ -119,4 +119,13 @@ export class MessageRepository implements IMessageRepository {
 
     return MessageMapper.toDomain(persistedMessage);
   }
+
+  async hideMessageForUser(messageId: string, userId: string): Promise<void> {
+    await this.prismaService.messageHidden.create({
+      data: {
+        userId,
+        messageId,
+      },
+    });
+  }
 }

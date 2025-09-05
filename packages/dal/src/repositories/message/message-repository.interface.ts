@@ -15,4 +15,6 @@ export interface IMessageRepository {
   upsertReaction(reaction: MessageReaction): Promise<MessageReaction | null>;
 
   findMessageById(messageId: string): Promise<Message | null>;
+
+  hideMessageForUser(messageId: string, userId: string): Promise<void>;
 }
