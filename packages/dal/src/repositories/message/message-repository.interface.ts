@@ -17,4 +17,6 @@ export interface IMessageRepository {
   findMessageById(messageId: string): Promise<Message | null>;
 
   hideMessageForUser(messageId: string, userId: string): Promise<void>;
+
+  isMessageHiddenForUser(messageId: string, userId: string): Promise<boolean>;
 }

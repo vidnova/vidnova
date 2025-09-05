@@ -12,6 +12,8 @@ import { UpdateMessageUseCase } from './use-cases/update-message/update-message.
 import { UpdateMessageCommand } from './use-cases/update-message/update-message.command';
 import { DeleteMessageForAllUseCase } from './use-cases/delete-message-for-all/delete-message-for-all.use-case';
 import { DeleteMessageForAllCommand } from './use-cases/delete-message-for-all/delete-message-for-all.command';
+import { DeleteMessageSelfUseCase } from './use-cases/delete-message-self/delete-message-self.use-case';
+import { DeleteMessageSelfCommand } from './use-cases/delete-message-self/delete-message-self.command';
 
 @Controller('messages')
 export class MessageController {
@@ -20,6 +22,7 @@ export class MessageController {
     private readonly createMessageReactionUseCase: CreateMessageReactionUseCase,
     private readonly updateMessageUseCase: UpdateMessageUseCase,
     private readonly deleteMessageForAllUseCase: DeleteMessageForAllUseCase,
+    private readonly deleteMessageSelfUseCase: DeleteMessageSelfUseCase,
   ) {}
 
   @Post()
@@ -78,6 +81,19 @@ export class MessageController {
 
     return this.deleteMessageForAllUseCase.execute(
       DeleteMessageForAllCommand.create({
+        userId,
+        messageId,
+      }),
+    );
+  }
+
+  @Delete(':messageId/self')
+  @UseGuards(AuthGuard)
+  async deleteMessageSelf(@Req() req: FastifyRequest, @Param('messageId') messageId: string) {
+    const { id: userId } = req.user;
+
+    return this.deleteMessageSelfUseCase.execute(
+      DeleteMessageSelfCommand.create({
         userId,
         messageId,
       }),

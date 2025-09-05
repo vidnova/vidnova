@@ -128,4 +128,17 @@ export class MessageRepository implements IMessageRepository {
       },
     });
   }
+
+  async isMessageHiddenForUser(messageId: string, userId: string): Promise<boolean> {
+    const messageHidden = await this.prismaService.messageHidden.findUnique({
+      where: {
+        messageId_userId: {
+          messageId,
+          userId,
+        },
+      },
+    });
+
+    return !!messageHidden;
+  }
 }
