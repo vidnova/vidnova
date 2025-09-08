@@ -46,6 +46,7 @@ export class MessageRepository implements IMessageRepository {
 
   async getAllByChatId(
     chatId: string,
+    userId: string,
     filters: GetAllMessagesFilters,
   ): Promise<{ messages: Message[]; hasMore: boolean }> {
     const { page = 1, limit = 100 } = filters;
@@ -54,7 +55,7 @@ export class MessageRepository implements IMessageRepository {
     const take = limit + 1;
 
     const messages = await this.prismaService.message.findMany({
-      where: { chatId },
+      where: { chatId, isDeletedForAll: false, hiddenForUsers: { none: { userId } } },
       skip,
       take,
       select: MessageQuery.SELECT_FIELDS,
@@ -94,9 +95,9 @@ export class MessageRepository implements IMessageRepository {
     return MessageReactionMapper.toDomainMessageReaction(persistedReaction);
   }
 
-  async findMessageById(messageId: string): Promise<Message | null> {
+  async findMessageById(messageId: string, userId: string): Promise<Message | null> {
     const persistedMessage = await this.prismaService.message.findUnique({
-      where: { id: messageId },
+      where: { id: messageId, isDeletedForAll: false, hiddenForUsers: { none: { userId } } },
       select: MessageQuery.SELECT_FIELDS,
     });
 
@@ -146,5 +147,20 @@ export class MessageRepository implements IMessageRepository {
     await this.prismaService.messageReaction.delete({
       where: { messageId_userId: { messageId, userId } },
     });
+  }
+
+  async findMessageReaction(messageId: string, userId: string): Promise<MessageReaction | null> {
+    const persistedMessageReaction = await this.prismaService.messageReaction.findUnique({
+      where: {
+        messageId_userId: {
+          messageId,
+          userId,
+        },
+      },
+    });
+
+    if (!persistedMessageReaction) return null
+
+    return MessageReaction.fromPersistence(persistedMessageReaction);
   }
 }

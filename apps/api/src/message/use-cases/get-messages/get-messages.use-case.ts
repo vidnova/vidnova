@@ -21,21 +21,21 @@ export class GetMessagesUseCase {
 
   async execute(command: GetMessagesCommand) {
     try {
-      const chat = await this.chatRepository.findById(command.chatId, true);
+      const { userId, page, limit, chatId } = command;
+
+      const chat = await this.chatRepository.findById(chatId, true);
       if (!chat) {
-        throw new NotFoundException(`Chat with ID ${command.chatId} not found`);
+        throw new NotFoundException(`Chat with ID ${chatId} not found`);
       }
 
-      const isUserChatMember = chat.members.find((member) => member.id === command.userId);
+      const isUserChatMember = chat.members.find((member) => member.id === userId);
       if (!isUserChatMember) {
-        throw new ForbiddenException(
-          `The user with ID ${command.userId} is not a member of this chat`,
-        );
+        throw new ForbiddenException(`The user with ID ${userId} is not a member of this chat`);
       }
 
-      return this.messageRepository.getAllByChatId(command.chatId, {
-        page: command.page,
-        limit: command.limit,
+      return this.messageRepository.getAllByChatId(chatId, userId, {
+        page,
+        limit,
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;

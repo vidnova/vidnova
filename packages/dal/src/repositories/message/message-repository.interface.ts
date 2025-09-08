@@ -9,16 +9,19 @@ export interface IMessageRepository {
 
   getAllByChatId(
     chatId: string,
+    userId: string,
     filters?: GetAllMessagesFilters,
   ): Promise<{ messages: Message[]; hasMore: boolean }>;
 
   upsertReaction(reaction: MessageReaction): Promise<MessageReaction | null>;
 
-  findMessageById(messageId: string): Promise<Message | null>;
+  findMessageById(messageId: string, userId: string): Promise<Message | null>;
 
   hideMessageForUser(messageId: string, userId: string): Promise<void>;
 
   isMessageHiddenForUser(messageId: string, userId: string): Promise<boolean>;
 
   deleteReaction(messageId: string, userId: string): Promise<void>;
+
+  findMessageReaction(messageId: string, userId: string): Promise<MessageReaction | null>;
 }

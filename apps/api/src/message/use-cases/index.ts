@@ -3,6 +3,7 @@ import { CreateMessageReactionUseCase } from './create-message-reaction/create-m
 import { UpdateMessageUseCase } from './update-message/update-message.use-case';
 import { DeleteMessageForAllUseCase } from './delete-message-for-all/delete-message-for-all.use-case';
 import { DeleteMessageSelfUseCase } from './delete-message-self/delete-message-self.use-case';
+import { DeleteMessageReactionUseCase } from './delete-message-reaction/delete-message-reaction.use-case';
 
 export const USE_CASES = [
   CreateMessageUseCase,
@@ -10,4 +11,5 @@ export const USE_CASES = [
   UpdateMessageUseCase,
   DeleteMessageForAllUseCase,
   DeleteMessageSelfUseCase,
+  DeleteMessageReactionUseCase,
 ];

@@ -22,20 +22,22 @@ export class DeleteMessageSelfUseCase {
 
   async execute(command: DeleteMessageSelfCommand) {
     try {
-      const message = await this.findMessageOrThrow(command.messageId);
+      const { messageId, userId } = command;
+
+      const message = await this.findMessageOrThrow(messageId, userId);
       const chat = await this.findChatOrThrow(message.chatId);
 
-      this.checkIsUserChatMember(command.userId, chat.members);
-      await this.checkIsMessageAlreadyDeletedForUser(command.messageId, command.userId);
+      this.checkIsUserChatMember(userId, chat.members);
+      await this.checkIsMessageAlreadyDeletedForUser(messageId, userId);
 
-      await this.messageRepository.hideMessageForUser(command.messageId, command.userId);
+      await this.messageRepository.hideMessageForUser(messageId, userId);
 
       await this.bullMqService.addJob(QueueNames.MESSAGE_QUEUE, JobTypes.DELETE_MESSAGE_SELF, {
         queueName: QueueNames.MESSAGE_QUEUE,
         jobType: JobTypes.DELETE_MESSAGE_SELF,
         payload: {
-          messageId: command.messageId,
-          userId: command.userId,
+          messageId: messageId,
+          userId: userId,
         },
       });
 
@@ -48,8 +50,8 @@ export class DeleteMessageSelfUseCase {
     }
   }
 
-  private async findMessageOrThrow(messageId: string) {
-    const message = await this.messageRepository.findMessageById(messageId);
+  private async findMessageOrThrow(messageId: string, userId: string) {
+    const message = await this.messageRepository.findMessageById(messageId, userId);
     if (!message) {
       throw new NotFoundException(`Message with ID ${messageId} not found`);
     }

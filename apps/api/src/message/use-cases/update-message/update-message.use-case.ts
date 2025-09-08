@@ -25,13 +25,15 @@ export class UpdateMessageUseCase {
 
   async execute(command: UpdateMessageCommand) {
     try {
-      const message = await this.findMessageOrThrow(command.messageId);
+      const { userId, messageId, content } = command;
+
+      const message = await this.findMessageOrThrow(messageId, userId);
       const chat = await this.findChatOrThrow(message.chatId);
 
-      this.validateUserAccess(command.userId, message.sender.id, chat.members);
+      this.validateUserAccess(userId, message.sender.id, chat.members);
       this.validateMessageTime(message.createdAt);
 
-      const messageWithUpdatedContent = message.update(command.content);
+      const messageWithUpdatedContent = message.update(content);
       const updatedMessage = await this.messageRepository.updateMessage(messageWithUpdatedContent);
 
       await this.bullMqService.addJob(QueueNames.MESSAGE_QUEUE, JobTypes.UPDATE_MESSAGE, {
@@ -49,8 +51,8 @@ export class UpdateMessageUseCase {
     }
   }
 
-  private async findMessageOrThrow(messageId: string) {
-    const message = await this.messageRepository.findMessageById(messageId);
+  private async findMessageOrThrow(messageId: string, userId: string) {
+    const message = await this.messageRepository.findMessageById(messageId, userId);
     if (!message) {
       throw new NotFoundException(`Message with ID ${messageId} not found`);
     }

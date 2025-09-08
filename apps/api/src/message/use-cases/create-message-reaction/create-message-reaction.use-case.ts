@@ -25,7 +25,7 @@ export class CreateMessageReactionUseCase {
     try {
       const { userId, messageId, emoji } = command;
 
-      const message = await this.getMessageOrFail(messageId);
+      const message = await this.getMessageOrFail(messageId, userId);
       const chat = await this.getChatOrFail(message.chatId);
       this.ensureUserInChat(chat.members, userId);
 
@@ -41,8 +41,8 @@ export class CreateMessageReactionUseCase {
     }
   }
 
-  private async getMessageOrFail(messageId: string) {
-    const message = await this.messageRepository.findMessageById(messageId);
+  private async getMessageOrFail(messageId: string, userId: string) {
+    const message = await this.messageRepository.findMessageById(messageId, userId);
     if (!message) {
       throw new NotFoundException(`Message with ID ${messageId} not found`);
     }
