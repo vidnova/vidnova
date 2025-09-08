@@ -141,4 +141,10 @@ export class MessageRepository implements IMessageRepository {
 
     return !!messageHidden;
   }
+
+  async deleteReaction(messageId: string, userId: string): Promise<void> {
+    await this.prismaService.messageReaction.delete({
+      where: { messageId_userId: { messageId, userId } },
+    });
+  }
 }

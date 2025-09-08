@@ -19,4 +19,6 @@ export interface IMessageRepository {
   hideMessageForUser(messageId: string, userId: string): Promise<void>;
 
   isMessageHiddenForUser(messageId: string, userId: string): Promise<boolean>;
+
+  deleteReaction(messageId: string, userId: string): Promise<void>;
 }
