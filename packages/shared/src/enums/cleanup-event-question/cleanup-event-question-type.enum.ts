@@ -1,0 +1,9 @@
+export enum CleanupEventQuestionType {
+  TEXT = 'TEXT',
+  NUMBER = 'NUMBER',
+  SINGLE_CHOICE = 'SINGLE_CHOICE',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  BOOLEAN = 'BOOLEAN',
+  DATE = 'DATE',
+  RANGE = 'RANGE',
+}

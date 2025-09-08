@@ -324,11 +324,19 @@ model CleanupEventQuestion {
   eventId         String
   type            CleanupEventQuestionType
   text            String
-  options         String[]
   order           Int
   required        Boolean
   event           CleanupEvent                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   questionAnswers CleanupEventQuestionAnswear[]
+  options         CleanupEventQuestionOption[]
+}
+
+model CleanupEventQuestionOption {
+  id         String               @id @default(uuid())
+  text       String
+  order      Int
+  questionId String
+  question   CleanupEventQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model CleanupEventQuestionAnswear {

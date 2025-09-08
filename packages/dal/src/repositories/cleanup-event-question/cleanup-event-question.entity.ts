@@ -1,0 +1,62 @@
+import { CleanupEventQuestionType } from '@vidnova/shared';
+import { v4 } from 'uuid';
+
+export class CleanupEventQuestion {
+  constructor(
+    private readonly _id: string,
+    private readonly _eventId: string,
+    private readonly _type: CleanupEventQuestionType,
+    private readonly _text: string,
+    private readonly _order: number,
+    private readonly _required: boolean,
+  ) {}
+
+  static create(params: {
+    eventId: string;
+    type: CleanupEventQuestionType;
+    text: string;
+    order: number;
+    required: boolean;
+  }): CleanupEventQuestion {
+    if (params.order < 1) {
+      throw new Error('Order must be greater then 0');
+    }
+
+    if (params.text.length < 1) {
+      throw new Error('Text length must be greater than 0');
+    }
+
+    return new CleanupEventQuestion(
+      v4(),
+      params.eventId,
+      params.type,
+      params.text,
+      params.order,
+      params.required,
+    );
+  }
+
+  get id(): string {
+    return this._id;
+  }
+
+  get eventId(): string {
+    return this._eventId;
+  }
+
+  get type(): CleanupEventQuestionType {
+    return this._type;
+  }
+
+  get text(): string {
+    return this._text;
+  }
+
+  get order(): number {
+    return this._order;
+  }
+
+  get required(): boolean {
+    return this._required;
+  }
+}
