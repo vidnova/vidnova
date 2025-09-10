@@ -12,3 +12,4 @@ export * from './take-part';
 export * from './report';
 export * from './chat';
 export * from './message';
+export * from './cleanup-event-question';

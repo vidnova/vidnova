@@ -1,5 +1,6 @@
 import { CleanupEventQuestionType } from '@vidnova/shared';
 import { v4 } from 'uuid';
+import { CleanupEventQuestionOption } from './cleanup-event-question-option.vo';
 
 export class CleanupEventQuestion {
   constructor(
@@ -9,6 +10,7 @@ export class CleanupEventQuestion {
     private readonly _text: string,
     private readonly _order: number,
     private readonly _required: boolean,
+    private readonly _options: CleanupEventQuestionOption[],
   ) {}
 
   static create(params: {
@@ -17,6 +19,7 @@ export class CleanupEventQuestion {
     text: string;
     order: number;
     required: boolean;
+    options: CleanupEventQuestionOption[];
   }): CleanupEventQuestion {
     if (params.order < 1) {
       throw new Error('Order must be greater then 0');
@@ -33,6 +36,27 @@ export class CleanupEventQuestion {
       params.text,
       params.order,
       params.required,
+      params.options,
+    );
+  }
+
+  static fromPersistence(params: {
+    id: string;
+    eventId: string;
+    type: CleanupEventQuestionType;
+    text: string;
+    order: number;
+    required: boolean;
+    options: CleanupEventQuestionOption[];
+  }): CleanupEventQuestion {
+    return new CleanupEventQuestion(
+      params.id,
+      params.eventId,
+      params.type,
+      params.text,
+      params.order,
+      params.required,
+      params.options,
     );
   }
 
@@ -58,5 +82,9 @@ export class CleanupEventQuestion {
 
   get required(): boolean {
     return this._required;
+  }
+
+  get options(): CleanupEventQuestionOption[] {
+    return this._options;
   }
 }
